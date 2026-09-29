@@ -261,17 +261,30 @@
         item.className = "character-item character-template";
         item.type = "button";
         item.draggable = true;
+        let touchMoved = false;
         item.innerHTML = "<img src=\"" + template.image + "\" alt=\"\"><span><strong>" + template.name + "</strong><small>Arrastra o toca para agregar</small></span><b>＋</b>";
         item.addEventListener("dragstart", function (event) {
           event.dataTransfer.setData("text/character", template.id);
           event.dataTransfer.effectAllowed = "copy";
         });
         item.addEventListener("click", function () {
-          if (item.dataset.touchDragged === "true") {
-            delete item.dataset.touchDragged;
+          if (item.dataset.touchHandled === "true") {
+            delete item.dataset.touchHandled;
             return;
           }
           addCharacter(template.id, 22 + (state.characters.length % 3) * 25, 34 + (state.characters.length % 2) * 25);
+        });
+        item.addEventListener("pointerdown", function (event) {
+          if (event.pointerType !== "mouse") touchMoved = false;
+        });
+        item.addEventListener("pointermove", function (event) {
+          if (event.pointerType !== "mouse") touchMoved = true;
+        });
+        item.addEventListener("pointerup", function (event) {
+          if (event.pointerType !== "mouse" && !touchMoved) {
+            item.dataset.touchHandled = "true";
+            addCharacter(template.id, 22 + (state.characters.length % 3) * 25, 34 + (state.characters.length % 2) * 25);
+          }
         });
         addTouchDrag(item, function (event) {
           const target = document.elementFromPoint(event.clientX, event.clientY);

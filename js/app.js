@@ -335,44 +335,52 @@
     let startX = 0;
     let startY = 0;
     let dragging = false;
+    let pointerId = null;
+    function moveDrag(event) {
+      if (event.pointerId !== pointerId) return;
+      if (Math.hypot(event.clientX - startX, event.clientY - startY) > 8) {
+        dragging = true;
+        event.preventDefault();
+      }
+    }
+    function finishDrag(event) {
+      if (event.pointerId !== pointerId) return;
+      document.removeEventListener("pointermove", moveDrag);
+      document.removeEventListener("pointerup", finishDrag);
+      document.removeEventListener("pointercancel", finishDrag);
+      if (dragging) {
+        element.dataset.touchDragged = "true";
+        onDrop(event);
+        event.preventDefault();
+      }
+      dragging = false;
+      pointerId = null;
+    }
     element.addEventListener("pointerdown", function (event) {
       if (event.pointerType === "mouse") return;
       if (event.target.closest("button, input")) return;
       startX = event.clientX;
       startY = event.clientY;
       dragging = false;
-      element.setPointerCapture(event.pointerId);
+      pointerId = event.pointerId;
+      document.addEventListener("pointermove", moveDrag, { passive: false });
+      document.addEventListener("pointerup", finishDrag, { passive: false });
+      document.addEventListener("pointercancel", finishDrag, { passive: false });
     });
-    element.addEventListener("pointermove", function (event) {
-      if (event.pointerType === "mouse") return;
-      if (Math.hypot(event.clientX - startX, event.clientY - startY) > 8) {
-        dragging = true;
-        event.preventDefault();
-      }
+  }
 
-      function addActionToCollection(type, collection) {
-        const character = selectedCharacter();
-        if (!character || state.running || !actionCatalog[type] || !collection) return;
-        const entry = { type: type, children: [] };
-        if (actionCatalog[type].duration) entry.duration = 1;
-        if (actionCatalog[type].degrees) entry.degrees = 90;
-        if (type === "forwardPaint") entry.thickness = 4;
-        if (type === "loop") entry.repetitions = 2;
-        collection.push(entry);
-        renderCharacters();
-        renderSequence();
-        $("#simulation-message").textContent = "Bloque " + actionCatalog[type].label + " agregado dentro del bloque.";
-      }
-    });
-    element.addEventListener("pointerup", function (event) {
-      if (event.pointerType === "mouse") return;
-      if (dragging) {
-        element.dataset.touchDragged = "true";
-        onDrop(event);
-        event.preventDefault();
-      }
-      element.releasePointerCapture(event.pointerId);
-    });
+  function addActionToCollection(type, collection) {
+    const character = selectedCharacter();
+    if (!character || state.running || !actionCatalog[type] || !collection) return;
+    const entry = { type: type, children: [] };
+    if (actionCatalog[type].duration) entry.duration = 1;
+    if (actionCatalog[type].degrees) entry.degrees = 90;
+    if (type === "forwardPaint") entry.thickness = 4;
+    if (type === "loop") entry.repetitions = 2;
+    collection.push(entry);
+    renderCharacters();
+    renderSequence();
+    $("#simulation-message").textContent = "Bloque " + actionCatalog[type].label + " agregado dentro del bloque.";
   }
 
   function addAction(type, parent) {

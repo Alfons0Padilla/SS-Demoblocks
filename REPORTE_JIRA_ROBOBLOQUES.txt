@@ -1,0 +1,123 @@
+REPORTE DE AVANCES PARA JIRA - ROBOBLOQUES
+Fecha: 29 de septiembre de 2026
+
+==================================================
+1. FUNCIONALIDADES YA IMPLEMENTADAS
+==================================================
+
+PAGINA Y NAVEGACION
+- Se creo la pagina principal de RoboBloques en index.html.
+- Se agregaron accesos al Curso guiado y al Laboratorio creativo.
+- Se actualizo la navegacion entre Inicio, Curso guiado y Laboratorio.
+- El laboratorio funcional se encuentra en sandbox.html.
+- Se publico el proyecto en GitHub Pages.
+
+PERSONAJES Y ESCENARIO
+- Se agrego Robotcito al catalogo de personajes.
+- Se permite agregar uno o varios Robotcitos al escenario.
+- Cada personaje conserva su propia posicion, orientacion y programa.
+- Se puede seleccionar un personaje para programarlo.
+- Se puede mover manualmente el personaje dentro de los limites del escenario.
+- Se agrego el boton para borrar el personaje seleccionado.
+- El escenario muestra el contador de personajes y el estado de programacion.
+
+BIBLIOTECA DE BLOQUES
+- Se organizaron los bloques en categorias desplegables:
+  Personajes, Movimiento, Pintar, Bucles, Control, Condiciones y Programadas.
+- Se implementaron los bloques Avanzar, Retroceder, Girar izquierda,
+  Girar derecha, Esperar, Detener, Avanzar y pintar, Repetir, Si y Decir.
+- Los bloques pueden agregarse con clic, toque o arrastrar y soltar.
+- Se agregaron ajustes para que la interaccion tactil no desplace la pagina.
+
+SECUENCIA Y BLOQUES ANIDADOS
+- Se pueden agregar, eliminar y reordenar bloques.
+- Se pueden mover bloques dentro y fuera de Repetir y Si.
+- Se pueden reordenar bloques dentro de los contenedores.
+- La insercion tactil usa seleccion del bloque y zonas de insercion.
+- Se corrigio la propagacion de clics en las zonas internas de los contenedores.
+- Los bloques tienen parametros editables desde la secuencia.
+
+EJECUCION Y SIMULACION
+- Se pueden ejecutar las acciones del personaje en orden.
+- Se pueden ejecutar al mismo tiempo los programas de varios personajes.
+- Se implementaron los botones Ejecutar, Detener y Reiniciar.
+- Detener cancela las animaciones y permite reiniciar el programa.
+- Reiniciar devuelve los personajes a su posicion y orientacion iniciales.
+- Se implemento el movimiento interpolado por frames.
+- Se implementaron los giros, la espera y el bloque Detener.
+- Se implementaron los ciclos Repetir y la ejecucion basica de Si.
+
+PINTURA Y DOCUMENTACION
+- Avanzar y pintar dibuja una linea mientras el personaje se desplaza.
+- Se puede configurar la duracion y el grosor de la linea.
+- Se creo control_tareas_jira.md con epicas, historias, tareas y bugs.
+- Se creo DOCUMENTO_CAMBIOS.md con el registro funcional del proyecto.
+- Se configuro Git y el repositorio remoto de GitHub.
+
+==================================================
+2. TRABAJO REALIZADO HOY
+==================================================
+
+BLOQUE DECIR
+- Se agrego un campo de texto editable al bloque Decir.
+- El texto tiene un limite maximo de 20 caracteres.
+- Se agrego un parametro de segundos para elegir cuanto dura el dialogo.
+- El texto aparece en una burbuja de dialogo sobre el personaje.
+- La burbuja sigue al personaje cuando este se mueve.
+- La burbuja desaparece al terminar el tiempo configurado.
+- La burbuja se elimina al detener o reiniciar la simulacion.
+- Decir no bloquea la secuencia: el siguiente bloque comienza inmediatamente.
+- El personaje puede hablar mientras avanza, gira o dibuja otra figura.
+
+BLOQUE DIBUJAR CORAZON
+- Se agrego el bloque Dibujar corazon dentro de Programadas.
+- El personaje dibuja el corazon avanzando y girando por segmentos.
+- No se utiliza una figura prefabricada para el dibujo.
+- Se agregaron los parametros Grosor y Tamano.
+- El grosor se puede configurar de 1 a 30.
+- El tamano se puede configurar de 6 a 35.
+
+BLOQUE DIBUJAR ESTRELLA
+- Se agrego el bloque Dibujar estrella dentro de Programadas.
+- El personaje dibuja una estrella de cinco puntas avanzando y girando.
+- La estrella se construye mediante 10 segmentos de movimiento.
+- Se agregaron los parametros Grosor y Tamano.
+- El grosor se puede configurar de 1 a 30.
+- El tamano se puede configurar de 6 a 35.
+- Se corrigio el cierre de la estrella para que el ultimo segmento termine
+  exactamente en el punto inicial.
+
+VALIDACIONES REALIZADAS HOY
+- Se verifico que el bloque Dibujar corazon genera segmentos de linea.
+- Se verifico que el bloque Dibujar estrella genera 10 segmentos.
+- Se verifico que la estrella queda cerrada.
+- Se verifico que la burbuja de Decir aparece sobre el personaje.
+- Se verifico que la burbuja desaparece despues del tiempo configurado.
+- Se verifico que Decir puede permanecer visible mientras se dibuja una figura.
+- Se revisaron los problemas del archivo JavaScript y no se encontraron errores.
+- Se reviso el formato del diff y no se encontraron errores de espacios.
+
+==================================================
+3. PENDIENTE PARA JIRA
+==================================================
+
+- Marcar como completadas las historias y tareas relacionadas con las
+  funciones descritas en este reporte.
+- Registrar como completada la implementacion de Decir con duracion y burbuja.
+- Registrar como completadas las tareas de Dibujar corazon y Dibujar estrella.
+- Registrar como corregido el bug de la estrella abierta.
+- Probar las funciones en dispositivos moviles reales.
+- Continuar con pruebas de usabilidad y nuevos bloques programados.
+
+==================================================
+4. REFERENCIAS DEL PROYECTO
+==================================================
+
+Repositorio:
+https://github.com/Alfons0Padilla/SS-Demoblocks
+
+Pagina publicada:
+https://alfons0padilla.github.io/SS-Demoblocks/
+
+Laboratorio:
+https://alfons0padilla.github.io/SS-Demoblocks/sandbox.html

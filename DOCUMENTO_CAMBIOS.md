@@ -346,3 +346,8 @@ RoboBloques debe sentirse como un pequeño editor visual: el usuario ve a sus pe
 - Eliminar un personaje remueve únicamente esa instancia y conserva los demás personajes y sus programas.
 - La acción cancela cualquier animación activa, cierra el menú contextual y actualiza el contador del escenario.
 - Después de eliminarlo, se puede incorporar nuevamente el mismo personaje desde la biblioteca.
+- La categoría **Programadas** incluye el bloque **Dibujar corazón**, que mueve al personaje por segmentos mientras avanza y deja un trazo para formar el corazón; permite configurar el grosor y el tamaño.
+- El bloque **Decir** incluye un campo de texto editable con un límite máximo de 20 caracteres.
+- El bloque **Decir** permite configurar cuántos segundos permanece visible el mensaje y lo muestra en una burbuja sobre el personaje, en lugar del texto inferior del escenario.
+- La duración de **Decir** no bloquea la secuencia: mientras la burbuja permanece visible, el personaje puede avanzar, dibujar un corazón o ejecutar otros bloques.
+- La categoría **Programadas** incluye el bloque **Dibujar estrella**, que mueve al personaje por segmentos mientras avanza y gira para formar la figura; permite configurar el grosor y el tamaño.

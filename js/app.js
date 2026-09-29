@@ -11,7 +11,9 @@
     loop: { label: "Repetir", icon: "🔁", color: "loop", detail: "Contenedor para repetir acciones", tab: "loops", container: true },
     forwardPaint: { label: "Avanzar y pintar", icon: "🖌️", color: "paint", detail: "Avanzar dejando una línea", tab: "paint", duration: true, thickness: true },
     condition: { label: "Si", icon: "🔀", color: "condition", detail: "Comprobar una condición", tab: "conditions", container: true },
-    say: { label: "Decir", icon: "💬", color: "programmed", detail: "Mostrar un mensaje", tab: "programmed" }
+    say: { label: "Decir", icon: "💬", color: "programmed", detail: "Mostrar un mensaje", tab: "programmed", duration: true },
+    heart: { label: "Dibujar corazón", icon: "❤️", color: "programmed", detail: "Avanzar y girar dibujando", tab: "programmed", shape: "heart", thickness: true },
+    star: { label: "Dibujar estrella", icon: "⭐", color: "programmed", detail: "Avanzar y girar dibujando", tab: "programmed", shape: "star", thickness: true }
   };
   ["forward", "backward"].forEach(function (type) { actionCatalog[type].duration = true; });
   const characterCatalog = [
@@ -24,7 +26,7 @@
     loops: ["loop"],
     control: ["stop", "wait"],
     conditions: ["condition"],
-    programmed: ["say"]
+    programmed: ["say", "heart", "star"]
   };
   const state = { characters: [], selectedId: null, menuVisible: false, running: false, canReset: false, run: null, activeTab: "characters", openTabs: { characters: true }, draggedSequence: null, touchTargetCollection: null, touchSelectedSequence: null };
   const stage = document.getElementById("escenario");
@@ -48,6 +50,10 @@
       Object.keys(state.run.frames).forEach(function (id) {
         if (state.run.frames[id]) cancelAnimationFrame(state.run.frames[id]);
       });
+      Object.keys(state.run.speechTimers || {}).forEach(function (id) {
+        clearTimeout(state.run.speechTimers[id]);
+      });
+      stage.querySelectorAll(".speech-bubble").forEach(function (bubble) { bubble.remove(); });
       state.run = null;
     }
     state.characters.forEach(function (item) {
@@ -368,6 +374,10 @@
     if (actionCatalog[type].degrees) entry.degrees = 90;
     if (type === "forwardPaint") entry.thickness = 4;
     if (type === "loop") entry.repetitions = 2;
+    if (type === "say") entry.message = "";
+    if (type === "say") entry.duration = 2;
+    if (type === "heart") { entry.size = 18; entry.thickness = 4; }
+    if (type === "star") { entry.size = 18; entry.thickness = 4; }
     collection.push(entry);
     renderCharacters();
     renderSequence();
@@ -382,6 +392,10 @@
     if (actionCatalog[type].degrees) entry.degrees = 90;
     if (type === "forwardPaint") entry.thickness = 4;
     if (type === "loop") entry.repetitions = 2;
+    if (type === "say") entry.message = "";
+    if (type === "say") entry.duration = 2;
+    if (type === "heart") { entry.size = 18; entry.thickness = 4; }
+    if (type === "star") { entry.size = 18; entry.thickness = 4; }
     (parent ? parent.children : character.actions).push(entry);
     renderCharacters();
     renderSequence();
@@ -422,6 +436,10 @@
       if (actionCatalog[type].degrees) entry.degrees = 90;
       if (type === "forwardPaint") entry.thickness = 4;
       if (type === "loop") entry.repetitions = 2;
+      if (type === "say") entry.message = "";
+      if (type === "say") entry.duration = 2;
+      if (type === "heart") { entry.size = 18; entry.thickness = 4; }
+      if (type === "star") { entry.size = 18; entry.thickness = 4; }
       targetCollection.splice(Math.max(0, Math.min(targetIndex, targetCollection.length)), 0, entry);
       renderCharacters();
       renderSequence();
@@ -530,6 +548,7 @@
     if (action.degrees) parameters.push(["Grados", "degrees", "number", "1", "360", "1", entry.degrees || 90]);
     if (action.thickness) parameters.push(["Grosor", "thickness", "number", "1", "30", "1", entry.thickness || 4]);
     if (entry.type === "loop") parameters.push(["Veces", "repetitions", "number", "1", "99", "1", entry.repetitions || 2]);
+    if (entry.type === "heart" || entry.type === "star") parameters.push(["Tamaño", "size", "number", "6", "35", "1", entry.size || 18]);
     if (parameters.length) {
       const controls = document.createElement("div");
       controls.className = "sequence-parameters";
@@ -552,6 +571,8 @@
               ? Math.max(1, Math.min(360, Math.round(raw || 90)))
               : parameter[1] === "thickness"
                 ? Math.max(1, Math.min(30, Math.round(raw || 4)))
+                : parameter[1] === "size"
+                  ? Math.max(6, Math.min(35, Math.round(raw || 18)))
                 : Math.max(1, Math.min(99, Math.round(raw || 2)));
           entry[parameter[1]] = value;
           input.value = value;
@@ -559,6 +580,26 @@
         label.appendChild(input);
         controls.appendChild(label);
       });
+      copy.appendChild(controls);
+    }
+    if (entry.type === "say") {
+      const controls = document.createElement("div");
+      controls.className = "sequence-parameters";
+      const label = document.createElement("label");
+      label.textContent = "Texto";
+      const input = document.createElement("input");
+      input.className = "sequence-parameter sequence-text-parameter";
+      input.type = "text";
+      input.maxLength = 20;
+      input.value = String(entry.message || "").slice(0, 20);
+      input.placeholder = "Escribe un mensaje";
+      input.setAttribute("aria-label", "Texto");
+      input.addEventListener("input", function () {
+        entry.message = input.value.slice(0, 20);
+        input.value = entry.message;
+      });
+      label.appendChild(input);
+      controls.appendChild(label);
       copy.appendChild(controls);
     }
     row.querySelector("button").addEventListener("click", function () { collection.splice(index, 1); renderCharacters(); renderSequence(); });
@@ -631,7 +672,7 @@
       character.direction = character.initialDirection;
     });
     state.running = true;
-    state.run = { cancelled: false, remaining: programmedCharacters.length, frames: {}, finished: {} };
+    state.run = { cancelled: false, remaining: programmedCharacters.length, frames: {}, speechTimers: {}, finished: {} };
     setExecutionControls(true);
     renderCharacters();
     function flatten(entries, actions) {
@@ -672,9 +713,16 @@
           return;
         }
         if (entry.type === "say") {
-          $("#simulation-message").textContent = "💬 " + character.name + ": " + (entry.message || "¡Hola!");
+          animateSpeech(character, entry, state.run);
           index += 1;
           step();
+          return;
+        }
+        if (entry.type === "heart" || entry.type === "star") {
+          animateShape(character, entry, function () {
+            index += 1;
+            step();
+          }, state.run);
           return;
         }
         animateAction(entry, character, function () {
@@ -708,7 +756,37 @@
     actor.style.top = character.position.y + "%";
     const image = actor.querySelector("img");
     if (image) image.style.transform = "rotate(" + character.direction + "deg)";
+    updateSpeechBubblePosition(character);
     if (state.menuVisible && character.id === state.selectedId) updateStageMenuPosition(character);
+  }
+
+  function updateSpeechBubblePosition(character) {
+    const bubble = stage.querySelector(".speech-bubble[data-character-id=\"" + character.id + "\"]");
+    const actor = stage.querySelector("[data-character-id=\"" + character.id + "\"]");
+    if (!bubble || !actor) return;
+    bubble.style.left = (character.position.x + 5) + "%";
+    bubble.style.top = (character.position.y - 4) + "%";
+  }
+
+  function animateSpeech(character, entry, run) {
+    if (run.speechTimers[character.id]) {
+      clearTimeout(run.speechTimers[character.id]);
+      delete run.speechTimers[character.id];
+    }
+    const previousBubble = stage.querySelector(".speech-bubble[data-character-id=\"" + character.id + "\"]");
+    if (previousBubble) previousBubble.remove();
+    const bubble = document.createElement("div");
+    bubble.className = "speech-bubble";
+    bubble.dataset.characterId = character.id;
+    bubble.textContent = String(entry.message || "¡Hola!").slice(0, 20);
+    stage.appendChild(bubble);
+    updateSpeechBubblePosition(character);
+    const duration = Math.max(.5, Math.min(60, Number(entry.duration) || 2)) * 1000;
+    const timerId = setTimeout(function () {
+      bubble.remove();
+      delete run.speechTimers[character.id];
+    }, duration);
+    run.speechTimers[character.id] = timerId;
   }
 
   function normalizeDirection(direction) {
@@ -764,6 +842,77 @@
       else done();
     }
     run.frames[character.id] = requestAnimationFrame(frame);
+  }
+
+  function animateShape(character, entry, done, run) {
+    const size = Math.max(6, Math.min(35, Number(entry.size) || 18));
+    const thickness = Math.max(1, Math.min(30, Number(entry.thickness) || 4));
+    const center = getCharacterCenter(character);
+    const points = [];
+    if (entry.type === "heart") {
+      const pointCount = 24;
+      for (let index = 0; index <= pointCount; index += 1) {
+        const angle = Math.PI * 2 - (Math.PI * 2 * index / pointCount);
+        const x = 16 * Math.pow(Math.sin(angle), 3);
+        const y = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle));
+        points.push({ x: center.x + x * size / 32, y: center.y + y * size / 32 });
+      }
+    } else {
+      const pointCount = 10;
+      for (let index = 0; index < pointCount; index += 1) {
+        const angle = -Math.PI / 2 + Math.PI * index / 5;
+        const radius = index % 2 === 0 ? size / 2 : size * .225;
+        points.push({ x: center.x + Math.cos(angle) * radius, y: center.y + Math.sin(angle) * radius });
+      }
+      points.push({ x: points[0].x, y: points[0].y });
+    }
+    const origin = points[0];
+    const offsetX = center.x - origin.x;
+    const offsetY = center.y - origin.y;
+    points.forEach(function (point) {
+      point.x += offsetX;
+      point.y += offsetY;
+    });
+    let segmentIndex = 0;
+    function drawSegment() {
+      if (!state.running || !run || run.cancelled) return;
+      if (segmentIndex >= points.length - 1) {
+        done();
+        return;
+      }
+      const start = points[segmentIndex];
+      const end = points[segmentIndex + 1];
+      const deltaX = end.x - start.x;
+      const deltaY = end.y - start.y;
+      const distance = Math.hypot(deltaX, deltaY);
+      const targetDirection = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+      const startDirection = character.direction || 0;
+      const line = createPaintLine(start, thickness);
+      const startTime = performance.now();
+      const duration = Math.max(90, distance * 35);
+      function frame(now) {
+        if (!state.running || !run || run.cancelled) return;
+        const progress = Math.min(1, (now - startTime) / duration);
+        character.position.x = start.x + deltaX * progress;
+        character.position.y = start.y + deltaY * progress;
+        character.direction = normalizeDirection(startDirection + (targetDirection - startDirection) * progress);
+        line.setAttribute("x2", String(character.position.x));
+        line.setAttribute("y2", String(character.position.y));
+        updateCharacterVisual(character);
+        if (progress < 1) {
+          run.frames[character.id] = requestAnimationFrame(frame);
+        } else {
+          character.position.x = end.x;
+          character.position.y = end.y;
+          line.setAttribute("x2", String(end.x));
+          line.setAttribute("y2", String(end.y));
+          segmentIndex += 1;
+          drawSegment();
+        }
+      }
+      run.frames[character.id] = requestAnimationFrame(frame);
+    }
+    drawSegment();
   }
 
   function getCharacterCenter(character) {

@@ -267,7 +267,17 @@
           event.dataTransfer.effectAllowed = "copy";
         });
         item.addEventListener("click", function () {
+          if (item.dataset.touchDragged === "true") {
+            delete item.dataset.touchDragged;
+            return;
+          }
           addCharacter(template.id, 22 + (state.characters.length % 3) * 25, 34 + (state.characters.length % 2) * 25);
+        });
+        addTouchDrag(item, function (event) {
+          const target = document.elementFromPoint(event.clientX, event.clientY);
+          if (!target || !target.closest("#escenario")) return;
+          const bounds = stage.getBoundingClientRect();
+          addCharacter(template.id, Math.max(7, Math.min(93, ((event.clientX - bounds.left) / bounds.width) * 100)), Math.max(12, Math.min(86, ((event.clientY - bounds.top) / bounds.height) * 100)));
         });
         content.appendChild(item);
       });
@@ -280,13 +290,50 @@
       button.innerHTML = "<span>" + action.icon + "</span><strong>" + action.label + "</strong>";
       button.addEventListener("dragstart", function (event) { event.dataTransfer.setData("text/action", type); event.dataTransfer.effectAllowed = "copy"; });
       button.addEventListener("click", function () {
+        if (button.dataset.touchDragged === "true") {
+          delete button.dataset.touchDragged;
+          return;
+        }
         addAction(type);
         $("#simulation-message").textContent = "Bloque " + action.label + " agregado a " + (selectedCharacter() ? selectedCharacter().name : "la secuencia") + ".";
+      });
+      addTouchDrag(button, function (event) {
+        const target = document.elementFromPoint(event.clientX, event.clientY);
+        if (target && (target.closest("#sequence") || target.closest(".stage-action-menu"))) addAction(type);
       });
       content.appendChild(button);
     });
       section.appendChild(content);
       container.appendChild(section);
+    });
+  }
+
+  function addTouchDrag(element, onDrop) {
+    let startX = 0;
+    let startY = 0;
+    let dragging = false;
+    element.addEventListener("pointerdown", function (event) {
+      if (event.pointerType === "mouse") return;
+      startX = event.clientX;
+      startY = event.clientY;
+      dragging = false;
+      element.setPointerCapture(event.pointerId);
+    });
+    element.addEventListener("pointermove", function (event) {
+      if (event.pointerType === "mouse") return;
+      if (Math.hypot(event.clientX - startX, event.clientY - startY) > 8) {
+        dragging = true;
+        event.preventDefault();
+      }
+    });
+    element.addEventListener("pointerup", function (event) {
+      if (event.pointerType === "mouse") return;
+      if (dragging) {
+        element.dataset.touchDragged = "true";
+        onDrop(event);
+        event.preventDefault();
+      }
+      element.releasePointerCapture(event.pointerId);
     });
   }
 
@@ -503,7 +550,7 @@
     prepareSequenceDrop(selectedCharacter() ? selectedCharacter().actions : [], selectedCharacter() ? selectedCharacter().actions.length : 0, event);
   });
   document.addEventListener("click", function (event) {
-    if (event.target.closest("#escenario")) hideCharacterMenu();
+    if (!event.target.closest("#escenario") && !event.target.closest(".stage-action-menu")) hideCharacterMenu();
   });
   $("#execute-program").addEventListener("click", function () {
     hideCharacterMenu();

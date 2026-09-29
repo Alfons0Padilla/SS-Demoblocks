@@ -99,7 +99,70 @@ VALIDACIONES REALIZADAS HOY
 - Se reviso el formato del diff y no se encontraron errores de espacios.
 
 ==================================================
-3. FORMA DE ACTUALIZAR ESTE REPORTE
+3. COMENTARIOS DE REALIZADO PARA JIRA
+==================================================
+
+EP-08 - Interacciones del personaje
+- Agregar comentario: realizado el desarrollo de los bloques Decir, Dibujar
+  corazon y Dibujar estrella como acciones programables del personaje.
+
+HU-15 - Mostrar mensajes
+- Agregar comentario: realizado el campo de texto de maximo 20 caracteres,
+  la duracion configurable y la burbuja de dialogo sobre el personaje.
+- Agregar comentario: validado que la burbuja sigue al personaje, desaparece
+  al terminar el tiempo y permanece visible mientras ejecuta otra accion.
+
+HU-17 - Dibujar figuras con el personaje
+- Agregar comentario: realizado el bloque Dibujar corazon con movimiento,
+  giros, tamano configurable y grosor configurable.
+- Agregar comentario: validado que el corazon se construye con segmentos de
+  linea durante el movimiento del personaje.
+
+HU-18 - Dibujar estrella con el personaje
+- Agregar comentario: realizado el bloque Dibujar estrella de cinco puntas
+  con movimiento, giros, tamano configurable y grosor configurable.
+- Agregar comentario: validado que la estrella se construye con 10 segmentos
+  y que el recorrido queda cerrado.
+
+TA-19 - Agregar duracion y texto al bloque Decir
+- Agregar comentario: realizado y validado el texto editable y la duracion
+  configurable del dialogo.
+
+TA-20 - Renderizar la burbuja sobre el personaje
+- Agregar comentario: realizado y validado el renderizado, seguimiento,
+  desaparicion y limpieza de la burbuja.
+
+TA-21 - Permitir que Decir continue con la siguiente accion
+- Agregar comentario: realizado y validado que Decir no bloquea la secuencia
+  y permite avanzar, girar o dibujar mientras el texto sigue visible.
+
+TA-22 - Implementar el recorrido segmentado del corazon
+- Agregar comentario: realizado y validado el recorrido del corazon mediante
+  segmentos de avance y giro.
+
+TA-23 - Implementar el recorrido segmentado de la estrella
+- Agregar comentario: realizado y validado el recorrido de la estrella
+  mediante 10 segmentos de avance y giro.
+
+TA-24 - Agregar parametros de tamano y grosor a las figuras
+- Agregar comentario: realizado y validado el tamano de 6 a 35 y el grosor
+  de 1 a 30 en corazon y estrella.
+
+TA-25 - Cerrar el recorrido de la estrella
+- Agregar comentario: realizado y validado que el ultimo segmento termina
+  exactamente en el punto inicial.
+
+TA-26 - Validar las figuras y el dialogo en la simulacion
+- Agregar comentario: realizado, se validaron los segmentos del corazon,
+  los 10 segmentos de la estrella, el cierre de la estrella, la burbuja y
+  la ejecucion concurrente del dialogo con otras acciones.
+
+BUG-10 - Estrella sin cierre
+- Agregar comentario: resuelto y validado; la estrella ahora termina
+  exactamente en su punto inicial.
+
+==================================================
+4. FORMA DE ACTUALIZAR ESTE REPORTE
 ==================================================
 
 - Este reporte se actualizara al finalizar cada sesion de trabajo.
@@ -109,7 +172,7 @@ VALIDACIONES REALIZADAS HOY
   se registro el avance.
 
 ==================================================
-4. CLASIFICACION PARA REGISTRAR EN JIRA
+5. CLASIFICACION PARA REGISTRAR EN JIRA
 ==================================================
 
 EPICA
@@ -162,7 +225,7 @@ CRITERIOS DE ACEPTACION
 - La estrella termina exactamente en su punto inicial.
 
 ==================================================
-5. PENDIENTE PARA JIRA
+6. PENDIENTE PARA JIRA
 ==================================================
 
 - Marcar como completadas las historias y tareas relacionadas con las
@@ -174,7 +237,7 @@ CRITERIOS DE ACEPTACION
 - Continuar con pruebas de usabilidad y nuevos bloques programados.
 
 ==================================================
-6. REFERENCIAS DEL PROYECTO
+7. REFERENCIAS DEL PROYECTO
 ==================================================
 
 Repositorio:

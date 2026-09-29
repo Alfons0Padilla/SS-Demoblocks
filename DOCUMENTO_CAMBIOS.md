@@ -304,6 +304,7 @@ RoboBloques debe sentirse como un pequeño editor visual: el usuario ve a sus pe
 - El botón **Detener** se habilita únicamente durante la ejecución; al usarlo, se cancela la animación, se limpian los trazos y el personaje vuelve a su posición y orientación inicial sin ejecutar otra vez el programa.
 - El botón **Ejecutar** inicia al mismo tiempo los programas de todos los personajes que tengan acciones; cada personaje conserva y ejecuta únicamente su propia secuencia.
 - El botón **Reiniciar** se habilita al finalizar o detener la ejecución; al pulsarlo, todos los personajes vuelven a su posición y orientación iniciales y se limpian los trazos.
+- El laboratorio incluye interacción táctil: tocar Robotcito lo agrega al escenario, tocar un bloque lo agrega a la secuencia y los personajes se pueden mover con el dedo.
 - La posición inicial se actualiza cada vez que el usuario arrastra un personaje; ejecutar y detener utilizan esa última posición elegida.
 - El menú del personaje permanece visible al cambiar de pestaña o interactuar con la biblioteca de bloques. Solo se cierra al hacer clic en el espacio del escenario, ejecutar, detener o iniciar un programa nuevo.
 - El movimiento y el giro utilizan interpolación lineal por frame para mantener una velocidad constante y evitar tirones; la duración configurada conserva su relación con el bloque, con una reproducción ligeramente más rápida.

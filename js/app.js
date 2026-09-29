@@ -123,6 +123,10 @@
     state.selectedId = id;
     renderCharacters();
     renderSequence();
+    if (showMenu) {
+      state.menuVisible = true;
+      renderStageMenu();
+    }
     $("#stage-status").textContent = "Programando a " + selectedCharacter().name;
   }
 
@@ -226,7 +230,7 @@
         renderCharacters();
         renderSequence();
       });
-      content.appendChild(item);
+      container.appendChild(item);
     });
   }
 
@@ -257,13 +261,13 @@
         item.className = "character-item character-template";
         item.type = "button";
         item.draggable = true;
-        item.innerHTML = "<img src=\"" + template.image + "\" alt=\"\"><span><strong>" + template.name + "</strong><small>Arrastrar al escenario</small></span><b>＋</b>";
+        item.innerHTML = "<img src=\"" + template.image + "\" alt=\"\"><span><strong>" + template.name + "</strong><small>Arrastra o toca para agregar</small></span><b>＋</b>";
         item.addEventListener("dragstart", function (event) {
           event.dataTransfer.setData("text/character", template.id);
           event.dataTransfer.effectAllowed = "copy";
         });
         item.addEventListener("click", function () {
-          $("#stage-status").textContent = "Arrastra " + template.name + " al escenario para comenzar";
+          addCharacter(template.id, 22 + (state.characters.length % 3) * 25, 34 + (state.characters.length % 2) * 25);
         });
         content.appendChild(item);
       });
@@ -275,7 +279,10 @@
       button.draggable = true;
       button.innerHTML = "<span>" + action.icon + "</span><strong>" + action.label + "</strong>";
       button.addEventListener("dragstart", function (event) { event.dataTransfer.setData("text/action", type); event.dataTransfer.effectAllowed = "copy"; });
-      button.addEventListener("click", function () { addAction(type); });
+      button.addEventListener("click", function () {
+        addAction(type);
+        $("#simulation-message").textContent = "Bloque " + action.label + " agregado a " + (selectedCharacter() ? selectedCharacter().name : "la secuencia") + ".";
+      });
       content.appendChild(button);
     });
       section.appendChild(content);

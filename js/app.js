@@ -26,7 +26,7 @@
     conditions: ["condition"],
     programmed: ["say"]
   };
-  const state = { characters: [], selectedId: null, menuVisible: false, running: false, canReset: false, run: null, activeTab: "characters", openTabs: { characters: true }, draggedSequence: null, touchTargetCollection: null };
+  const state = { characters: [], selectedId: null, menuVisible: false, running: false, canReset: false, run: null, activeTab: "characters", openTabs: { characters: true }, draggedSequence: null, touchTargetCollection: null, touchSelectedSequence: null };
   const stage = document.getElementById("escenario");
   if (!stage) return;
   const $ = function (selector) { return document.querySelector(selector); };
@@ -315,15 +315,6 @@
         }
         $("#simulation-message").textContent = "Bloque " + action.label + " agregado a " + (selectedCharacter() ? selectedCharacter().name : "la secuencia") + ".";
       });
-      addTouchDrag(button, function (event) {
-        const target = document.elementFromPoint(event.clientX, event.clientY);
-        const nestedZone = target && target.closest(".nested-drop-zone");
-        if (nestedZone && nestedZone.sequenceCollection) {
-          addActionToCollection(type, nestedZone.sequenceCollection);
-        } else if (target && (target.closest("#sequence") || target.closest(".stage-action-menu"))) {
-          addAction(type);
-        }
-      });
       content.appendChild(button);
     });
       section.appendChild(content);
@@ -408,6 +399,7 @@
     sourceCollection.splice(sourceIndex, 1);
     if (sourceCollection === targetCollection && sourceIndex < targetIndex) targetIndex -= 1;
     targetCollection.splice(Math.max(0, Math.min(targetIndex, targetCollection.length)), 0, entry);
+    state.touchSelectedSequence = null;
     renderCharacters();
     renderSequence();
   }
@@ -480,6 +472,11 @@
       zone.classList.remove("is-over");
       prepareSequenceDrop(collection, index, event);
     });
+    zone.addEventListener("click", function (event) {
+      if (!state.touchSelectedSequence) return;
+      event.stopPropagation();
+      moveSequenceEntry(state.touchSelectedSequence.entry, state.touchSelectedSequence.collection, collection, index);
+    });
     return zone;
   }
 
@@ -516,14 +513,14 @@
       const targetIndex = collection.indexOf(entry) + (event.clientY >= bounds.top + bounds.height / 2 ? 1 : 0);
       prepareSequenceDrop(collection, targetIndex, event);
     });
-    addTouchDrag(row, function (event) {
-      const target = document.elementFromPoint(event.clientX, event.clientY);
-      const insertZone = target && target.closest(".sequence-insert-zone");
-      const nestedZone = target && target.closest(".nested-drop-zone");
-      if (insertZone && insertZone.sequenceCollection) {
-        moveSequenceEntry(entry, collection, insertZone.sequenceCollection, insertZone.sequenceIndex);
-      } else if (nestedZone && nestedZone.sequenceCollection) {
-        moveSequenceEntry(entry, collection, nestedZone.sequenceCollection, nestedZone.sequenceCollection.length);
+    row.addEventListener("pointerup", function (event) {
+      if (event.pointerType !== "mouse" && !event.target.closest("button, input, .nested-drop-zone")) {
+        state.touchSelectedSequence = { entry: entry, collection: collection };
+        document.querySelectorAll(".sequence-item.is-touch-selected").forEach(function (item) {
+          item.classList.remove("is-touch-selected");
+        });
+        row.classList.add("is-touch-selected");
+        $("#simulation-message").textContent = "Bloque seleccionado. Toca una posición o un bloque contenedor para moverlo.";
       }
     });
     row.innerHTML = "<span class=\"sequence-number\">" + (index + 1) + "</span><span class=\"sequence-icon block-" + action.color + "\">" + action.icon + "</span><div class=\"sequence-item-copy\"><strong>" + action.label + "</strong><small>" + action.detail + "</small></div><button type=\"button\" aria-label=\"Quitar " + action.label + "\">×</button>";
@@ -571,6 +568,11 @@
       inner.sequenceCollection = entry.children;
       inner.innerHTML = "<span>Arrastra acciones dentro de este bloque</span>";
       inner.addEventListener("click", function () {
+        if (state.touchSelectedSequence) {
+          const selected = state.touchSelectedSequence;
+          moveSequenceEntry(selected.entry, selected.collection, entry.children, entry.children.length);
+          return;
+        }
         state.touchTargetCollection = entry.children;
         inner.classList.add("is-selected");
         $("#simulation-message").textContent = "Zona interna seleccionada. Toca un bloque para agregarlo aquí.";

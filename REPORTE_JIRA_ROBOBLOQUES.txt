@@ -109,7 +109,60 @@ VALIDACIONES REALIZADAS HOY
   se registro el avance.
 
 ==================================================
-4. PENDIENTE PARA JIRA
+4. CLASIFICACION PARA REGISTRAR EN JIRA
+==================================================
+
+EPICA
+- Usar una epica para agrupar un objetivo grande que requiera varias
+  historias y tareas.
+- Para los avances de hoy no es necesario crear una epica nueva.
+- Registrar los cambios dentro de EP-08 - Interacciones del personaje,
+  porque Decir, Dibujar corazon y Dibujar estrella son comportamientos
+  programables del personaje.
+- Si el alcance de figuras y dialogos crece hasta convertirse en un
+  modulo independiente, crear una nueva epica, por ejemplo:
+  EP-11 - Acciones creativas del personaje.
+
+HISTORIA DE USUARIO
+- Crear o actualizar HU-15 - Mostrar mensajes:
+  Como estudiante quiero configurar un mensaje y su duracion para que
+  Robotcito lo muestre en una burbuja mientras realiza otras acciones.
+- Crear una nueva historia para las figuras:
+  HU-17 - Dibujar figuras con el personaje:
+  Como estudiante quiero seleccionar una figura, su tamano y grosor para
+  que Robotcito la dibuje avanzando y girando.
+- Si se desea separar las figuras, crear una historia adicional:
+  HU-18 - Dibujar estrella con el personaje.
+
+TASK TECNICA
+- Crear TA-19 - Agregar duracion y texto al bloque Decir.
+- Crear TA-20 - Renderizar la burbuja sobre el personaje.
+- Crear TA-21 - Permitir que Decir se ejecute en paralelo con la siguiente
+  accion.
+- Crear TA-22 - Implementar el recorrido segmentado del corazon.
+- Crear TA-23 - Implementar el recorrido segmentado de la estrella.
+- Crear TA-24 - Agregar parametros de tamano y grosor a las figuras.
+- Crear TA-25 - Cerrar el recorrido de la estrella en el punto inicial.
+- Crear TA-26 - Validar las figuras y el dialogo en la simulacion.
+
+BUG
+- No es necesario registrar como bug la estrella abierta porque ya fue
+  corregida. Si se desea conservar el historial, registrar BUG-10 -
+  Estrella sin cierre y marcarlo como resuelto.
+- Registrar un nuevo bug solamente si una prueba posterior vuelve a mostrar
+  una separacion, un salto del personaje o una burbuja mal posicionada.
+
+CRITERIOS DE ACEPTACION
+- Decir limita el texto a 20 caracteres.
+- Decir permite configurar la duracion en segundos.
+- La burbuja aparece sobre el personaje y lo sigue durante el movimiento.
+- Decir no detiene la siguiente accion de la secuencia.
+- Corazon y estrella se dibujan con movimiento del personaje.
+- Las figuras permiten configurar tamano y grosor.
+- La estrella termina exactamente en su punto inicial.
+
+==================================================
+5. PENDIENTE PARA JIRA
 ==================================================
 
 - Marcar como completadas las historias y tareas relacionadas con las
@@ -121,7 +174,7 @@ VALIDACIONES REALIZADAS HOY
 - Continuar con pruebas de usabilidad y nuevos bloques programados.
 
 ==================================================
-5. REFERENCIAS DEL PROYECTO
+6. REFERENCIAS DEL PROYECTO
 ==================================================
 
 Repositorio:

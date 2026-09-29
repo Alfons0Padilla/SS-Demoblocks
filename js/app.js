@@ -26,7 +26,7 @@
     conditions: ["condition"],
     programmed: ["say"]
   };
-  const state = { characters: [], selectedId: null, menuVisible: false, running: false, canReset: false, run: null, activeTab: "characters", openTabs: { characters: true }, draggedSequence: null };
+  const state = { characters: [], selectedId: null, menuVisible: false, running: false, canReset: false, run: null, activeTab: "characters", openTabs: { characters: true }, draggedSequence: null, touchTargetCollection: null };
   const stage = document.getElementById("escenario");
   if (!stage) return;
   const $ = function (selector) { return document.querySelector(selector); };
@@ -307,12 +307,22 @@
           delete button.dataset.touchDragged;
           return;
         }
-        addAction(type);
+        if (state.touchTargetCollection) {
+          addActionToCollection(type, state.touchTargetCollection);
+          state.touchTargetCollection = null;
+        } else {
+          addAction(type);
+        }
         $("#simulation-message").textContent = "Bloque " + action.label + " agregado a " + (selectedCharacter() ? selectedCharacter().name : "la secuencia") + ".";
       });
       addTouchDrag(button, function (event) {
         const target = document.elementFromPoint(event.clientX, event.clientY);
-        if (target && (target.closest("#sequence") || target.closest(".stage-action-menu"))) addAction(type);
+        const nestedZone = target && target.closest(".nested-drop-zone");
+        if (nestedZone && nestedZone.sequenceCollection) {
+          addActionToCollection(type, nestedZone.sequenceCollection);
+        } else if (target && (target.closest("#sequence") || target.closest(".stage-action-menu"))) {
+          addAction(type);
+        }
       });
       content.appendChild(button);
     });
@@ -327,6 +337,7 @@
     let dragging = false;
     element.addEventListener("pointerdown", function (event) {
       if (event.pointerType === "mouse") return;
+      if (event.target.closest("button, input")) return;
       startX = event.clientX;
       startY = event.clientY;
       dragging = false;
@@ -337,6 +348,20 @@
       if (Math.hypot(event.clientX - startX, event.clientY - startY) > 8) {
         dragging = true;
         event.preventDefault();
+      }
+
+      function addActionToCollection(type, collection) {
+        const character = selectedCharacter();
+        if (!character || state.running || !actionCatalog[type] || !collection) return;
+        const entry = { type: type, children: [] };
+        if (actionCatalog[type].duration) entry.duration = 1;
+        if (actionCatalog[type].degrees) entry.degrees = 90;
+        if (type === "forwardPaint") entry.thickness = 4;
+        if (type === "loop") entry.repetitions = 2;
+        collection.push(entry);
+        renderCharacters();
+        renderSequence();
+        $("#simulation-message").textContent = "Bloque " + actionCatalog[type].label + " agregado dentro del bloque.";
       }
     });
     element.addEventListener("pointerup", function (event) {
@@ -432,6 +457,8 @@
   function createSequenceInsertZone(collection, index) {
     const zone = document.createElement("div");
     zone.className = "sequence-insert-zone";
+    zone.sequenceCollection = collection;
+    zone.sequenceIndex = index;
     zone.setAttribute("aria-label", "Soltar acción aquí");
     zone.addEventListener("dragover", function (event) {
       if (event.dataTransfer.types.indexOf("text/sequence") !== -1 || event.dataTransfer.types.indexOf("text/action") !== -1) {
@@ -481,6 +508,16 @@
       const targetIndex = collection.indexOf(entry) + (event.clientY >= bounds.top + bounds.height / 2 ? 1 : 0);
       prepareSequenceDrop(collection, targetIndex, event);
     });
+    addTouchDrag(row, function (event) {
+      const target = document.elementFromPoint(event.clientX, event.clientY);
+      const insertZone = target && target.closest(".sequence-insert-zone");
+      const nestedZone = target && target.closest(".nested-drop-zone");
+      if (insertZone && insertZone.sequenceCollection) {
+        moveSequenceEntry(entry, collection, insertZone.sequenceCollection, insertZone.sequenceIndex);
+      } else if (nestedZone && nestedZone.sequenceCollection) {
+        moveSequenceEntry(entry, collection, nestedZone.sequenceCollection, nestedZone.sequenceCollection.length);
+      }
+    });
     row.innerHTML = "<span class=\"sequence-number\">" + (index + 1) + "</span><span class=\"sequence-icon block-" + action.color + "\">" + action.icon + "</span><div class=\"sequence-item-copy\"><strong>" + action.label + "</strong><small>" + action.detail + "</small></div><button type=\"button\" aria-label=\"Quitar " + action.label + "\">×</button>";
     const copy = row.querySelector(".sequence-item-copy");
     const parameters = [];
@@ -523,7 +560,13 @@
     if (action.container) {
       const inner = document.createElement("div");
       inner.className = "nested-drop-zone";
+      inner.sequenceCollection = entry.children;
       inner.innerHTML = "<span>Arrastra acciones dentro de este bloque</span>";
+      inner.addEventListener("click", function () {
+        state.touchTargetCollection = entry.children;
+        inner.classList.add("is-selected");
+        $("#simulation-message").textContent = "Zona interna seleccionada. Toca un bloque para agregarlo aquí.";
+      });
       inner.addEventListener("dragover", function (event) {
         if (event.dataTransfer.types.indexOf("text/sequence") !== -1 || event.dataTransfer.types.indexOf("text/action") !== -1) {
           event.preventDefault();

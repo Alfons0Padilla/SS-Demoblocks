@@ -567,7 +567,8 @@
       inner.className = "nested-drop-zone";
       inner.sequenceCollection = entry.children;
       inner.innerHTML = "<span>Arrastra acciones dentro de este bloque</span>";
-      inner.addEventListener("click", function () {
+      inner.addEventListener("click", function (event) {
+        if (event.target.closest(".sequence-insert-zone, .sequence-item")) return;
         if (state.touchSelectedSequence) {
           const selected = state.touchSelectedSequence;
           moveSequenceEntry(selected.entry, selected.collection, entry.children, entry.children.length);

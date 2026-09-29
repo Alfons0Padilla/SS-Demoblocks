@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#5b5ce2">
+  <title>RoboBloques | Laboratorio creativo</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="RoboBloques, ir al inicio">
+        <span class="brand-mark"><img src="Recursos/Anikka.png" alt="Anikka"></span>
+        <span><strong>RoboBloques</strong><small>Programa, prueba y crea</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-link">Inicio</a>
+        <a href="curso.html" class="nav-link">Curso guiado</a>
+        <a href="sandbox.html" class="nav-link is-active">Laboratorio</a>
+      </nav>
+      <div class="topbar-badge"><span class="status-dot"></span> Modo simulación</div>
+    </header>
+
+    <main class="workspace-page">
+      <section class="workspace-heading" aria-labelledby="workspace-title">
+        <div>
+          <span class="eyebrow">Laboratorio creativo</span>
+          <h1 id="workspace-title">Crea tu propia <span>aventura</span></h1>
+          <p>Selecciona un personaje, agrega acciones y observa cómo las realiza en el escenario.</p>
+        </div>
+        <div class="workspace-actions">
+          <button class="button button-primary" id="execute-program" type="button">▶ Ejecutar</button>
+          <button class="button button-stop" id="stop-program" type="button" disabled>■ Detener</button>
+          <button class="button button-restart" id="restart-program" type="button" disabled>↻ Reiniciar</button>
+        </div>
+      </section>
+
+      <section class="workspace-layout" aria-label="Espacio de programación">
+        <section class="program-panel" id="biblioteca" aria-labelledby="program-title">
+          <div class="program-panel-heading">
+            <div><span class="eyebrow">Biblioteca</span><h2 id="program-title">Bloques</h2></div>
+          </div>
+          <div class="program-content">
+            <div class="block-library" aria-label="Bloques disponibles">
+              <div class="action-buttons" id="action-buttons"></div>
+            </div>
+          </div>
+        </section>
+        <div class="stage-column">
+          <div class="stage-toolbar"><div><strong>Escenario</strong><span id="stage-status">Selecciona un personaje para comenzar</span></div><span class="stage-counter" id="stage-counter">0 personajes</span></div>
+          <div class="stage" id="escenario" aria-label="Escenario de simulación"><svg class="paint-layer" id="paint-layer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+          <p class="simulation-message" id="simulation-message" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="sequence-panel" id="programa" aria-labelledby="sequence-title">
+        <div class="sequence-panel-heading">
+          <div><span class="eyebrow">Programación del personaje</span><h2 id="sequence-title">Secuencia de acciones</h2></div>
+          <div class="sequence-character-actions">
+            <span class="sequence-character" id="sequence-character">Selecciona un personaje</span>
+            <button class="delete-character-button" id="delete-character" type="button" disabled>🗑 Borrar personaje</button>
+          </div>
+        </div>
+        <div class="sequence" id="sequence" aria-label="Secuencia de acciones"></div>
+      </section>
+    </main>
+    <footer><span>RoboBloques</span> · Aprende, prueba y crea <span aria-hidden="true">✨</span></footer>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

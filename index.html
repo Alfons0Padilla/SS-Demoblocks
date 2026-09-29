@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#5b5ce2">
+  <title>RoboBloques | Inicio</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="RoboBloques, ir al inicio">
+        <span class="brand-mark"><img src="Recursos/Anikka.png" alt="Anikka"></span>
+        <span><strong>RoboBloques</strong><small>Programa, prueba y crea</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a href="index.html" class="nav-link is-active">Inicio</a>
+        <a href="curso.html" class="nav-link">Curso guiado</a>
+        <a href="sandbox.html" class="nav-link">Laboratorio</a>
+      </nav>
+      <div class="topbar-badge"><span class="status-dot"></span> Modo simulación</div>
+    </header>
+
+    <main>
+      <section class="hero home-hero" aria-labelledby="home-title">
+        <div class="hero-copy">
+          <span class="eyebrow">Aprendizaje creativo</span>
+          <h1 id="home-title">Bienvenido a <span>RoboBloques</span></h1>
+          <p class="home-helper">Aprende a programar personajes usando bloques visuales, retos guiados y simulaciones interactivas.</p>
+        </div>
+        <div class="hero-robot" aria-hidden="true">
+          <div class="hero-shadow"></div>
+          <div class="robot-face"><img src="Recursos/robotcito.png" alt=""></div>
+          <span class="spark spark-one">✦</span>
+          <span class="spark spark-two">✦</span>
+        </div>
+      </section>
+
+      <section aria-labelledby="options-title">
+        <div class="section-heading home-section-heading">
+          <div><span class="eyebrow">Elige tu experiencia</span><h2 id="options-title">¿Qué quieres hacer?</h2></div>
+        </div>
+        <div class="entry-grid">
+          <article class="entry-card entry-card-course">
+            <div class="card-icon"><img src="Recursos/libro.png" alt=""></div>
+            <div>
+              <span class="card-label">Ruta paso a paso</span>
+              <h3>Curso guiado</h3>
+              <p>Completa la misión “Primer movimiento” y aprende a construir tu primer programa.</p>
+              <a class="card-action" href="curso.html">Comenzar curso <b>→</b></a>
+            </div>
+          </article>
+          <article class="entry-card entry-card-sandbox">
+            <div class="card-icon"><img src="Recursos/Cubo.png" alt=""></div>
+            <div>
+              <span class="card-label">Experimentación libre</span>
+              <h3>Laboratorio creativo</h3>
+              <p>Selecciona personajes, agrega bloques y observa tus programas en el escenario.</p>
+              <a class="card-action" href="sandbox.html">Abrir laboratorio <b>→</b></a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="status-panel home-status" aria-label="Estado de la plataforma">
+        <div class="status-illustration"><img src="Recursos/Eva.png" alt=""></div>
+        <div class="status-copy">
+          <span class="card-label">Estado del espacio</span>
+          <h3>Todo listo para aprender</h3>
+          <p>La simulación funciona localmente y no necesita conexión con un robot.</p>
+        </div>
+        <span class="connection-status">● Disponible</span>
+      </section>
+    </main>
+    <footer><span>RoboBloques</span> · Aprende, prueba y crea <span aria-hidden="true">✨</span></footer>
+  </div>
+</body>
+</html>

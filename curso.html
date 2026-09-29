@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#5b5ce2">
+  <title>RoboBloques | Curso guiado</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="RoboBloques, ir al inicio"><span class="brand-mark"><img src="Recursos/Anikka.png" alt="Anikka"></span><span><strong>RoboBloques</strong></span></a>
+      <nav class="main-nav" aria-label="Navegación principal"><a href="index.html" class="nav-link">Inicio</a><a href="curso.html" class="nav-link is-active">Curso guiado</a><a href="sandbox.html" class="nav-link">Laboratorio</a></nav>
+      <div class="topbar-badge"><span class="status-dot"></span> Modo simulación</div>
+    </header>
+    <main>
+      <section aria-labelledby="curso-title">
+        <div class="page-header"><div><span class="eyebrow">Curso guiado · Misión 1</span><h1 id="curso-title">Primer movimiento</h1><p>Tu primera misión es enseñar al carrito a avanzar.</p></div><span class="progress-badge">⭐ 1 de 1 lección</span></div>
+        <div class="lesson-layout">
+          <aside class="lesson-sidebar"><div class="lesson-progress"><div class="progress-top"><span>Tu progreso</span><strong>0%</strong></div><div class="progress-track"><span style="width: 8%"></span></div></div><div class="lesson-list"><span class="list-title">Misiones</span><div class="lesson-item is-current"><span>1</span><div><strong>Primer movimiento</strong><small>En curso</small></div><b>›</b></div><div class="lesson-item is-locked"><span>2</span><div><strong>Próximamente</strong><small>Bloqueada</small></div><b>🔒</b></div></div><div class="tip-box"><span>💡</span><p>Junta los bloques como piezas de un rompecabezas.</p></div></aside>
+          <div class="lesson-content">
+            <div class="lesson-intro"><div class="lesson-number">01</div><div><h2>Haz que avance</h2><p>Usa el bloque <strong>Avanzar</strong> para mover el carrito.</p></div></div>
+            <div class="challenge-card"><div class="challenge-icon">🎯</div><div><strong>Tu reto</strong><p>Elige un bloque, colócalo en el área y pulsa ejecutar.</p></div></div>
+            <div class="lesson-block-picker"><div><strong>1. Elige un bloque</strong><small>Haz clic o arrástralo</small></div><div class="lesson-blocks" id="lesson-blocks" aria-label="Bloques para la lección"></div></div>
+            <div class="block-workspace lesson-workspace"><div class="workspace-label"><span>2. Arma tu programa</span><small>Arrastra aquí</small></div><div class="lesson-drop-zone" id="lesson-drop-zone" tabindex="0"><div class="empty-program"><span class="plus-icon">＋</span><p>Suelta aquí tu bloque<br><small>o tócalo para añadirlo</small></p></div></div><div class="workspace-placeholder">Zona preparada para Blockly</div></div>
+            <div class="lesson-actions"><button class="button button-primary execute-button" type="button">▶ Ejecutar simulación</button><a class="button button-quiet" href="sandbox.html">Ver todos los bloques</a></div><p class="simulation-message" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer><span>RoboBloques</span> · Aprende, prueba y crea <span aria-hidden="true">✨</span></footer>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

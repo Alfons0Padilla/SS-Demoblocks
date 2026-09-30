@@ -243,7 +243,25 @@ CRITERIOS DE ACEPTACION
 - Continuar con pruebas de usabilidad y nuevos bloques programados.
 
 ==================================================
-7. REFERENCIAS DEL PROYECTO
+7. CAMBIOS REALIZADOS PARA EJECUCION, DETENCION Y REINICIO
+==================================================
+
+- Se modifico el boton Detener para pausar la ejecucion en la posicion
+  actual del personaje, sin regresarlo a su posicion inicial.
+- Se cancelaron las animaciones pendientes al detener para evitar que la
+  ejecucion continue despues de la pausa.
+- Al detener la simulacion se habilitan los botones Ejecutar y Reiniciar.
+- Ejecutar despues de detener restaura las posiciones iniciales y comienza
+  nuevamente la ejecucion desde el principio.
+- Reiniciar restaura la posicion y orientacion originales, elimina los
+  trazos del escenario y deja la simulacion detenida, sin ejecutarla.
+- Se actualizaron las validaciones del reporte para comprobar los tres
+  comportamientos.
+- Los cambios se publicaron en la rama main del repositorio mediante el
+  commit cde25ec.
+
+==================================================
+8. REFERENCIAS DEL PROYECTO
 ==================================================
 
 Repositorio:

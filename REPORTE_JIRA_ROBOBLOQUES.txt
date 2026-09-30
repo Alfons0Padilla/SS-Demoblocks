@@ -42,7 +42,10 @@ EJECUCION Y SIMULACION
 - Se pueden ejecutar las acciones del personaje en orden.
 - Se pueden ejecutar al mismo tiempo los programas de varios personajes.
 - Se implementaron los botones Ejecutar, Detener y Reiniciar.
-- Detener cancela las animaciones y permite reiniciar el programa.
+- Detener pausa la ejecucion en la posicion actual sin regresar al inicio.
+- Al detener, Ejecutar queda habilitado para comenzar nuevamente desde el inicio.
+- Al detener, Reiniciar queda habilitado para restaurar la posicion original
+  y dejar el escenario detenido, sin ejecutar.
 - Reiniciar devuelve los personajes a su posicion y orientacion iniciales.
 - Se implemento el movimiento interpolado por frames.
 - Se implementaron los giros, la espera y el bloque Detener.
@@ -95,6 +98,9 @@ VALIDACIONES REALIZADAS HOY
 - Se verifico que la burbuja de Decir aparece sobre el personaje.
 - Se verifico que la burbuja desaparece despues del tiempo configurado.
 - Se verifico que Decir puede permanecer visible mientras se dibuja una figura.
+- Se verifico que Detener mantiene la posicion actual del personaje.
+- Se verifico que Ejecutar despues de detener inicia desde la posicion original.
+- Se verifico que Reiniciar restaura la posicion original sin ejecutar.
 - Se revisaron los problemas del archivo JavaScript y no se encontraron errores.
 - Se reviso el formato del diff y no se encontraron errores de espacios.
 

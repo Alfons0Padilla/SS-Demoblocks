@@ -53,9 +53,9 @@
       Object.keys(state.run.speechTimers || {}).forEach(function (id) {
         clearTimeout(state.run.speechTimers[id]);
       });
-      stage.querySelectorAll(".speech-bubble").forEach(function (bubble) { bubble.remove(); });
       state.run = null;
     }
+    stage.querySelectorAll(".speech-bubble").forEach(function (bubble) { bubble.remove(); });
     state.characters.forEach(function (item) {
       item.position = Object.assign({}, item.initialPosition);
       item.direction = item.initialDirection;
@@ -737,9 +737,20 @@
   });
   $("#stop-program").addEventListener("click", function () {
     hideCharacterMenu();
-    resetExecution();
+    state.running = false;
+    if (state.run) {
+      state.run.cancelled = true;
+      Object.keys(state.run.frames).forEach(function (id) {
+        if (state.run.frames[id]) cancelAnimationFrame(state.run.frames[id]);
+      });
+      Object.keys(state.run.speechTimers || {}).forEach(function (id) {
+        clearTimeout(state.run.speechTimers[id]);
+      });
+      state.run = null;
+    }
     state.canReset = true;
     setExecutionControls(false);
+    renderCharacters();
     $("#simulation-message").textContent = "⏹ Simulación detenida.";
   });
   $("#restart-program").addEventListener("click", function () {

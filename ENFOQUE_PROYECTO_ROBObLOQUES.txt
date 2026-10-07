@@ -1,0 +1,248 @@
+ROBOBLOQUES
+ENFOQUE Y ALCANCE DEL PROYECTO
+Actualizado: 2026-10-06
+
+1. VISION DEL PROYECTO
+----------------------
+
+RoboBloques sera una plataforma web educativa para introducir a ninos en la
+programacion visual y el pensamiento computacional mediante bloques.
+
+El proyecto no incluira robot fisico, sensores, hardware ni base de datos
+remota. El producto se concentrara en dos espacios principales:
+
+- Curso guiado de programacion basica.
+- Laboratorio creativo o sandbox para crear proyectos libres.
+
+La meta es entregar una experiencia educativa completa, visual, progresiva y
+motivadora; no solamente una coleccion de ejercicios para mover un personaje.
+
+
+2. PUBLICO Y OBJETIVOS
+----------------------
+
+Publico principal:
+- Ninos que tienen su primer acercamiento a la programacion.
+- Edad inicial sugerida: 8 a 12 anos, ajustable mediante pruebas.
+
+Objetivo general:
+Ensenar conceptos basicos de programacion mediante actividades interactivas
+que permitan aprender, practicar, corregir errores y crear proyectos propios.
+
+Habilidades que debe desarrollar el usuario:
+- Pensamiento secuencial.
+- Orientacion y planificacion.
+- Reconocimiento de patrones.
+- Repeticion y optimizacion.
+- Depuracion de errores.
+- Creatividad y expresion mediante codigo.
+- Autonomia para resolver retos.
+
+
+3. ESTRUCTURA EDUCATIVA PROPUESTA
+----------------------------------
+
+El curso tendra 6 modulos y aproximadamente 25 a 30 misiones. La cantidad
+final podra ajustarse despues de probar la dificultad y duracion con usuarios.
+
+MODULO 1 - Primeros pasos
+Conceptos: secuencias, movimiento, giros, espera y errores sencillos.
+Cantidad sugerida: 5 misiones.
+
+MODULO 2 - Recorridos y orientacion
+Conceptos: rutas, metas, laberintos, giros y soluciones eficientes.
+Cantidad sugerida: 5 misiones.
+
+MODULO 3 - Repeticiones
+Conceptos: bloque Repetir, patrones, reduccion de bloques y optimizacion.
+Cantidad sugerida: 5 misiones.
+
+MODULO 4 - Dibujar con codigo
+Conceptos: desplazamiento con trazo, figuras, giros y creacion visual.
+Cantidad sugerida: 5 misiones.
+
+MODULO 5 - Historias y eventos
+Conceptos: mensajes, esperas, movimiento, escenas y pequenas historias.
+Cantidad sugerida: 5 misiones.
+
+MODULO 6 - Proyecto final
+Etapas: elegir una idea, planificar, programar, agregar elementos creativos,
+probar, corregir y presentar una aventura propia.
+Cantidad sugerida: 5 a 7 actividades o misiones.
+
+Estado actual de implementacion:
+- Modulo 1 y Modulo 2 ya cuentan con cinco misiones cada uno.
+- Se incluyen misiones guiadas, de comprension, correccion de errores,
+  creativas y retos abiertos.
+- Las misiones de error comienzan con un programa incorrecto que el usuario
+  debe corregir reordenando, quitando o agregando bloques.
+- Las misiones creativas y abiertas se validan mediante requisitos, no por una
+  unica secuencia.
+
+La progresion debe ir de ejercicios con solucion esperada hacia retos abiertos
+con multiples soluciones.
+
+
+4. TIPOS DE ACTIVIDADES
+-----------------------
+
+Misiones guiadas:
+- Tienen una secuencia o conjunto de requisitos esperado.
+- Introducen conceptos nuevos paso a paso.
+- Usan bloques limitados para evitar sobrecargar al usuario.
+
+Misiones de depuracion:
+- Presentan un programa con un error.
+- El usuario debe encontrar, quitar, cambiar o reordenar bloques.
+- Deben ensenar que equivocarse y corregir forma parte de programar.
+
+Retos abiertos:
+- Permiten diferentes soluciones correctas.
+- Evalua requisitos, no una unica secuencia.
+- Se enfocan en creatividad, historias, dibujos y proyectos.
+
+
+5. AYUDA PROGRESIVA
+--------------------
+
+La ayuda debe disminuir gradualmente:
+
+- Inicio del curso: overlay visual paso a paso, explicacion de bloques,
+  animaciones y mensajes claros.
+- Al entrar a un modulo nuevo: guia de bienvenida con el objetivo y el tipo de
+  reto que se trabajara.
+- La primera vez que aparece un bloque nuevo: explicacion contextual de lo que
+  hace y como puede combinarse.
+- Modulos intermedios: ejemplos breves y pistas opcionales.
+- Modulos avanzados: solo objetivos, retroalimentacion y boton de pista.
+- Proyecto final: sin solucion predeterminada, lista de requisitos y ayuda bajo
+  demanda.
+
+La interfaz debe ser visual y amigable para ninos. No se debe oscurecer toda
+la pantalla ni bloquear innecesariamente el area de trabajo.
+
+
+6. PROGRESO, PERFILES Y EVALUACION
+-----------------------------------
+
+Se implementaran perfiles locales, sin servidor ni base de datos:
+
+- Nombre o alias.
+- Avatar.
+- Misiones completadas.
+- Modulo actual.
+- Porcentaje general.
+- Estrellas obtenidas.
+- Logros desbloqueados.
+- Ultimo acceso o ultimo proyecto.
+- Opcion para cambiar de perfil y reiniciar progreso.
+
+La persistencia se realizara con localStorage y debera separarse por perfil.
+
+Evaluacion motivadora:
+- 1 estrella: completa la mision.
+- 2 estrellas: la completa con una solucion eficiente.
+- 3 estrellas: cumple condiciones adicionales de eficiencia o creatividad.
+
+La evaluacion no debe castigar excesivamente ni impedir que el usuario siga
+aprendiendo.
+
+
+7. LABORATORIO CREATIVO
+-----------------------
+
+El sandbox sera un espacio libre independiente del progreso obligatorio del
+curso. Debe permitir:
+
+- Crear y programar personajes.
+- Ejecutar todos los personajes.
+- Ejecutar, detener, pausar y reiniciar.
+- Resaltar el bloque que se esta ejecutando.
+- Guardar y cargar proyectos localmente.
+- Exportar e importar proyectos en formato JSON.
+- Crear historias, recorridos y dibujos.
+
+El laboratorio debe estar disponible desde el inicio y funcionar como espacio
+de exploracion despues o durante el curso.
+
+
+8. FUNCIONES DIFERENCIADORAS
+----------------------------
+
+Prioridad alta:
+- Arquitectura del curso basada en modulos y misiones configurables.
+- Perfiles y progreso local.
+- Estrellas y logros.
+- Misiones de depuracion.
+- Guardar, cargar y exportar proyectos.
+- Ayuda progresiva.
+- Retroalimentacion clara al ejecutar.
+
+Prioridad media:
+- Pausar y continuar ejecuciones.
+- Resaltado del bloque activo.
+- Panel visual de progreso.
+- Fondos o escenarios personalizables.
+- Mas personajes.
+
+Prioridad posterior:
+- Grabacion de la ejecucion y descarga en formato WebM.
+- Exportacion conjunta de video y proyecto.
+- Reto diario.
+- Editor de niveles.
+- Compartir proyectos mediante archivos.
+
+La grabacion de video debe implementarse solo despues de estabilizar la
+ejecucion del sandbox y el guardado de proyectos. Podra utilizar
+MediaRecorder y un canvas o una captura controlada del escenario.
+
+
+9. ORDEN DE DESARROLLO
+----------------------
+
+1. Refactorizar el curso para soportar modulos y misiones.
+2. Crear perfiles y progreso local.
+3. Completar los modulos de secuencias, recorridos, repeticiones y dibujo.
+4. Incorporar misiones de depuracion.
+5. Mejorar el sandbox para guardar y cargar proyectos.
+6. Agregar estrellas, logros y panel de progreso.
+7. Implementar exportacion e importacion JSON.
+8. Implementar grabacion y descarga de ejecuciones.
+9. Cerrar documentacion, pruebas, accesibilidad y validacion responsive.
+
+Cada etapa debe validarse antes de ampliar la siguiente para evitar que el
+curso crezca sin una base estable.
+
+
+10. DOCUMENTACION DE ENTREGA
+----------------------------
+
+El proyecto debe incluir:
+
+- Documento de objetivos, alcance y limitaciones.
+- Documento pedagogico con la progresion de aprendizaje.
+- Documento tecnico de arquitectura y persistencia.
+- Manual de usuario.
+- Plan y evidencias de pruebas.
+- Reporte de avances y decisiones.
+
+La documentacion debe indicar explicitamente que RoboBloques funciona sin robot
+fisico y sin base de datos remota, utilizando persistencia local cuando sea
+necesario.
+
+
+11. CRITERIO DE EXITO
+---------------------
+
+RoboBloques se considerara una entrega solida cuando un nino pueda:
+
+1. Aprender los conceptos iniciales con ayuda visual.
+2. Resolver misiones con una dificultad progresiva.
+3. Encontrar y corregir errores.
+4. Ver y conservar su progreso.
+5. Crear una historia, dibujo o aventura propia.
+6. Guardar o exportar su creacion.
+7. Utilizar el sandbox sin depender de una unica solucion.
+
+El resultado esperado es una plataforma web educativa de programacion visual,
+con curso, practica, creatividad, evaluacion y proyecto final.

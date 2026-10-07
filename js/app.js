@@ -2,18 +2,17 @@
   "use strict";
 
   const actionCatalog = {
-    forward: { label: "Avanzar", icon: "⬆️", color: "movement", detail: "Mover hacia adelante", tab: "movement" },
-    backward: { label: "Retroceder", icon: "⬇️", color: "movement", detail: "Mover hacia atrás", tab: "movement" },
-    left: { label: "Girar izquierda", icon: "↶", color: "movement", detail: "Girar por grados", tab: "movement", degrees: true },
-    right: { label: "Girar derecha", icon: "↷", color: "movement", detail: "Girar por grados", tab: "movement", degrees: true },
-    stop: { label: "Detener", icon: "⏹️", color: "control", detail: "Parar el personaje", tab: "control" },
-    wait: { label: "Esperar", icon: "⏱️", color: "control", detail: "Esperar un momento", tab: "control", duration: true },
-    loop: { label: "Repetir", icon: "🔁", color: "loop", detail: "Contenedor para repetir acciones", tab: "loops", container: true },
-    forwardPaint: { label: "Avanzar y pintar", icon: "🖌️", color: "paint", detail: "Avanzar dejando una línea", tab: "paint", duration: true, thickness: true },
-    condition: { label: "Si", icon: "🔀", color: "condition", detail: "Comprobar una condición", tab: "conditions", container: true },
-    say: { label: "Decir", icon: "💬", color: "programmed", detail: "Mostrar un mensaje", tab: "programmed", duration: true },
-    heart: { label: "Dibujar corazón", icon: "❤️", color: "programmed", detail: "Avanzar y girar dibujando", tab: "programmed", shape: "heart", thickness: true },
-    star: { label: "Dibujar estrella", icon: "⭐", color: "programmed", detail: "Avanzar y girar dibujando", tab: "programmed", shape: "star", thickness: true }
+    forward: { label: "Avanzar", icon: "\u2B06\uFE0F", color: "movement", detail: "Mover hacia adelante", tab: "movement" },
+    backward: { label: "Retroceder", icon: "\u2B07\uFE0F", color: "movement", detail: "Mover hacia atrás", tab: "movement" },
+    left: { label: "Girar izquierda", icon: "\u21B6", color: "movement", detail: "Girar por grados", tab: "movement", degrees: true },
+    right: { label: "Girar derecha", icon: "\u21B7", color: "movement", detail: "Girar por grados", tab: "movement", degrees: true },
+    stop: { label: "Detener", icon: "\u23F9\uFE0F", color: "control", detail: "Parar el personaje", tab: "control" },
+    wait: { label: "Esperar", icon: "\u23F1\uFE0F", color: "control", detail: "Esperar un momento", tab: "control", duration: true },
+    loop: { label: "Repetir", icon: "\uD83D\uDD01", color: "loop", detail: "Contenedor para repetir acciones", tab: "loops", container: true },
+    forwardPaint: { label: "Avanzar y pintar", icon: "\uD83D\uDD8C\uFE0F", color: "paint", detail: "Avanzar dejando una línea", tab: "paint", duration: true, thickness: true },
+    say: { label: "Decir", icon: "\uD83D\uDCAC", color: "programmed", detail: "Mostrar un mensaje", tab: "programmed", duration: true },
+    heart: { label: "Dibujar corazón", icon: "\u2764\uFE0F", color: "programmed", detail: "Avanzar y girar dibujando", tab: "programmed", shape: "heart", thickness: true },
+    star: { label: "Dibujar estrella", icon: "\u2B50", color: "programmed", detail: "Avanzar y girar dibujando", tab: "programmed", shape: "star", thickness: true }
   };
   ["forward", "backward"].forEach(function (type) { actionCatalog[type].duration = true; });
   const characterCatalog = [
@@ -25,13 +24,114 @@
     paint: ["forwardPaint"],
     loops: ["loop"],
     control: ["stop", "wait"],
-    conditions: ["condition"],
     programmed: ["say", "heart", "star"]
   };
   const state = { characters: [], selectedId: null, menuVisible: false, running: false, canReset: false, run: null, activeTab: "characters", openTabs: { characters: true }, draggedSequence: null, touchTargetCollection: null, touchSelectedSequence: null };
-  const stage = document.getElementById("escenario");
-  if (!stage) return;
   const $ = function (selector) { return document.querySelector(selector); };
+  function initCourse() {
+    const picker = $("#lesson-blocks");
+    const dropZone = $("#lesson-drop-zone");
+    const executeButton = document.querySelector(".execute-button");
+    const stopButton = document.querySelector(".stop-lesson-button");
+    const restartButton = document.querySelector(".restart-lesson-button");
+    const hintButton = document.querySelector(".hint-button");
+    const hintBubble = document.querySelector("#lesson-hint");
+    const hintText = document.querySelector("#lesson-hint-text");
+    const previousMissionButton = document.querySelector("#previous-mission");
+    const nextMissionButton = document.querySelector("#next-mission");
+    const missionNavigationStatus = document.querySelector("#mission-navigation-status");
+    const character = $("#lesson-character");
+    const stage = document.querySelector(".lesson-stage");
+    const success = $("#lesson-success");
+    const guide = $("#lesson-guide");
+    const missions = [
+      { module: 1, kind: "guided", name: "Primer movimiento", title: "Haz que avance", objective: "Usa una instrucción para cambiar el movimiento de Robotcito.", target: "Haz que Robotcito avance.", blocks: ["forward"], sequence: ["forward"], hint: "Prueba el bloque disponible y observa el resultado.", guide: [{ icon: "👀", title: "Mira el escenario", text: "Aquí verás a Robotcito moverse." }, { icon: "🧩", title: "Conoce Avanzar", text: "Avanzar hace que Robotcito camine hacia adelante." }, { icon: "👆", title: "Elige un bloque", text: "Toca Avanzar para añadirlo al programa." }, { icon: "🧱", title: "Arma tu programa", text: "Los bloques forman las instrucciones." }, { icon: "▶️", title: "Ejecútalo", text: "Pulsa Ejecutar simulación para probarlo." }] },
+      { module: 1, kind: "comprehension", name: "Ordena el viaje", title: "Ve y regresa", objective: "Organiza dos instrucciones para llevar a Robotcito y traerlo de vuelta.", target: "Lleva a Robotcito y tráelo de vuelta.", blocks: ["forward", "backward"], sequence: ["forward", "backward"], hint: "Prueba una combinación y observa qué ocurre.", guide: [{ icon: "➡️", title: "Piensa en el orden", text: "Una instrucción ocurre antes que la otra." }, { icon: "🧪", title: "Compruébalo", text: "Arma la secuencia y observa el resultado." }] },
+      { module: 1, kind: "error", name: "Corrige el rumbo", title: "Arregla el programa", objective: "Investiga una secuencia que no produce el recorrido esperado.", target: "¿Dónde está el error en el programa?", blocks: ["forward", "right"], sequence: ["forward", "right"], initialSequence: ["right", "forward"], hint: "Observa el resultado y prueba cambiar el orden.", guide: [{ icon: "🔎", title: "Busca el error", text: "Revisa qué bloque debe ir primero. Puedes quitarlo o moverlo." }] },
+      { module: 1, kind: "creative", name: "Tu pequeño recorrido", title: "Crea un recorrido", objective: "Diseña una ruta propia con Avanzar y giros.", target: "Crea tu propio recorrido.", blocks: ["forward", "right", "left"], creative: true, hint: "Usa al menos tres bloques y combina movimiento con un giro." },
+      { module: 1, kind: "open", name: "Reto del módulo", title: "Llega a tu destino", objective: "Construye un recorrido de al menos cuatro bloques.", target: "Construye un camino hasta tu destino.", blocks: ["forward", "backward", "right", "left"], open: true, hint: "Prueba cuatro bloques; no hay una única solución." },
+      { module: 2, kind: "guided", name: "Pausa y continúa", title: "Espera un momento", objective: "Usa una pausa para cambiar el ritmo de un recorrido.", target: "Incluye una pausa en el recorrido.", blocks: ["forward", "wait"], sequence: ["forward", "wait", "forward"], hint: "Prueba una pausa y compara el resultado." },
+      { module: 2, kind: "comprehension", name: "Lee la secuencia", title: "Primero piensa", objective: "Analiza un programa que combina movimiento y tiempo.", target: "Crea un recorrido con movimiento y pausa.", blocks: ["forward", "wait"], sequence: ["forward", "wait", "forward"], hint: "Lee tu programa de arriba hacia abajo y comprueba tu idea." },
+      { module: 2, kind: "error", name: "Repara la pausa", title: "Corrige la pausa", objective: "Investiga por qué una pausa colocada en otro lugar cambia el resultado.", target: "¿Dónde debe estar la pausa?", blocks: ["forward", "wait"], sequence: ["forward", "wait", "forward"], initialSequence: ["wait", "forward", "forward"], hint: "Observa cuándo ocurre la pausa y prueba moverla." },
+      { module: 2, kind: "creative", name: "Coreografía robótica", title: "Crea una coreografía", objective: "Combina avances, giros y una pausa para crear una coreografía.", target: "Crea una coreografía para Robotcito.", blocks: ["forward", "right", "left", "wait"], creative: true, hint: "Incluye un giro y una pausa para que tu coreografía tenga ritmo." },
+      { module: 2, kind: "open", name: "Reto final", title: "Programa sin instrucciones", objective: "Construye un programa de cinco bloques o más.", target: "Crea un programa original con Robotcito.", blocks: ["forward", "backward", "right", "left", "wait"], open: true, hint: "Experimenta, ejecuta y mejora tu idea." }
+    ];
+    const COURSE_TEST_MODE = true;
+    if (!picker || !dropZone || !executeButton) return;
+    let current = 0, currentModule = 1, actions = [], running = false, canReset = false, frame = null, started = 0, duration = 0, guideIndex = 0, positionX = 0, rotation = 0, invalidExecutions = 0, inactivityTimer = null, hintAvailable = false;
+    const completed = JSON.parse(localStorage.getItem("robobloques-course-completed") || "[]");
+    const labels = { forward: ["⬆️", "Avanzar"], backward: ["⬇️", "Retroceder"], right: ["↷", "Girar derecha"], left: ["↶", "Girar izquierda"], wait: ["⏱️", "Esperar"] };
+    const defaultParameters = { forward: { duration: 2 }, backward: { duration: 2 }, right: { degrees: 45 }, left: { degrees: 45 }, wait: { duration: 1 } };
+    function mission() { return missions[current]; }
+    function isLockedMission() { return moduleMissions(mission().module).indexOf(mission()) === 0; }
+    function createAction(type) { return Object.assign({ type: type }, defaultParameters[type] || {}); }
+    function parameterMarkup(entry) {
+      if (isLockedMission()) {
+        return entry.duration ? "<small class=\"course-locked-value\">· " + entry.duration + " s</small>" : entry.degrees ? "<small class=\"course-locked-value\">· " + entry.degrees + "°</small>" : "";
+      }
+      if (entry.type === "forward" || entry.type === "backward" || entry.type === "wait") return "<label>Segundos <input class=\"course-parameter\" data-parameter=\"duration\" type=\"number\" min=\"0.1\" max=\"60\" step=\"0.1\" value=\"" + entry.duration + "\"></label>";
+      if (entry.type === "right" || entry.type === "left") return "<label>Grados <input class=\"course-parameter\" data-parameter=\"degrees\" type=\"number\" min=\"1\" max=\"360\" step=\"1\" value=\"" + entry.degrees + "\"></label>";
+      return "";
+    }
+    function moduleMissions(module) { return missions.filter(function (item) { return item.module === module; }); }
+    function moduleComplete(module) { return moduleMissions(module).every(function (item) { return completed.indexOf(missions.indexOf(item)) >= 0; }); }
+    function setMessage() {}
+    function enableHint() {
+      if (completed.indexOf(current) >= 0 || hintAvailable) return;
+      hintAvailable = true;
+      hintButton.disabled = false;
+      hintButton.setAttribute("aria-label", "Mostrar pista");
+    }
+    function showHint(text) {
+      if (!hintBubble || !hintText) return;
+      if (completed.indexOf(current) >= 0 || !hintAvailable) return;
+      hintText.textContent = text || mission().hint;
+      hintBubble.classList.add("is-visible");
+      hintBubble.setAttribute("aria-hidden", "false");
+      hintButton.setAttribute("aria-expanded", "true");
+    }
+    function resetInactivity() {
+      if (inactivityTimer) clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(function () {
+        if (completed.indexOf(current) >= 0) return;
+        if (!running && !guide.classList.contains("is-visible")) {
+          enableHint();
+        }
+      }, 18000);
+    }
+    function controls() { executeButton.disabled = running; if (stopButton) stopButton.disabled = !running; if (restartButton) restartButton.disabled = running || !canReset; }
+    function hideSuccess() { if (success) { success.classList.remove("is-visible"); success.setAttribute("aria-hidden", "true"); } }
+    function showSuccess() { if (success) { success.classList.remove("is-visible"); void success.offsetWidth; success.classList.add("is-visible"); success.setAttribute("aria-hidden", "false"); } }
+    function completeMission() { if (completed.indexOf(current) < 0) completed.push(current); if (inactivityTimer) clearTimeout(inactivityTimer); hintAvailable = false; hintButton.disabled = true; if (hintBubble) { hintBubble.classList.remove("is-visible"); hintBubble.setAttribute("aria-hidden", "true"); hintButton.setAttribute("aria-expanded", "false"); } closeGuide(); localStorage.setItem("robobloques-course-completed", JSON.stringify(completed)); renderMissionList(); renderModules(); updateMissionNavigation(); document.querySelector("#course-percent").textContent = Math.round(completed.length * 100 / missions.length) + "%"; document.querySelector("#course-progress-bar").style.width = (completed.length * 100 / missions.length) + "%"; }
+    function isMissionUnlocked(index) { if (COURSE_TEST_MODE) return true; const item = missions[index]; const moduleIndex = moduleMissions(item.module).indexOf(item); return moduleIndex === 0 || completed.indexOf(missions.indexOf(moduleMissions(item.module)[moduleIndex - 1])) >= 0; }
+    function updateMissionNavigation() { if (!previousMissionButton || !nextMissionButton || !missionNavigationStatus) return; const moduleItems = moduleMissions(currentModule); const modulePosition = moduleItems.indexOf(mission()); const previous = modulePosition > 0 ? missions.indexOf(moduleItems[modulePosition - 1]) : -1; const next = modulePosition < moduleItems.length - 1 ? missions.indexOf(moduleItems[modulePosition + 1]) : -1; previousMissionButton.disabled = previous < 0; nextMissionButton.disabled = next < 0 || !isMissionUnlocked(next); missionNavigationStatus.textContent = "Misión " + (modulePosition + 1) + " de " + moduleItems.length; previousMissionButton.setAttribute("aria-label", previous >= 0 ? "Ir a " + moduleItems[modulePosition - 1].name : "No hay misión anterior"); nextMissionButton.setAttribute("aria-label", next >= 0 ? "Ir a " + moduleItems[modulePosition + 1].name : "No hay misión siguiente"); }
+    function renderModules() { const list = document.querySelector("#module-list"); if (!list) return; list.innerHTML = ""; [1, 2].forEach(function (module) { const unlocked = COURSE_TEST_MODE || module === 1 || moduleComplete(1); const button = document.createElement("button"); button.type = "button"; button.className = "module-item " + (module === currentModule ? "is-current " : "") + (!unlocked ? "is-locked" : ""); button.disabled = !unlocked; button.innerHTML = "<span>" + module + "</span><div><strong>Módulo " + module + "</strong><small>" + (moduleComplete(module) ? "Completado" : unlocked ? "Disponible" : "Bloqueado") + "</small></div><b>" + (unlocked ? "›" : "🔒") + "</b>"; button.addEventListener("click", function () { if (unlocked) loadModule(module); }); list.appendChild(button); }); }
+    function renderMissionList() { const list = document.querySelector("#mission-list"); list.innerHTML = ""; missions.forEach(function (item, index) { if (item.module !== currentModule) return; const moduleIndex = moduleMissions(currentModule).indexOf(item); const unlocked = COURSE_TEST_MODE || moduleIndex === 0 || completed.indexOf(missions.indexOf(moduleMissions(currentModule)[moduleIndex - 1])) >= 0; const el = document.createElement("button"); el.type = "button"; el.className = "lesson-item " + (index === current ? "is-current " : "") + (!unlocked ? "is-locked" : ""); el.disabled = !unlocked; el.innerHTML = "<span>" + (moduleIndex + 1) + "</span><div><strong>" + item.name + "</strong><small>" + (completed.indexOf(index) >= 0 ? "Completada" : unlocked ? "Disponible" : "Bloqueada") + "</small></div><b>" + (unlocked ? "›" : "🔒") + "</b>"; el.addEventListener("click", function () { if (unlocked) loadMission(index); }); list.appendChild(el); }); }
+    function loadModule(module) { currentModule = module; const first = moduleMissions(module).find(function (item) { return completed.indexOf(missions.indexOf(item)) < 0; }) || moduleMissions(module)[0]; loadMission(missions.indexOf(first), true); }
+    function renderProgram() { dropZone.innerHTML = ""; if (!actions.length) { dropZone.innerHTML = "<div class=\"empty-program\"><span class=\"plus-icon\">＋</span><p>Suelta aquí tu bloque<br><small>o tócalo para añadirlo</small></p></div>"; return; } actions.forEach(function (entry, index) { const block = document.createElement("div"); block.className = "program-block block-" + (entry.type === "wait" ? "control" : "movement"); block.draggable = !running; block.dataset.index = index; block.innerHTML = "<span>" + labels[entry.type][0] + "</span><strong>" + labels[entry.type][1] + "</strong>" + parameterMarkup(entry) + "<button type=\"button\" aria-label=\"Quitar bloque\">×</button>"; block.addEventListener("dragstart", function (event) { event.dataTransfer.setData("text/course-index", String(index)); block.classList.add("is-dragging"); }); block.addEventListener("dragend", function () { block.classList.remove("is-dragging"); }); const parameter = block.querySelector(".course-parameter"); if (parameter) parameter.addEventListener("change", function (event) { const input = event.target; const value = input.dataset.parameter === "degrees" ? Math.max(1, Math.min(360, Math.round(Number(input.value) || 45))) : Math.max(.1, Math.min(60, Number(input.value) || 1)); entry[input.dataset.parameter] = value; input.value = value; resetInactivity(); }); block.querySelector("button").addEventListener("click", function () { if (!running) { actions.splice(index, 1); renderProgram(); resetInactivity(); if (!actions.length) enableHint(); } }); dropZone.appendChild(block); }); }
+    function addAction(type) { if (running || mission().blocks.indexOf(type) < 0) return; actions.push(createAction(type)); renderProgram(); resetInactivity(); const key = "robobloques-help-" + type; if (current < 3 && !localStorage.getItem(key)) { localStorage.setItem(key, "1"); showContextHelp(type); } }
+    function renderPicker() { picker.innerHTML = ""; mission().blocks.forEach(function (type) { const button = document.createElement("button"); button.type = "button"; button.draggable = true; button.className = "visual-block block-" + (type === "wait" ? "control" : "movement"); button.innerHTML = "<span class=\"block-icon\">" + labels[type][0] + "</span><strong>" + labels[type][1] + "</strong>"; button.addEventListener("click", function () { addAction(type); }); button.addEventListener("dragstart", function (event) { event.dataTransfer.setData("text/course-action", type); }); picker.appendChild(button); }); }
+    function loadMission(index, fromModule) { current = index; const item = mission(); currentModule = item.module; actions = (item.initialSequence || []).map(function (type) { return createAction(type); }); running = false; canReset = false; invalidExecutions = 0; hintAvailable = false; hintButton.disabled = true; if (frame) cancelAnimationFrame(frame); hideSuccess(); if (hintBubble) { hintBubble.classList.remove("is-visible"); hintBubble.setAttribute("aria-hidden", "true"); hintButton.setAttribute("aria-expanded", "false"); } renderPicker(); renderProgram(); renderMissionList(); renderModules(); updateMissionNavigation(); const kindNames = { guided: "guiada", comprehension: "comprensión", error: "corrección de errores", creative: "creativa", open: "reto abierto" }; document.querySelector("#mission-eyebrow").textContent = "Módulo " + item.module + " · Misión " + (moduleMissions(item.module).indexOf(item) + 1); document.querySelector("#curso-title").textContent = item.name; document.querySelector("#lesson-number").textContent = "0" + (moduleMissions(item.module).indexOf(item) + 1); document.querySelector("#module-kicker").textContent = "Módulo " + item.module + " · " + kindNames[item.kind]; document.querySelector("#lesson-title").textContent = item.title; document.querySelector("#lesson-objective").innerHTML = item.objective; document.querySelector("#lesson-target").textContent = item.target; document.querySelector("#lesson-challenge").textContent = item.target; document.querySelector("#block-note").textContent = isLockedMission() ? "Valores fijados en esta primera misión del módulo" : "Arrastra para ordenar y modifica duración o grados cuando aparezcan"; document.querySelector("#mission-progress").textContent = "⭐ Módulo " + item.module + " · " + (moduleMissions(item.module).indexOf(item) + 1) + " de " + moduleMissions(item.module).length; document.querySelector("#course-percent").textContent = Math.round(completed.length * 100 / missions.length) + "%"; document.querySelector("#course-progress-bar").style.width = (completed.length * 100 / missions.length) + "%"; character.style.transform = "translateX(0) rotate(0deg)"; controls(); guideIndex = 0; if (item.guide && current < 3 && completed.indexOf(current) < 0) showGuide(); else if (item.module === 1 && current === 0 && !fromModule && !localStorage.getItem("robobloques-module-" + item.module)) { localStorage.setItem("robobloques-module-" + item.module, "1"); showModuleHelp(); } else closeGuide(); resetInactivity(); }
+    function positionGuide() { if (!guide || !guide.classList.contains("is-visible")) return; const spot = document.querySelector("#lesson-guide-spotlight"), target = document.querySelector(guide.dataset.target || ".lesson-stage"); if (!target || !spot) return; const b = target.getBoundingClientRect(), p = guide.getBoundingClientRect(); spot.style.left = b.left - p.left - 8 + "px"; spot.style.top = b.top - p.top - 8 + "px"; spot.style.width = b.width + 16 + "px"; spot.style.height = b.height + 16 + "px"; }
+    function showContextHelp(type) { const item = { forward: ["⬆️", "Bloque Avanzar", "Mueve a Robotcito hacia adelante."], backward: ["⬇️", "Bloque Retroceder", "Lo hace volver sobre su camino."], right: ["↷", "Bloque Girar derecha", "Cambia el rumbo 45 grados."], left: ["↶", "Bloque Girar izquierda", "Cambia el rumbo hacia el otro lado."], wait: ["⏱️", "Bloque Esperar", "Hace una pausa antes de continuar."] }[type]; if (!item) return; guide.dataset.target = "#lesson-blocks"; document.querySelector("#lesson-guide-step").textContent = "Nuevo bloque"; document.querySelector("#lesson-guide-icon").textContent = item[0]; document.querySelector("#lesson-guide-title").textContent = item[1]; document.querySelector("#lesson-guide-text").textContent = isLockedMission() ? item[2] + " En esta misión el valor está fijado." : item[2] + " Después puedes cambiar sus segundos o grados y arrastrarlo para ordenar tu programa."; document.querySelector("#lesson-guide-next").textContent = "¡Entendido! ✓"; guide.classList.add("is-visible"); guide.setAttribute("aria-hidden", "false"); requestAnimationFrame(positionGuide); }
+    function showModuleHelp() { guide.dataset.target = ".lesson-intro"; document.querySelector("#lesson-guide-step").textContent = "Comienza el módulo"; document.querySelector("#lesson-guide-icon").textContent = "🗺️"; document.querySelector("#lesson-guide-title").textContent = "Así funciona este módulo"; document.querySelector("#lesson-guide-text").textContent = "Aprenderás con misiones distintas: algunas te guían, otras te piden pensar, corregir errores y crear tus propias soluciones."; document.querySelector("#lesson-guide-next").textContent = "¡Vamos! ➜"; guide.classList.add("is-visible"); guide.setAttribute("aria-hidden", "false"); requestAnimationFrame(positionGuide); }
+    function guideSteps() { const steps = mission().guide ? mission().guide.slice() : []; if (!isLockedMission()) steps.push({ icon: "🛠️", title: "Modifica y ordena", text: "Puedes cambiar los segundos o grados de cada bloque y arrastrarlos para ordenar tu programa." }); return steps; }
+    function showGuide() { const steps = guideSteps(); if (!steps.length) return; const step = steps[guideIndex]; guide.dataset.target = guideIndex === 0 ? ".lesson-stage" : guideIndex === steps.length - 1 ? "#lesson-drop-zone" : guideIndex === 1 ? "#lesson-blocks" : "#lesson-drop-zone"; document.querySelector("#lesson-guide-step").textContent = guideIndex + 1 + " de " + steps.length; document.querySelector("#lesson-guide-icon").textContent = step.icon; document.querySelector("#lesson-guide-title").textContent = step.title; document.querySelector("#lesson-guide-text").textContent = step.text + (!isLockedMission() && guideIndex < steps.length - 1 ? " También puedes editar los segundos o grados y arrastrar los bloques para cambiar su orden." : ""); document.querySelector("#lesson-guide-next").textContent = guideIndex === steps.length - 1 ? "¡Entendido! ✓" : "Siguiente ➜"; guide.classList.add("is-visible"); guide.setAttribute("aria-hidden", "false"); requestAnimationFrame(positionGuide); }
+    function closeGuide() { guide.classList.remove("is-visible"); guide.setAttribute("aria-hidden", "true"); }
+    document.querySelector("#lesson-guide-next").addEventListener("click", function () { if (guideIndex < guideSteps().length - 1) { guideIndex++; showGuide(); } else closeGuide(); });
+    hintButton.addEventListener("click", function () { const isVisible = hintBubble.classList.toggle("is-visible"); hintBubble.setAttribute("aria-hidden", String(!isVisible)); hintButton.setAttribute("aria-expanded", String(isVisible)); if (isVisible) hintText.textContent = mission().hint; resetInactivity(); });
+    window.addEventListener("resize", positionGuide);
+    dropZone.addEventListener("dragover", function (event) { if (event.dataTransfer.types.indexOf("text/course-action") >= 0 || event.dataTransfer.types.indexOf("text/course-index") >= 0) { event.preventDefault(); dropZone.classList.add("is-over"); } });
+    dropZone.addEventListener("dragleave", function () { dropZone.classList.remove("is-over"); });
+    dropZone.addEventListener("drop", function (event) { event.preventDefault(); dropZone.classList.remove("is-over"); const draggedIndex = event.dataTransfer.getData("text/course-index"); if (draggedIndex !== "") { const from = Number(draggedIndex); const target = event.target.closest(".program-block"); let to = target ? Number(target.dataset.index) : actions.length; if (from !== to) { const moved = actions.splice(from, 1)[0]; if (from < to) to--; actions.splice(Math.max(0, to), 0, moved); renderProgram(); resetInactivity(); } return; } addAction(event.dataTransfer.getData("text/course-action")); });
+    executeButton.addEventListener("click", function () { if (running) return; resetInactivity(); const item = mission(); const actual = actions.map(function (a) { return a.type; }); if (!actions.length) { enableHint(); return; } const valid = item.creative ? actual.length >= 3 && actual.some(function (type) { return type === "right" || type === "left"; }) : item.open ? actual.length >= 4 : actual.join(",") === item.sequence.join(","); if (!valid) { invalidExecutions++; if (invalidExecutions >= 2) enableHint(); return; } invalidExecutions = 0; const expected = item.sequence || actual; hideSuccess(); running = true; canReset = false; controls(); let step = 0, stepStart = performance.now(), stepX = positionX, stepRotation = rotation; function finish() { running = false; canReset = true; controls(); completeMission(); showSuccess(); } function animate(now) { if (!running) return; const type = expected[step], entry = actions[step] || createAction(type); const stepDuration = entry.duration ? entry.duration * 1000 : 500; const progress = Math.min(1, (now - stepStart) / stepDuration); const limit = Math.max(120, (stage ? stage.clientWidth : 400) - 150); let targetX = stepX, targetRotation = stepRotation; if (type === "forward") targetX = Math.min(limit, stepX + 110); if (type === "backward") targetX = Math.max(0, stepX - 110); if (type === "right") targetRotation = stepRotation + (entry.degrees || 45); if (type === "left") targetRotation = stepRotation - (entry.degrees || 45); positionX = stepX + (targetX - stepX) * progress; rotation = stepRotation + (targetRotation - stepRotation) * progress; character.style.transform = "translateX(" + positionX + "px) rotate(" + rotation + "deg)"; if (progress < 1) { frame = requestAnimationFrame(animate); return; } positionX = targetX; rotation = targetRotation; step++; if (step >= expected.length) { finish(); return; } stepStart = now; stepX = positionX; stepRotation = rotation; frame = requestAnimationFrame(animate); } frame = requestAnimationFrame(animate); });
+    stopButton.addEventListener("click", function () { if (!running) return; running = false; if (frame) cancelAnimationFrame(frame); canReset = true; controls(); resetInactivity(); });
+    restartButton.addEventListener("click", function () { if (running || !canReset) return; if (frame) cancelAnimationFrame(frame); positionX = 0; rotation = 0; character.style.transform = "translateX(0) rotate(0deg)"; hideSuccess(); running = false; canReset = false; controls(); resetInactivity(); });
+    previousMissionButton.addEventListener("click", function () { const items = moduleMissions(currentModule), position = items.indexOf(mission()); if (position > 0) loadMission(missions.indexOf(items[position - 1])); });
+    nextMissionButton.addEventListener("click", function () { const items = moduleMissions(currentModule), position = items.indexOf(mission()), next = position + 1 < items.length ? missions.indexOf(items[position + 1]) : -1; if (next >= 0 && isMissionUnlocked(next)) loadMission(next); });
+    renderMissionList(); loadMission(0);
+  }  const stage = document.getElementById("escenario");
+  if (!stage) { initCourse(); return; }
   const selectedCharacter = function () { return state.characters.find(function (character) { return character.id === state.selectedId; }); };
   function hideCharacterMenu() {
     state.menuVisible = false;
@@ -170,7 +270,7 @@
     menu.className = "stage-action-menu";
     menu.style.left = Math.min(73, Math.max(7, character.position.x + 7)) + "%";
     menu.style.top = Math.min(70, Math.max(7, character.position.y - 10)) + "%";
-    menu.innerHTML = "<div class=\"stage-menu-header\"><strong>Acciones de " + character.name + "</strong><button class=\"delete-character-button\" type=\"button\" aria-label=\"Eliminar " + character.name + "\">🗑</button></div><div class=\"stage-menu-drop\" id=\"stage-menu-drop\">＋</div><div class=\"stage-menu-actions\"></div>";
+    menu.innerHTML = "<div class=\"stage-menu-header\"><strong>Acciones de " + character.name + "</strong><button class=\"delete-character-button\" type=\"button\" aria-label=\"Eliminar " + character.name + "\">\uD83D\uDDD1\uFE0F</button></div><div class=\"stage-menu-drop\" id=\"stage-menu-drop\">＋</div><div class=\"stage-menu-actions\"></div>";
     stage.appendChild(menu);
     menu.querySelector(".delete-character-button").addEventListener("click", function () {
       resetExecution(character);
@@ -243,7 +343,7 @@
   function renderLibrary() {
     const container = $("#action-buttons");
     container.innerHTML = "";
-    const categories = ["characters", "movement", "paint", "loops", "control", "conditions", "programmed"];
+    const categories = ["characters", "movement", "paint", "loops", "control", "programmed"];
     categories.forEach(function (tabName) {
       const section = document.createElement("section");
       section.className = "library-section" + (state.openTabs[tabName] ? " is-open" : "");
@@ -252,7 +352,7 @@
       toggle.className = "library-section-toggle";
       toggle.type = "button";
       toggle.setAttribute("aria-expanded", state.openTabs[tabName] ? "true" : "false");
-      toggle.innerHTML = "<span>" + ({ characters: "👥", movement: "↕️", paint: "🖌️", loops: "🔁", control: "⚙️", conditions: "🔀", programmed: "💬" }[tabName]) + "</span><strong>" + ({ characters: "Personajes", movement: "Movimiento", paint: "Pintar", loops: "Bucles", control: "Control", conditions: "Condiciones", programmed: "Programadas" }[tabName]) + "</strong><b>⌄</b>";
+      toggle.innerHTML = "<span>" + ({ characters: "\uD83D\uDC65", movement: "\u2195\uFE0F", paint: "\uD83D\uDD8C\uFE0F", loops: "\uD83D\uDD01", control: "\u2699\uFE0F", programmed: "\uD83D\uDCAC" }[tabName]) + "</span><strong>" + ({ characters: "Personajes", movement: "Movimiento", paint: "Pintar", loops: "Bucles", control: "Control", programmed: "Programadas" }[tabName]) + "</strong><b>\u2304</b>";
       toggle.addEventListener("click", function () {
         state.openTabs[tabName] = !state.openTabs[tabName];
         state.activeTab = tabName;
@@ -457,7 +557,7 @@
     sequence.classList.remove("is-empty");
     if (!character) {
       sequence.classList.add("is-empty");
-      sequence.innerHTML = "<div class=\"sequence-empty\"><span>🧩</span><strong>Arrastra un personaje al escenario</strong><small>Después podrás arrastrar bloques a esta secuencia.</small></div>";
+      sequence.innerHTML = "<div class=\"sequence-empty\"><span>\uD83E\uDDE9</span><strong>Arrastra un personaje al escenario</strong><small>Después podrás arrastrar bloques a esta secuencia.</small></div>";
       return;
     }
     if (!character.actions.length) {
@@ -677,8 +777,8 @@
     renderCharacters();
     function flatten(entries, actions) {
       entries.forEach(function (entry) {
-        if (entry.type === "loop" || entry.type === "condition") {
-          for (let count = 0; count < (entry.type === "loop" ? (entry.repetitions || 2) : 1); count += 1) flatten(entry.children, actions);
+        if (entry.type === "loop") {
+          for (let count = 0; count < (entry.repetitions || 2); count += 1) flatten(entry.children, actions);
         } else actions.push(entry);
       });
     }
@@ -693,8 +793,8 @@
         setExecutionControls(false);
         renderCharacters();
         $("#simulation-message").textContent = stoppedByBlock
-          ? "⏹ Un programa terminó con el bloque Detener."
-          : "✅ Todos los programas terminaron.";
+          ? "\u23F9\uFE0F Un programa terminó con el bloque Detener."
+          : "\u2705 Todos los programas terminaron.";
       }
     }
     function startCharacter(character) {
@@ -732,7 +832,7 @@
       }
       step();
     }
-    $("#simulation-message").textContent = "✨ Ejecutando todos los personajes...";
+    $("#simulation-message").textContent = "\u2728 Ejecutando todos los personajes...";
     programmedCharacters.forEach(startCharacter);
   });
   $("#stop-program").addEventListener("click", function () {
@@ -751,14 +851,14 @@
     state.canReset = true;
     setExecutionControls(false);
     renderCharacters();
-    $("#simulation-message").textContent = "⏹ Simulación detenida.";
+    $("#simulation-message").textContent = "\u23F9\uFE0F Simulación detenida.";
   });
   $("#restart-program").addEventListener("click", function () {
     if (state.running || !state.canReset) return;
     resetExecution();
     state.canReset = false;
     setExecutionControls(false);
-    $("#simulation-message").textContent = "↻ Personajes reiniciados.";
+    $("#simulation-message").textContent = "\u21BB Personajes reiniciados.";
   });
   function updateCharacterVisual(character) {
     const actor = stage.querySelector("[data-character-id=\"" + character.id + "\"]");
@@ -789,7 +889,7 @@
     const bubble = document.createElement("div");
     bubble.className = "speech-bubble";
     bubble.dataset.characterId = character.id;
-    bubble.textContent = String(entry.message || "¡Hola!").slice(0, 20);
+    bubble.textContent = String(entry.message || "Â¡Hola!").slice(0, 20);
     stage.appendChild(bubble);
     updateSpeechBubblePosition(character);
     const duration = Math.max(.5, Math.min(60, Number(entry.duration) || 2)) * 1000;

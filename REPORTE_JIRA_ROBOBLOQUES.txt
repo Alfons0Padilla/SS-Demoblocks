@@ -272,3 +272,27 @@ https://alfons0padilla.github.io/SS-Demoblocks/
 
 Laboratorio:
 https://alfons0padilla.github.io/SS-Demoblocks/sandbox.html
+
+==================================================
+9. AVANCE DEL MODULO 1 Y 2
+==================================================
+
+- Se implemento una navegacion formal entre Modulo 1 y Modulo 2.
+- Cada modulo cuenta con cinco misiones y progreso independiente.
+- El desbloqueo de modulos y misiones se conserva mediante localStorage.
+- Se agregaron tipos de actividad:
+  - Guiada.
+  - Comprension.
+  - Correccion de errores.
+  - Creativa.
+  - Reto abierto.
+- Las misiones de correccion comienzan con una secuencia incorrecta para que
+  el usuario pueda quitar, agregar o reordenar bloques.
+- Las misiones creativas y abiertas se validan por requisitos y no por una
+  unica secuencia.
+- Se agrego ayuda de bienvenida al iniciar un modulo nuevo.
+- Se agrego ayuda contextual la primera vez que aparece un bloque nuevo.
+- La ayuda contextual explica visualmente que hace cada bloque.
+- Se agregaron controles para subir, bajar y quitar bloques en el curso.
+- Se conservaron los controles Ejecutar, Detener y Reiniciar.
+- El Modulo 1 y el Modulo 2 quedan listos como avance funcional demostrable.

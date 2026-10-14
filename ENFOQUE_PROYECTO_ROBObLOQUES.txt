@@ -45,12 +45,16 @@ Habilidades que debe desarrollar el usuario:
 El curso tendra 6 modulos y aproximadamente 25 a 30 misiones. La cantidad
 final podra ajustarse despues de probar la dificultad y duracion con usuarios.
 
-MODULO 1 - Primeros pasos
-Conceptos: secuencias, movimiento, giros, espera y errores sencillos.
+MODULO 1 - Fundamentos del movimiento
+Nivel: Introductorio.
+Enfoque: instrucciones, orden y movimiento con bloques básicos.
+Conceptos: secuencias simples, movimiento, giros y errores sencillos.
 Cantidad sugerida: 5 misiones.
 
-MODULO 2 - Recorridos y orientacion
-Conceptos: rutas, metas, laberintos, giros y soluciones eficientes.
+MODULO 2 - Secuencias y control del tiempo
+Nivel: Básico.
+Enfoque: combinar instrucciones, ordenar secuencias y controlar pausas.
+Conceptos: rutas, giros, esperas, ritmo y soluciones eficientes.
 Cantidad sugerida: 5 misiones.
 
 MODULO 3 - Repeticiones

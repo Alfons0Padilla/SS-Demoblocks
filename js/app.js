@@ -16,7 +16,8 @@
   };
   ["forward", "backward"].forEach(function (type) { actionCatalog[type].duration = true; });
   const characterCatalog = [
-    { id: "robotcito", name: "Robotcito", image: "Recursos/robotcito.png", position: { x: 22, y: 34 } }
+    { id: "robotcito", name: "Robotcito", image: "Recursos/robotcito.png", position: { x: 22, y: 34 } },
+    { id: "gatito", name: "Gatito", image: "Recursos/Gatito.png", position: { x: 62, y: 48 } }
   ];
   const tabs = {
     characters: [],

@@ -3,11 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#5b5ce2">
+  <meta name="theme-color" content="#287C72">
   <title>RoboBloques | Laboratorio creativo</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=20261020-2208">
 </head>
-<body class="site-redesign">
+<body class="site-redesign laboratory-locked">
+  <section class="laboratory-lock" id="laboratory-lock" aria-label="Laboratorio bloqueado" aria-modal="true" role="dialog">
+    <div class="laboratory-lock-scrim"></div>
+    <div class="laboratory-lock-card">
+      <img class="laboratory-lock-mentor" src="Recursos/Chiapaneca.png" alt="Chiapaneca te explica el acceso al laboratorio">
+      <div class="laboratory-lock-message">
+        <span class="laboratory-lock-step" id="laboratory-lock-step">Acceso bloqueado · Módulo 1</span>
+        <span class="laboratory-lock-icon" id="laboratory-lock-icon" aria-hidden="true">🔒</span>
+        <h2 id="laboratory-lock-title">Primero aprende las bases</h2>
+        <p id="laboratory-lock-text">El laboratorio se desbloqueará cuando completes el módulo 1 del Curso guiado. Allí conocerás los bloques y aprenderás a ordenar tus primeras instrucciones.</p>
+        <button class="button button-primary" id="laboratory-lock-course" type="button">Ir al Curso guiado <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </section>
   <div class="app-shell">
     <header class="topbar">
       <a class="brand" href="index.html" aria-label="RoboBloques, ir al inicio">
@@ -19,10 +32,12 @@
         <a href="curso.html" class="nav-link">Curso guiado</a>
         <a href="sandbox.html" class="nav-link is-active">Laboratorio</a>
       </nav>
+      <span class="region-badge" aria-label="Ambientación de Chiapas"><span aria-hidden="true">🌿</span> Aventura chiapaneca</span>
       <div class="topbar-badge"><span class="status-dot"></span> Modo simulación</div>
     </header>
 
     <main class="workspace-page">
+      <div class="chiapas-banner" aria-label="Explora, aprende y crea en Chiapas"><span class="chiapas-banner-icon" aria-hidden="true">☀</span><div><strong>¡Hola, explorador!</strong><span>Construye tu recorrido y descubre la selva a tu manera.</span></div><span class="chiapas-banner-art" aria-hidden="true">⛰ ✿ 🐆</span></div>
       <section class="workspace-heading" aria-labelledby="workspace-title">
         <div>
           <span class="eyebrow">Laboratorio creativo</span>
@@ -68,5 +83,6 @@
     <footer><strong>RoboBloques</strong><span>Aprende, prueba y crea con bloques visuales.</span><nav aria-label="Enlaces del pie de página"><a href="index.html">Inicio</a><a href="curso.html">Curso guiado</a><a href="sandbox.html">Laboratorio</a></nav></footer>
   </div>
   <script src="js/app.js"></script>
+  <script src="js/laboratory-lock.js"></script>
 </body>
 </html>

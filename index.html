@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#4F6EF7">
+  <meta name="theme-color" content="#287C72">
   <title>RoboBloques | Inicio</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=20261020-2159">
 </head>
-<body class="site-redesign">
+<body class="site-redesign jaguar-tour-active">
   <div class="app-shell">
     <header class="topbar">
       <a class="brand" href="index.html" aria-label="RoboBloques, ir al inicio">
@@ -20,10 +20,12 @@
         <a href="sandbox.html" class="nav-link">Laboratorio</a>
       </nav>
       <a class="header-cta" href="curso.html">Comenzar a aprender <span aria-hidden="true">→</span></a>
+      <span class="region-badge" aria-label="Ambientación de Chiapas"><span aria-hidden="true">🌿</span> Aventura chiapaneca</span>
       <div class="topbar-badge"><span class="status-dot"></span> Modo simulación</div>
     </header>
 
     <main>
+      <div class="chiapas-banner" aria-label="Explora, aprende y crea en Chiapas"><span class="chiapas-banner-icon" aria-hidden="true">☀</span><div><strong>¡Hola, explorador!</strong><span>Hoy vamos a programar entre montañas, selva y colores de Chiapas.</span></div><span class="chiapas-banner-art" aria-hidden="true">⛰ ✿ 🐆</span></div>
       <section class="home-hero home-hero-new" aria-labelledby="home-title">
         <div class="hero-copy">
           <span class="hero-kicker"><i aria-hidden="true"></i> Aprende programación jugando</span>
@@ -75,5 +77,27 @@
     </main>
     <footer><strong>RoboBloques</strong><span>Aprende, prueba y crea con bloques visuales.</span><nav aria-label="Enlaces del pie de página"><a href="index.html">Inicio</a><a href="curso.html">Curso guiado</a><a href="sandbox.html">Laboratorio</a></nav></footer>
   </div>
+  <section class="jaguar-welcome" id="jaguar-welcome" aria-label="Bienvenida guiada" aria-live="polite">
+    <div class="jaguar-welcome-scrim"></div>
+    <div class="jaguar-overlay-panels" aria-hidden="true">
+      <i class="jaguar-overlay-panel panel-top"></i>
+      <i class="jaguar-overlay-panel panel-right"></i>
+      <i class="jaguar-overlay-panel panel-bottom"></i>
+      <i class="jaguar-overlay-panel panel-left"></i>
+    </div>
+    <div class="jaguar-guide" role="dialog" aria-modal="true" aria-labelledby="jaguar-guide-title">
+      <div class="jaguar-speech" id="jaguar-speech">
+        <span class="jaguar-speech-tail" aria-hidden="true"></span>
+        <span class="jaguar-speech-step" id="jaguar-speech-step"></span>
+        <h2 id="jaguar-guide-title">¡Bienvenido a RoboBloques!</h2>
+        <p id="jaguar-guide-text">Soy tu jaguar guía. Toca la pantalla para conocer esta aventura.</p>
+        <span class="jaguar-speech-hint">Toca en cualquier parte para continuar <b aria-hidden="true">→</b></span>
+      </div>
+      <img class="jaguar-guide-image jaguar-guide-image-left" src="Recursos/Jaguar Izq.png" alt="Jaguar guía de RoboBloques mirando a la izquierda">
+      <img class="jaguar-guide-image jaguar-guide-image-right" src="Recursos/Jaguar Der.png" alt="" aria-hidden="true">
+    </div>
+    <div class="jaguar-spotlight" id="jaguar-spotlight" aria-hidden="true"></div>
+  </section>
+  <script src="js/welcome.js"></script>
 </body>
 </html>

@@ -8,6 +8,19 @@
   const leftJaguar = document.querySelector(".jaguar-guide-image-left");
   const rightJaguar = document.querySelector(".jaguar-guide-image-right");
   if (!welcome || !spotlight || !guide) return;
+  const jaguarTourSeenKey = "robobloques-jaguar-tour-seen";
+  let jaguarTourSeen = false;
+  try {
+    jaguarTourSeen = localStorage.getItem(jaguarTourSeenKey) === "true";
+  } catch (error) {
+    jaguarTourSeen = false;
+  }
+  if (jaguarTourSeen) {
+    welcome.remove();
+    document.body.classList.remove("jaguar-tour-active");
+    document.documentElement.classList.remove("jaguar-tour-active");
+    return;
+  }
   document.body.classList.add("jaguar-tour-active");
   document.documentElement.classList.add("jaguar-tour-active");
 
@@ -227,6 +240,11 @@
 
   function finish(event) {
     if (event) event.preventDefault();
+    try {
+      localStorage.setItem(jaguarTourSeenKey, "true");
+    } catch (error) {
+      // The tour can still finish when browser storage is unavailable.
+    }
     welcome.classList.add("is-dismissed");
     document.body.classList.add("jaguar-tour-finished");
     document.body.classList.remove("jaguar-tour-active");

@@ -267,6 +267,7 @@
     state.menuVisible = false;
     const menu = stage.querySelector(".stage-action-menu");
     if (menu) menu.remove();
+    document.documentElement.classList.remove("mobile-program-open");
   }
   function setExecutionControls(running) {
     $("#execute-program").disabled = running;
@@ -361,6 +362,8 @@
     renderSequence();
     if (showMenu) {
       state.menuVisible = true;
+      document.documentElement.classList.add("mobile-program-open");
+      if (mobileSequenceMenuToggle) mobileSequenceMenuToggle.setAttribute("aria-expanded", "true");
       renderStageMenu();
     }
     $("#stage-status").textContent = "Programando a " + selectedCharacter().name;
@@ -500,7 +503,8 @@
       toggle.setAttribute("aria-expanded", unlocked && state.openTabs[tabName] ? "true" : "false");
       toggle.setAttribute("aria-disabled", String(!unlocked));
       toggle.innerHTML = "<span>" + ({ characters: "\uD83D\uDC65", movement: "\u2195\uFE0F", paint: "\uD83D\uDD8C\uFE0F", loops: "\uD83D\uDD01", control: "\u2699\uFE0F", programmed: "\uD83D\uDCAC" }[tabName]) + "</span><strong>" + ({ characters: "Personajes", movement: "Movimiento", paint: "Pintar", loops: "Bucles", control: "Control", programmed: "Programadas" }[tabName]) + "</strong>" + (unlocked ? "<b>\u2304</b>" : "<span class=\"library-lock-icon\" aria-hidden=\"true\">\uD83D\uDD12</span>");
-      toggle.addEventListener("click", function () {
+      toggle.addEventListener("click", function (event) {
+        event.stopPropagation();
         if (!unlocked) return;
         state.openTabs[tabName] = !state.openTabs[tabName];
         state.activeTab = tabName;
@@ -556,7 +560,8 @@
       button.draggable = true;
       button.innerHTML = "<span>" + action.icon + "</span><strong>" + action.label + "</strong>";
       button.addEventListener("dragstart", function (event) { event.dataTransfer.setData("text/action", type); event.dataTransfer.effectAllowed = "copy"; });
-      button.addEventListener("click", function () {
+      button.addEventListener("click", function (event) {
+        event.stopPropagation();
         if (button.dataset.touchDragged === "true") {
           delete button.dataset.touchDragged;
           return;
@@ -699,18 +704,19 @@
   function renderSequence() {
     const character = selectedCharacter();
     const sequence = $("#sequence");
+    const mobileSequenceInteraction = window.matchMedia("(max-width: 700px), (orientation: landscape) and (max-height: 700px)").matches;
     renderStageMenuActions();
     if (!sequence) return;
     sequence.innerHTML = "";
     sequence.classList.remove("is-empty");
     if (!character) {
       sequence.classList.add("is-empty");
-      sequence.innerHTML = "<div class=\"sequence-empty\"><span>\uD83E\uDDE9</span><strong>Arrastra un personaje al escenario</strong><small>Después podrás arrastrar bloques a esta secuencia.</small></div>";
+      sequence.innerHTML = "<div class=\"sequence-empty\"><span>\uD83E\uDDE9</span><strong>Arrastra un personaje al escenario</strong><small>" + (mobileSequenceInteraction ? "Después toca los bloques y las posiciones para ordenarlos." : "Después podrás arrastrar bloques a esta secuencia.") + "</small></div>";
       return;
     }
     if (!character.actions.length) {
       sequence.classList.add("is-empty");
-      sequence.innerHTML = "<div class=\"sequence-empty\"><span>🎯</span><strong>La secuencia de " + character.name + " está vacía</strong><small>Arrastra un bloque desde la biblioteca hacia esta zona.</small></div>";
+      sequence.innerHTML = "<div class=\"sequence-empty\"><span>🎯</span><strong>La secuencia de " + character.name + " está vacía</strong><small>" + (mobileSequenceInteraction ? "Toca un bloque en la biblioteca para agregarlo." : "Arrastra un bloque desde la biblioteca hacia esta zona.") + "</small></div>";
       return;
     }
     character.actions.forEach(function (entry, index) {
@@ -749,8 +755,9 @@
   function createSequenceItem(entry, collection, index) {
     const action = actionCatalog[entry.type];
     const row = document.createElement("div");
+    const mobileSequenceInteraction = window.matchMedia("(max-width: 700px), (orientation: landscape) and (max-height: 700px)").matches;
     row.className = "sequence-item" + (action.container ? " sequence-container" : "");
-    row.draggable = true;
+    row.draggable = !mobileSequenceInteraction;
     row.addEventListener("dragstart", function (event) {
       event.stopPropagation();
       state.draggedSequence = { entry: entry, collection: collection };
@@ -781,6 +788,14 @@
     });
     row.addEventListener("pointerup", function (event) {
       if (event.pointerType !== "mouse" && !event.target.closest("button, input, .nested-drop-zone")) {
+        if (event.target.closest(".sequence-item") !== row) return;
+        if (state.touchSelectedSequence && state.touchSelectedSequence.entry !== entry) {
+          const bounds = row.getBoundingClientRect();
+          const targetIndex = collection.indexOf(entry) + (event.clientY >= bounds.top + bounds.height / 2 ? 1 : 0);
+          event.stopPropagation();
+          moveSequenceEntry(state.touchSelectedSequence.entry, state.touchSelectedSequence.collection, collection, targetIndex);
+          return;
+        }
         state.touchSelectedSequence = { entry: entry, collection: collection };
         document.querySelectorAll(".sequence-item.is-touch-selected").forEach(function (item) {
           item.classList.remove("is-touch-selected");
@@ -855,7 +870,7 @@
       const inner = document.createElement("div");
       inner.className = "nested-drop-zone";
       inner.sequenceCollection = entry.children;
-      inner.innerHTML = "<span>Arrastra acciones dentro de este bloque</span>";
+      inner.innerHTML = "<span>" + (mobileSequenceInteraction ? "Toca aquí para mover bloques dentro" : "Arrastra acciones dentro de este bloque") + "</span>";
       inner.addEventListener("click", function (event) {
         if (event.target.closest(".sequence-insert-zone, .sequence-item")) return;
         if (state.touchSelectedSequence) {
@@ -906,7 +921,10 @@
     prepareSequenceDrop(selectedCharacter() ? selectedCharacter().actions : [], selectedCharacter() ? selectedCharacter().actions.length : 0, event);
   });
   document.addEventListener("click", function (event) {
-    if (!event.target.closest("#escenario") && !event.target.closest(".stage-action-menu")) hideCharacterMenu();
+    if (window.innerWidth > 700 && window.innerHeight > 700 &&
+        !event.target.closest("#escenario") &&
+        !event.target.closest(".stage-action-menu") &&
+        !event.target.closest(".stage-character")) hideCharacterMenu();
   });
   $("#execute-program").addEventListener("click", function () {
     hideCharacterMenu();
@@ -1201,6 +1219,63 @@
     return line;
   }
   $("#delete-character").addEventListener("click", deleteSelectedCharacter);
+  const mobileBlockMenuToggle = $("#mobile-block-menu-toggle");
+  const mobileSequenceMenuToggle = $("#mobile-sequence-menu-toggle");
+  const mobileExecutionToggle = $("#mobile-execution-toggle");
+  const mobileSequenceClose = $("#mobile-sequence-close");
+  function updateExecutionToggle(isOpen) {
+    if (!mobileExecutionToggle) return;
+    mobileExecutionToggle.setAttribute("aria-expanded", String(isOpen));
+    mobileExecutionToggle.setAttribute("aria-label", isOpen ? "Cerrar controles de ejecución" : "Abrir controles de ejecución");
+  }
+  if (mobileBlockMenuToggle) {
+    mobileBlockMenuToggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+      const isOpen = document.documentElement.classList.toggle("mobile-blocks-open");
+      mobileBlockMenuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+  }
+  if (mobileSequenceMenuToggle) {
+    mobileSequenceMenuToggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+      const isOpen = document.documentElement.classList.toggle("mobile-program-open");
+      mobileSequenceMenuToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+  }
+  if (mobileExecutionToggle) {
+    mobileExecutionToggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+      const isOpen = document.documentElement.classList.toggle("mobile-execution-open");
+      updateExecutionToggle(isOpen);
+    });
+  }
+  if (mobileSequenceClose) {
+    mobileSequenceClose.addEventListener("click", function (event) {
+      event.stopPropagation();
+      document.documentElement.classList.remove("mobile-program-open");
+      if (mobileSequenceMenuToggle) mobileSequenceMenuToggle.setAttribute("aria-expanded", "false");
+    });
+  }
+  document.addEventListener("click", function (event) {
+    if (!event.target.closest("#workspace-execution-menu") && !event.target.closest("#mobile-execution-toggle")) {
+      document.documentElement.classList.remove("mobile-execution-open");
+      updateExecutionToggle(false);
+    }
+    if (!event.target.closest("#biblioteca") &&
+        !event.target.closest(".mobile-panel-toggle") &&
+        !event.target.closest("#mobile-sequence-menu-toggle")) {
+      document.documentElement.classList.remove("mobile-blocks-open");
+      if (mobileBlockMenuToggle) mobileBlockMenuToggle.setAttribute("aria-expanded", "false");
+    }
+    if (!event.target.closest("#programa") &&
+        !event.target.closest("#biblioteca") &&
+        !event.target.closest(".stage-character") &&
+        !event.target.closest("#mobile-sequence-menu-toggle") &&
+        !event.target.closest(".mobile-sequence-close")) {
+      document.documentElement.classList.remove("mobile-program-open");
+      if (mobileSequenceMenuToggle) mobileSequenceMenuToggle.setAttribute("aria-expanded", "false");
+    }
+  });
   setExecutionControls(false);
   renderLibrary();
   renderCharacters();

@@ -37,6 +37,8 @@
     </header>
 
     <main class="workspace-page">
+      <button class="mobile-panel-toggle" id="mobile-block-menu-toggle" type="button" aria-controls="biblioteca" aria-expanded="false"><span aria-hidden="true">☰</span><span class="sr-only">Abrir menú de bloques</span></button>
+      <button class="mobile-sequence-toggle" id="mobile-sequence-menu-toggle" type="button" aria-controls="programa" aria-expanded="false"><span aria-hidden="true">☷</span><span class="sr-only">Abrir menú de secuencia</span></button>
       <div class="chiapas-banner" aria-label="Explora, aprende y crea en Chiapas"><span class="chiapas-banner-icon" aria-hidden="true">☀</span><div><strong>¡Hola, explorador!</strong><span>Construye tu recorrido y descubre la selva a tu manera.</span></div><span class="chiapas-banner-art" aria-hidden="true">⛰ ✿ 🐆</span></div>
       <section class="workspace-heading" aria-labelledby="workspace-title">
         <div>
@@ -44,7 +46,9 @@
           <h1 id="workspace-title">Crea tu propia <span>aventura</span></h1>
           <p>Selecciona un personaje, agrega acciones y observa cómo las realiza en el escenario. En celular puedes tocar los personajes y bloques para agregarlos.</p>
         </div>
-        <div class="workspace-actions">
+        <div class="workspace-actions" id="workspace-execution-menu">
+          <button class="mobile-execution-toggle" id="mobile-execution-toggle" type="button" aria-controls="workspace-execution-menu" aria-expanded="false" aria-label="Abrir controles de ejecución"><span class="execution-chevron" aria-hidden="true"></span></button>
+          <span class="mobile-execution-label">Controles</span>
           <button class="button button-primary" id="execute-program" type="button">▶ Ejecutar</button>
           <button class="button button-stop" id="stop-program" type="button" disabled>■ Detener</button>
           <button class="button button-restart" id="restart-program" type="button" disabled>↻ Reiniciar</button>
@@ -73,6 +77,7 @@
         <div class="sequence-panel-heading">
           <div><span class="eyebrow">Programación del personaje</span><h2 id="sequence-title">Secuencia de acciones</h2></div>
           <div class="sequence-character-actions">
+            <button class="mobile-sequence-close" id="mobile-sequence-close" type="button" aria-label="Cerrar secuencia de acciones">×</button>
             <span class="sequence-character" id="sequence-character">Selecciona un personaje</span>
             <button class="delete-character-button" id="delete-character" type="button" disabled>🗑 Borrar personaje</button>
           </div>
@@ -82,7 +87,28 @@
     </main>
     <footer><strong>RoboBloques</strong><span>Aprende, prueba y crea con bloques visuales.</span><nav aria-label="Enlaces del pie de página"><a href="index.html">Inicio</a><a href="curso.html">Curso guiado</a><a href="sandbox.html">Laboratorio</a></nav></footer>
   </div>
+  <section class="jaguar-welcome laboratory-tour" id="laboratory-tour" aria-label="Guía del laboratorio" aria-live="polite">
+    <div class="jaguar-welcome-scrim"></div>
+    <div class="jaguar-overlay-panels" aria-hidden="true">
+      <i class="jaguar-overlay-panel panel-top"></i>
+      <i class="jaguar-overlay-panel panel-right"></i>
+      <i class="jaguar-overlay-panel panel-bottom"></i>
+      <i class="jaguar-overlay-panel panel-left"></i>
+    </div>
+    <div class="jaguar-guide guide-welcome" role="dialog" aria-modal="true" aria-labelledby="laboratory-tour-title">
+      <div class="jaguar-speech">
+        <span class="jaguar-speech-tail" aria-hidden="true"></span>
+        <span class="jaguar-speech-step" id="laboratory-tour-step"></span>
+        <h2 id="laboratory-tour-title"></h2>
+        <p id="laboratory-tour-text"></p>
+        <span class="jaguar-speech-hint">Toca para continuar <b aria-hidden="true">→</b></span>
+      </div>
+      <img class="jaguar-guide-image jaguar-guide-image-left" src="Recursos/Chiapaneca.png" alt="Chiapaneca guía del laboratorio">
+    </div>
+    <div class="jaguar-spotlight" id="laboratory-tour-spotlight" aria-hidden="true"></div>
+  </section>
   <script src="js/app.js"></script>
   <script src="js/laboratory-lock.js"></script>
+  <script src="js/laboratory-tour.js"></script>
 </body>
 </html>

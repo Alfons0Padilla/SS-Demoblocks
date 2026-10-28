@@ -1243,18 +1243,18 @@
         if (mobileBlockMenuToggle) mobileBlockMenuToggle.setAttribute("aria-expanded", "false");
         if (mobileSequenceMenuToggle) mobileSequenceMenuToggle.setAttribute("aria-expanded", "false");
       }
-      if (mobileNavigationClose) {
-        mobileNavigationClose.addEventListener("click", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          document.documentElement.classList.remove("mobile-navigation-open");
-          mobileNavigationClose.blur();
-          if (mobileNavigationToggle) {
-            mobileNavigationToggle.querySelector("[aria-hidden='true']").textContent = "⌂";
-            mobileNavigationToggle.setAttribute("aria-expanded", "false");
-            mobileNavigationToggle.setAttribute("aria-label", "Abrir menú de navegación");
-          }
-        });
+    });
+  }
+  if (mobileNavigationClose) {
+    mobileNavigationClose.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.documentElement.classList.remove("mobile-navigation-open");
+      mobileNavigationClose.blur();
+      if (mobileNavigationToggle) {
+        mobileNavigationToggle.querySelector("[aria-hidden='true']").textContent = "⌂";
+        mobileNavigationToggle.setAttribute("aria-expanded", "false");
+        mobileNavigationToggle.setAttribute("aria-label", "Abrir menú de navegación");
       }
     });
   }
@@ -1262,6 +1262,10 @@
     mobileBlockMenuToggle.addEventListener("click", function (event) {
       event.stopPropagation();
       const isOpen = document.documentElement.classList.toggle("mobile-blocks-open");
+      if (isOpen) {
+        document.documentElement.classList.remove("mobile-execution-open");
+        updateExecutionToggle(false);
+      }
       mobileBlockMenuToggle.setAttribute("aria-expanded", String(isOpen));
     });
   }
@@ -1269,12 +1273,17 @@
     mobileSequenceMenuToggle.addEventListener("click", function (event) {
       event.stopPropagation();
       const isOpen = document.documentElement.classList.toggle("mobile-program-open");
+      if (isOpen) {
+        document.documentElement.classList.remove("mobile-execution-open");
+        updateExecutionToggle(false);
+      }
       mobileSequenceMenuToggle.setAttribute("aria-expanded", String(isOpen));
     });
   }
   if (mobileExecutionToggle) {
     mobileExecutionToggle.addEventListener("click", function (event) {
       event.stopPropagation();
+      if (document.documentElement.classList.contains("mobile-blocks-open") || document.documentElement.classList.contains("mobile-program-open")) return;
       const isOpen = document.documentElement.classList.toggle("mobile-execution-open");
       updateExecutionToggle(isOpen);
     });

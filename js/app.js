@@ -1299,13 +1299,11 @@
       }
     }
     if (!event.target.closest("#biblioteca") &&
-        !event.target.closest(".mobile-panel-toggle") &&
-        !event.target.closest("#mobile-sequence-menu-toggle")) {
+        !event.target.closest(".mobile-panel-toggle")) {
       document.documentElement.classList.remove("mobile-blocks-open");
       if (mobileBlockMenuToggle) mobileBlockMenuToggle.setAttribute("aria-expanded", "false");
     }
     if (!event.target.closest("#programa") &&
-        !event.target.closest("#biblioteca") &&
         !event.target.closest(".stage-character") &&
         !event.target.closest("#mobile-sequence-menu-toggle") &&
         !event.target.closest(".mobile-sequence-close")) {

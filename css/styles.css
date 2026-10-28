@@ -2510,6 +2510,8 @@ html.mobile-execution-open .execution-chevron {
   }
 
   .mobile-library-close {
+    position: relative;
+    z-index: 2;
     display: grid;
     place-items: center;
     width: 30px;

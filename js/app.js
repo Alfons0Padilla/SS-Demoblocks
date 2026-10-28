@@ -1303,6 +1303,13 @@
     });
   }
   document.addEventListener("click", function (event) {
+    if (event.target.closest("#mobile-library-close")) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.documentElement.classList.remove("mobile-blocks-open");
+      if (mobileBlockMenuToggle) mobileBlockMenuToggle.setAttribute("aria-expanded", "false");
+      return;
+    }
     if (!event.target.closest("#workspace-execution-menu") && !event.target.closest("#mobile-execution-toggle")) {
       document.documentElement.classList.remove("mobile-execution-open");
       updateExecutionToggle(false);

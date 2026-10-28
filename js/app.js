@@ -1233,6 +1233,7 @@
     mobileNavigationToggle.addEventListener("click", function (event) {
       event.stopPropagation();
       const isOpen = document.documentElement.classList.toggle("mobile-navigation-open");
+      mobileNavigationToggle.querySelector("[aria-hidden='true']").textContent = isOpen ? "×" : "⌂";
       mobileNavigationToggle.setAttribute("aria-expanded", String(isOpen));
       mobileNavigationToggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
       if (isOpen) {
@@ -1278,6 +1279,7 @@
     if (!event.target.closest("#laboratory-navigation") && !event.target.closest("#mobile-navigation-toggle")) {
       document.documentElement.classList.remove("mobile-navigation-open");
       if (mobileNavigationToggle) {
+        mobileNavigationToggle.querySelector("[aria-hidden='true']").textContent = "⌂";
         mobileNavigationToggle.setAttribute("aria-expanded", "false");
         mobileNavigationToggle.setAttribute("aria-label", "Abrir menú de navegación");
       }

@@ -2500,6 +2500,8 @@ html.mobile-execution-open .execution-chevron {
     color: #287c72;
     background: #e7f4ed;
     box-shadow: 0 4px 12px rgba(29, 95, 80, .2);
+    z-index: 30;
+    font-size: 30px;
   }
 
   .mobile-sequence-toggle {

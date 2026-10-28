@@ -2336,6 +2336,43 @@ html.mobile-execution-open .execution-chevron {
     display: none;
   }
 
+  body:not(.laboratory-locked) .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 46px;
+    margin: 0;
+    padding: 4px 10px;
+    border-radius: 0;
+    box-shadow: 0 3px 12px rgba(29, 95, 80, .16);
+  }
+
+  body:not(.laboratory-locked) .topbar .brand,
+  body:not(.laboratory-locked) .topbar .region-badge {
+    display: none;
+  }
+
+  body:not(.laboratory-locked) .topbar .main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: 38px;
+    gap: 2px;
+  }
+
+  body:not(.laboratory-locked) .topbar .nav-link {
+    flex: 1;
+    justify-content: center;
+    height: 34px;
+    padding: 0 5px;
+    font-size: 11px;
+  }
+
   body:not(.laboratory-locked) .workspace-page {
     position: fixed;
     inset: 0;
@@ -2356,7 +2393,7 @@ html.mobile-execution-open .execution-chevron {
     inset: 0;
     display: flex;
     flex-direction: column;
-    padding: 47px 7px 7px;
+    padding: 96px 7px 7px;
     border: 0;
     border-radius: 0;
     background: #f6faf5;
@@ -2403,7 +2440,7 @@ html.mobile-execution-open .execution-chevron {
 
   .mobile-panel-toggle {
     position: fixed;
-    top: 10px;
+    top: 54px;
     left: 10px;
     z-index: 12;
     display: grid;
@@ -2422,7 +2459,7 @@ html.mobile-execution-open .execution-chevron {
 
   .mobile-sequence-toggle {
     position: fixed;
-    top: 10px;
+    top: 54px;
     right: 10px;
     z-index: 12;
     display: grid;

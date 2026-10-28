@@ -2508,6 +2508,16 @@ html.mobile-execution-open .execution-chevron {
     line-height: 1;
   }
 
+  html.mobile-blocks-open .mobile-navigation-toggle,
+  html.mobile-program-open .mobile-navigation-toggle,
+  html.mobile-blocks-open .mobile-panel-toggle,
+  html.mobile-program-open .mobile-sequence-toggle,
+  html.mobile-blocks-open .mobile-sequence-toggle,
+  html.mobile-program-open .mobile-panel-toggle {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .mobile-navigation-toggle span[aria-hidden="true"] {
     display: block;
     transform: translateY(-1px);

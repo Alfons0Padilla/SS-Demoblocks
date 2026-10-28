@@ -1223,6 +1223,7 @@
   const mobileSequenceMenuToggle = $("#mobile-sequence-menu-toggle");
   const mobileNavigationToggle = $("#mobile-navigation-toggle");
   const mobileNavigationClose = $("#mobile-navigation-close");
+  const mobileLibraryClose = $("#mobile-library-close");
   const mobileExecutionToggle = $("#mobile-execution-toggle");
   const mobileSequenceClose = $("#mobile-sequence-close");
   function updateExecutionToggle(isOpen) {
@@ -1283,6 +1284,13 @@
       event.stopPropagation();
       document.documentElement.classList.remove("mobile-program-open");
       if (mobileSequenceMenuToggle) mobileSequenceMenuToggle.setAttribute("aria-expanded", "false");
+    });
+  }
+  if (mobileLibraryClose) {
+    mobileLibraryClose.addEventListener("click", function (event) {
+      event.stopPropagation();
+      document.documentElement.classList.remove("mobile-blocks-open");
+      if (mobileBlockMenuToggle) mobileBlockMenuToggle.setAttribute("aria-expanded", "false");
     });
   }
   document.addEventListener("click", function (event) {

@@ -2285,6 +2285,7 @@ html.lesson-tour-active body {
 .mobile-panel-toggle,
 .mobile-sequence-toggle,
 .mobile-execution-toggle,
+.mobile-navigation-toggle,
 .mobile-sequence-close,
 .mobile-execution-label {
   display: none;
@@ -2321,7 +2322,8 @@ html.mobile-execution-open .execution-chevron {
 @media (max-width: 700px) {
   html:has(body.laboratory-locked) .mobile-panel-toggle,
   html:has(body.laboratory-locked) .mobile-sequence-toggle,
-  html:has(body.laboratory-locked) .mobile-execution-toggle {
+  html:has(body.laboratory-locked) .mobile-execution-toggle,
+  html:has(body.laboratory-locked) .mobile-navigation-toggle {
     display: none;
   }
 
@@ -2341,7 +2343,7 @@ html.mobile-execution-open .execution-chevron {
     top: 0;
     left: 0;
     z-index: 20;
-    display: flex;
+    display: none;
     align-items: center;
     width: 100%;
     min-height: 46px;
@@ -2349,6 +2351,14 @@ html.mobile-execution-open .execution-chevron {
     padding: 4px 10px;
     border-radius: 0;
     box-shadow: 0 3px 12px rgba(29, 95, 80, .16);
+  }
+
+  body:not(.laboratory-locked) .topbar .main-nav {
+    display: flex;
+  }
+
+  html.mobile-navigation-open body:not(.laboratory-locked) .topbar {
+    display: flex;
   }
 
   body:not(.laboratory-locked) .topbar .brand,
@@ -2393,7 +2403,7 @@ html.mobile-execution-open .execution-chevron {
     inset: 0;
     display: flex;
     flex-direction: column;
-    padding: 96px 7px 7px;
+    padding: 58px 7px 7px;
     border: 0;
     border-radius: 0;
     background: #f6faf5;
@@ -2455,6 +2465,30 @@ html.mobile-execution-open .execution-chevron {
     box-shadow: 0 5px 14px rgba(29, 95, 80, .28);
     cursor: pointer;
     font-size: 22px;
+  }
+
+  .mobile-navigation-toggle {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    z-index: 21;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 0;
+    border-radius: 13px;
+    color: #fff;
+    background: #287c72;
+    box-shadow: 0 5px 14px rgba(29, 95, 80, .28);
+    cursor: pointer;
+    font-size: 20px;
+    transform: translateX(-50%);
+  }
+
+  html.mobile-navigation-open body:not(.laboratory-locked) .stage-column {
+    padding-top: 96px;
   }
 
   .mobile-sequence-toggle {

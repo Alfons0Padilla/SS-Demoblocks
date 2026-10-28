@@ -1221,12 +1221,21 @@
   $("#delete-character").addEventListener("click", deleteSelectedCharacter);
   const mobileBlockMenuToggle = $("#mobile-block-menu-toggle");
   const mobileSequenceMenuToggle = $("#mobile-sequence-menu-toggle");
+  const mobileNavigationToggle = $("#mobile-navigation-toggle");
   const mobileExecutionToggle = $("#mobile-execution-toggle");
   const mobileSequenceClose = $("#mobile-sequence-close");
   function updateExecutionToggle(isOpen) {
     if (!mobileExecutionToggle) return;
     mobileExecutionToggle.setAttribute("aria-expanded", String(isOpen));
     mobileExecutionToggle.setAttribute("aria-label", isOpen ? "Cerrar controles de ejecución" : "Abrir controles de ejecución");
+  }
+  if (mobileNavigationToggle) {
+    mobileNavigationToggle.addEventListener("click", function (event) {
+      event.stopPropagation();
+      const isOpen = document.documentElement.classList.toggle("mobile-navigation-open");
+      mobileNavigationToggle.setAttribute("aria-expanded", String(isOpen));
+      mobileNavigationToggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
+    });
   }
   if (mobileBlockMenuToggle) {
     mobileBlockMenuToggle.addEventListener("click", function (event) {

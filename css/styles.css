@@ -2286,6 +2286,7 @@ html.lesson-tour-active body {
 .mobile-sequence-toggle,
 .mobile-execution-toggle,
 .mobile-navigation-toggle,
+.mobile-navigation-close,
 .mobile-sequence-close,
 .mobile-execution-label {
   display: none;
@@ -2381,6 +2382,26 @@ html.mobile-execution-open .execution-chevron {
     height: 34px;
     padding: 0 5px;
     font-size: 11px;
+  }
+
+  body:not(.laboratory-locked) .mobile-navigation-close {
+    display: block;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 9px;
+    color: #287c72;
+    background: #e7f4ed;
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 27px;
+  }
+
+  body:not(.laboratory-locked) .mobile-navigation-close:focus-visible {
+    outline: 3px solid rgba(40, 124, 114, .35);
+    outline-offset: 2px;
   }
 
   body:not(.laboratory-locked) .workspace-page {

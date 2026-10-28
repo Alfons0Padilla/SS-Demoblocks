@@ -1235,6 +1235,11 @@
       const isOpen = document.documentElement.classList.toggle("mobile-navigation-open");
       mobileNavigationToggle.setAttribute("aria-expanded", String(isOpen));
       mobileNavigationToggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
+      if (isOpen) {
+        document.documentElement.classList.remove("mobile-blocks-open", "mobile-program-open");
+        if (mobileBlockMenuToggle) mobileBlockMenuToggle.setAttribute("aria-expanded", "false");
+        if (mobileSequenceMenuToggle) mobileSequenceMenuToggle.setAttribute("aria-expanded", "false");
+      }
     });
   }
   if (mobileBlockMenuToggle) {
@@ -1269,6 +1274,13 @@
     if (!event.target.closest("#workspace-execution-menu") && !event.target.closest("#mobile-execution-toggle")) {
       document.documentElement.classList.remove("mobile-execution-open");
       updateExecutionToggle(false);
+    }
+    if (!event.target.closest("#laboratory-navigation") && !event.target.closest("#mobile-navigation-toggle")) {
+      document.documentElement.classList.remove("mobile-navigation-open");
+      if (mobileNavigationToggle) {
+        mobileNavigationToggle.setAttribute("aria-expanded", "false");
+        mobileNavigationToggle.setAttribute("aria-label", "Abrir menú de navegación");
+      }
     }
     if (!event.target.closest("#biblioteca") &&
         !event.target.closest(".mobile-panel-toggle") &&

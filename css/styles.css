@@ -2470,11 +2470,11 @@ html.mobile-execution-open .execution-chevron {
   .mobile-navigation-toggle {
     position: fixed;
     top: 10px;
-    left: 50%;
+    left: 10px;
     z-index: 21;
     display: grid;
     place-items: center;
-    width: 42px;
+    width: 46px;
     height: 42px;
     padding: 0;
     border: 0;
@@ -2483,12 +2483,23 @@ html.mobile-execution-open .execution-chevron {
     background: #287c72;
     box-shadow: 0 5px 14px rgba(29, 95, 80, .28);
     cursor: pointer;
-    font-size: 20px;
-    transform: translateX(-50%);
+    font-size: 25px;
+    line-height: 1;
+  }
+
+  .mobile-navigation-toggle span[aria-hidden="true"] {
+    display: block;
+    transform: translateY(-1px);
   }
 
   html.mobile-navigation-open body:not(.laboratory-locked) .stage-column {
     padding-top: 96px;
+  }
+
+  html.mobile-navigation-open .mobile-navigation-toggle {
+    color: #287c72;
+    background: #e7f4ed;
+    box-shadow: 0 4px 12px rgba(29, 95, 80, .2);
   }
 
   .mobile-sequence-toggle {

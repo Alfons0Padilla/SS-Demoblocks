@@ -334,7 +334,22 @@
     successNext.addEventListener("click", function () { const items = moduleMissions(currentModule), position = items.indexOf(mission()); if (successNext.dataset.destination === "module") { hideSuccess(); loadModule(currentModule + 1); return; } const next = position + 1 < items.length ? missions.indexOf(items[position + 1]) : -1; if (next >= 0 && isMissionUnlocked(next)) { hideSuccess(); loadMission(next); } });
     previousMissionButton.addEventListener("click", function () { const items = moduleMissions(currentModule), position = items.indexOf(mission()); if (position > 0) loadMission(missions.indexOf(items[position - 1])); });
     nextMissionButton.addEventListener("click", function () { const items = moduleMissions(currentModule), position = items.indexOf(mission()), next = position + 1 < items.length ? missions.indexOf(items[position + 1]) : -1; if (next >= 0 && isMissionUnlocked(next)) loadMission(next); });
-    resetProgressButton.addEventListener("click", function () { if (!window.confirm("¿Quieres borrar tu progreso del curso?")) return; completed.splice(0, completed.length); progress.missionStars = {}; progress.stars = 0; progress.achievements = []; progress.lastModule = 1; saveProgress(); renderMissionList(); renderModules(); updateMissionNavigation(); updateProgressDisplay(); loadMission(0); });
+    resetProgressButton.addEventListener("click", function () {
+      if (!window.confirm("¿Quieres borrar tu progreso del curso?")) return;
+      if (frame) cancelAnimationFrame(frame);
+      frame = null;
+      running = false;
+      canReset = false;
+      completed.splice(0, completed.length);
+      progress.missionStars = {};
+      progress.stars = 0;
+      progress.achievements = [];
+      progress.lastModule = 1;
+      saveProgress();
+      hideSuccess();
+      closeGuide();
+      loadMission(0);
+    });
     renderMissionList(); updateProgressDisplay(); loadMission(0); if (!selectedCourseCharacter()) openCharacterModal();
   }  const stage = document.getElementById("escenario");
   if (!stage) { initCourse(); return; }

@@ -3964,6 +3964,36 @@ html.mobile-execution-open .execution-chevron {
   }
 }
 
+/* Personaje del curso: tamaño contenido dentro del escenario móvil. */
+@media (max-width: 700px) {
+  .site-redesign .lesson-stage #lesson-character,
+  .lesson-stage #lesson-character {
+    width: min(150px, 42vw) !important;
+    height: min(150px, 42vw) !important;
+    max-width: 150px !important;
+    max-height: 150px !important;
+    object-fit: contain;
+  }
+
+  .site-redesign .lesson-stage,
+  .lesson-stage {
+    min-height: 210px;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-redesign .lesson-stage #lesson-character,
+  .lesson-stage #lesson-character {
+    width: 132px !important;
+    height: 132px !important;
+  }
+
+  .site-redesign .lesson-stage,
+  .lesson-stage {
+    min-height: 190px;
+  }
+}
+
 /* Mobile: composición estable para el globo y el personaje. */
 @media (max-width: 700px) {
   .jaguar-guide,

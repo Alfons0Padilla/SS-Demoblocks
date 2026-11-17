@@ -3787,6 +3787,23 @@ html.mobile-execution-open .execution-chevron {
     overflow-wrap: anywhere;
   }
 
+  .jaguar-guide.guide-welcome {
+    top: 50% !important;
+    bottom: auto !important;
+  }
+
+  .jaguar-guide.guide-welcome .jaguar-speech {
+    min-height: 0;
+  }
+
+  .jaguar-guide.guide-welcome .jaguar-guide-image {
+    left: 0 !important;
+    right: auto !important;
+    bottom: 0;
+    width: min(135px, 35vw) !important;
+    max-height: 135px !important;
+  }
+
   .jaguar-speech h2 {
     margin-bottom: 7px;
     font-size: clamp(16px, 5vw, 21px);
@@ -3855,6 +3872,10 @@ html.mobile-execution-open .execution-chevron {
     height: 214px;
   }
 
+  .jaguar-speech-step {
+    display: none;
+  }
+
   .jaguar-speech {
     padding: 10px 10px 8px;
   }
@@ -3878,5 +3899,225 @@ html.mobile-execution-open .execution-chevron {
   .jaguar-guide.is-positioned.guide-side-right .jaguar-guide-image {
     width: min(115px, 34vw);
     max-height: 115px;
+  }
+}
+
+@media (max-width: 700px) {
+  .laboratory-lock-card {
+    grid-template-columns: 1fr;
+    width: calc(100% - 24px);
+    max-width: 430px;
+    max-height: calc(100vh - 24px);
+    height: auto;
+    min-height: 0;
+  }
+
+  .laboratory-lock-mentor {
+    width: min(180px, 46vw);
+    max-height: 180px;
+    height: 180px;
+    margin-top: 4px;
+  }
+
+  .laboratory-lock-message {
+    padding: 4px 18px 18px;
+  }
+
+  .laboratory-lock-message h2 {
+    margin-bottom: 7px;
+    font-size: clamp(22px, 7vw, 28px);
+    line-height: 1.08;
+  }
+
+  .laboratory-lock-message p {
+    margin-bottom: 14px;
+    font-size: clamp(12px, 3.4vw, 13px);
+    line-height: 1.42;
+  }
+
+  .laboratory-lock-message .button {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  .laboratory-lock-card {
+    width: calc(100% - 18px);
+  }
+
+  .laboratory-lock-mentor {
+    width: 150px;
+    max-height: 150px;
+    height: 150px;
+  }
+
+  .laboratory-lock-message {
+    padding-inline: 14px;
+  }
+
+  .laboratory-lock-message h2 {
+    font-size: 21px;
+  }
+
+  .laboratory-lock-message p {
+    font-size: 12px;
+  }
+}
+
+/* Mobile: composición estable para el globo y el personaje. */
+@media (max-width: 700px) {
+  .jaguar-guide,
+  .jaguar-guide.guide-welcome,
+  .laboratory-tour .jaguar-guide,
+  .laboratory-tour .jaguar-guide.is-positioned {
+    width: calc(100% - 24px) !important;
+    max-width: 430px;
+    height: 220px;
+    overflow: visible;
+  }
+
+  .jaguar-guide.is-positioned {
+    left: 12px !important;
+    right: 12px !important;
+    top: auto !important;
+    bottom: 12px !important;
+    transform: none;
+  }
+
+  .jaguar-guide.guide-final {
+    top: 14px !important;
+    bottom: auto !important;
+  }
+
+  .jaguar-guide.guide-welcome {
+    left: 50% !important;
+    top: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%);
+  }
+
+  .jaguar-guide.is-positioned .jaguar-speech,
+  .jaguar-guide.guide-welcome .jaguar-speech,
+  .laboratory-tour .jaguar-speech,
+  .jaguar-speech {
+    top: 0;
+    left: 0 !important;
+    width: 100% !important;
+    min-height: 0;
+    max-height: none;
+    height: auto;
+    box-sizing: border-box;
+    overflow: visible;
+    padding: 12px 14px 11px;
+  }
+
+  .jaguar-speech-tail {
+    left: 42px;
+    right: auto;
+    bottom: -18px;
+  }
+
+  .jaguar-speech-step {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .jaguar-speech h2 {
+    margin-bottom: 6px;
+    font-size: clamp(16px, 5vw, 20px);
+  }
+
+  .jaguar-speech p {
+    font-size: clamp(11px, 3.1vw, 13px);
+    line-height: 1.38;
+  }
+
+  .jaguar-speech-hint {
+    margin-top: 7px;
+  }
+
+  .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-left .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-right .jaguar-guide-image,
+  .laboratory-tour .jaguar-guide-image,
+  .laboratory-tour .jaguar-guide.is-positioned.guide-side-left .jaguar-guide-image,
+  .laboratory-tour .jaguar-guide.is-positioned.guide-side-right .jaguar-guide-image {
+    left: auto !important;
+    right: 10px !important;
+    bottom: 0;
+    width: 112px !important;
+    height: 112px;
+    max-height: 112px;
+  }
+
+  .laboratory-tour .jaguar-guide,
+  .laboratory-tour .jaguar-guide.is-positioned {
+    height: 250px;
+  }
+
+  .laboratory-tour .jaguar-speech {
+    padding: 10px 12px 9px;
+  }
+
+  .laboratory-tour .jaguar-speech-step,
+  .laboratory-tour .jaguar-speech-hint {
+    display: block;
+  }
+
+  .laboratory-tour .jaguar-speech-tail {
+    left: auto;
+    right: 52px;
+  }
+}
+
+@media (max-width: 360px) {
+  .jaguar-guide,
+  .jaguar-guide.guide-welcome,
+  .jaguar-guide.is-positioned {
+    width: calc(100% - 20px) !important;
+    height: 190px;
+  }
+
+  .jaguar-guide.guide-welcome {
+    height: 190px;
+  }
+
+  .jaguar-speech-step,
+  .jaguar-speech-hint {
+    display: none;
+  }
+
+  .jaguar-speech {
+    padding: 9px 10px 8px;
+  }
+
+  .jaguar-speech h2 {
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: 1.08;
+  }
+
+  .jaguar-speech p {
+    font-size: 10.5px;
+    line-height: 1.32;
+  }
+
+  .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-left .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-right .jaguar-guide-image {
+    width: 94px !important;
+    height: 94px;
+    max-height: 94px;
+  }
+
+  .laboratory-tour .jaguar-guide,
+  .laboratory-tour .jaguar-guide.is-positioned {
+    height: 210px;
+  }
+
+  .laboratory-tour .jaguar-speech-step,
+  .laboratory-tour .jaguar-speech-hint {
+    display: none;
   }
 }

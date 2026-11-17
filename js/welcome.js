@@ -115,7 +115,7 @@
   }
 
   function getMobileGuideHeight() {
-    return window.innerWidth <= 360 ? 214 : 232;
+    return window.innerWidth <= 360 ? 190 : 220;
   }
 
   window.addEventListener("scroll", keepTourViewport, { passive: true });
@@ -211,6 +211,20 @@
       if (window.innerWidth <= 700 && hole.top < window.innerHeight / 2 &&
           hole.bottom + gap + guideHeight <= window.innerHeight - margin) {
         guide.style.top = Math.min(window.innerHeight - guideHeight - margin, hole.bottom + gap) + "px";
+      }
+      if (window.innerWidth <= 700) {
+        const edge = window.innerWidth <= 360 ? 10 : 12;
+        guide.style.left = edge + "px";
+        guide.style.right = edge + "px";
+        guide.style.width = "calc(100% - " + (edge * 2) + "px)";
+        guide.style.transform = "none";
+        if (currentMessage === messages.length - 1) {
+          guide.style.top = "14px";
+          guide.style.bottom = "auto";
+        } else {
+          guide.style.top = "auto";
+          guide.style.bottom = "12px";
+        }
       }
       guide.classList.remove("guide-side-left", "guide-side-right");
       guide.classList.add(placement.side === "left" ? "guide-side-left" : "guide-side-right");

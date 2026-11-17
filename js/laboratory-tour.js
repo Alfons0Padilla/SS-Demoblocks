@@ -80,9 +80,8 @@
     guide.style.setProperty("bottom", mobile ? (landscape || executionTarget ? "auto" : "10px") : "auto", "important");
     guide.style.width = mobile ? (landscape ? "min(430px, 52vw)" : "calc(100% - 28px)") : "min(700px, calc(100% - 28px))";
     guide.style.height = mobile
-      ? (window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches ? "188px" : "280px")
+      ? (window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches ? "188px" : (window.innerWidth <= 360 ? "210px" : "250px"))
       : "min(440px, calc(100% - 28px))";
-    if (mobile && !landscape) guide.style.height = "360px";
     guide.style.transform = mobile ? "none" : "translate(-50%, -50%)";
     guide.classList.add("is-positioned", mobile ? "guide-side-left" : "guide-side-right");
   }

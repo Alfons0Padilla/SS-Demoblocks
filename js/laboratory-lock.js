@@ -109,6 +109,7 @@
     window.removeEventListener("wheel", preventScroll);
     window.removeEventListener("touchmove", preventScroll);
     document.removeEventListener("keydown", preventKeys);
+    document.dispatchEvent(new CustomEvent("laboratory-unlocked"));
     lock.remove();
   }
 

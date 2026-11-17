@@ -41,13 +41,14 @@
     }
 
     if (laboratoryGuide) {
+      const topPosition = laboratoryGuide.classList.contains("tour-guide-top");
       laboratoryGuide.style.setProperty("left", edge + "px", "important");
       laboratoryGuide.style.setProperty("right", edge + "px", "important");
       laboratoryGuide.style.setProperty("width", "calc(100% - " + (edge * 2) + "px)", "important");
       laboratoryGuide.style.setProperty("max-width", "430px", "important");
       laboratoryGuide.style.setProperty("height", small ? "210px" : "250px", "important");
-      laboratoryGuide.style.setProperty("top", "auto", "important");
-      laboratoryGuide.style.setProperty("bottom", "10px", "important");
+      laboratoryGuide.style.setProperty("top", topPosition ? "10px" : "auto", "important");
+      laboratoryGuide.style.setProperty("bottom", topPosition ? "auto" : "10px", "important");
       laboratoryGuide.style.setProperty("transform", "none", "important");
     }
 

@@ -4,7 +4,9 @@
   const tour = document.querySelector("#laboratory-tour");
   if (!tour) return;
   if (document.body.classList.contains("laboratory-locked")) {
-    tour.remove();
+    document.addEventListener("laboratory-unlocked", function () {
+      window.location.reload();
+    }, { once: true });
     return;
   }
   const key = "robobloques-laboratory-tour-seen-v2";
@@ -19,7 +21,7 @@
     { title: "Selecciona un personaje para comenzar", text: "Toca un personaje en el escenario para programarlo. Verás el aviso de programación y sus acciones en la secuencia.", target: "#escenario" },
     { title: "Secuencia de acciones", text: "Este menú muestra las instrucciones del personaje seleccionado. Puedes abrirlo sin cerrar la biblioteca.", target: "#programa", open: "sequence" },
     { title: "Ordena las acciones", text: "Toca un bloque para seleccionarlo y luego toca otro bloque o una posición para moverlo. En mobile los bloques no se arrastran.", target: "#programa", open: "sequence" },
-    { title: "Controles de ejecución", text: "Toca el control para desplegar Ejecutar, Detener y Reiniciar. Si no hay acciones, el laboratorio mostrará: “Agrega acciones antes de ejecutar.”", target: "#mobile-execution-toggle", open: "execution" }
+    { title: "Controles de ejecución", text: "Toca el control para desplegar Ejecutar, Detener y Reiniciar. Si no hay acciones, el laboratorio mostrará: “Agrega acciones antes de ejecutar.”", target: "#workspace-execution-menu", open: "execution" }
   ];
   let index = 0;
   let renderId = 0;
@@ -34,7 +36,12 @@
     const root = document.documentElement;
     if (name === "blocks") root.classList.toggle("mobile-blocks-open", open);
     if (name === "sequence") root.classList.toggle("mobile-program-open", open);
-    if (name === "execution") root.classList.toggle("mobile-execution-open", open);
+    if (name === "execution") {
+      root.classList.toggle("mobile-execution-open", open);
+      if (open) {
+        root.classList.remove("mobile-blocks-open", "mobile-program-open");
+      }
+    }
     const button = name === "blocks" ? document.querySelector("#mobile-block-menu-toggle")
       : name === "sequence" ? document.querySelector("#mobile-sequence-menu-toggle")
         : document.querySelector("#mobile-execution-toggle");
@@ -51,7 +58,13 @@
     }
     const bounds = target ? target.getBoundingClientRect() : null;
     const padding = 7;
-    const bottom = window.innerHeight - (window.innerWidth <= 700 ? 202 : 18);
+    const smallMobile = window.innerWidth <= 360;
+    const guideHeight = smallMobile ? 210 : 250;
+    const executionTarget = currentStepTarget === "#mobile-execution-toggle" ||
+      currentStepTarget === "#workspace-execution-menu";
+    const bottom = window.innerWidth <= 700
+      ? (executionTarget ? window.innerHeight - 8 : window.innerHeight - guideHeight - 10)
+      : window.innerHeight - 18;
     const hole = bounds ? {
       left: Math.max(8, bounds.left - padding),
       top: Math.max(8, bounds.top - padding),
@@ -71,10 +84,17 @@
     panels.forEach(function (panel, panelIndex) { Object.assign(panel.style, styles[panelIndex]); });
     const mobile = window.innerWidth <= 700 || (window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches);
     const landscape = window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches;
-    const executionTarget = currentStepTarget === "#mobile-execution-toggle";
-    guide.classList.toggle("tour-guide-top", landscape || executionTarget);
-    guide.classList.toggle("tour-guide-bottom", !landscape && !executionTarget);
-    guide.style.left = mobile ? (landscape ? "12px" : "14px") : "50%";
+    const guideExecutionTarget = currentStepTarget === "#mobile-execution-toggle" ||
+      currentStepTarget === "#workspace-execution-menu";
+    guide.classList.toggle("tour-guide-top", landscape || guideExecutionTarget);
+    guide.classList.toggle("tour-guide-bottom", !landscape && !guideExecutionTarget);
+    const mobileEdge = window.innerWidth <= 360 ? 10 : 12;
+    guide.style.left = mobile ? (landscape ? "12px" : mobileEdge + "px") : "50%";
+    if (mobile) {
+      guide.style.setProperty("left", mobileEdge + "px", "important");
+      guide.style.setProperty("right", mobileEdge + "px", "important");
+      guide.style.setProperty("width", "calc(100% - " + (mobileEdge * 2) + "px)", "important");
+    }
     guide.style.setProperty("top", mobile ? (landscape || executionTarget ? "10px" : "auto") : "50%", "important");
     guide.style.right = mobile ? (landscape ? "auto" : "14px") : "auto";
     guide.style.setProperty("bottom", mobile ? (landscape || executionTarget ? "auto" : "10px") : "auto", "important");

@@ -114,6 +114,10 @@
     if (scrollKeys.includes(event.key)) event.preventDefault();
   }
 
+  function getMobileGuideHeight() {
+    return window.innerWidth <= 360 ? 214 : 232;
+  }
+
   window.addEventListener("scroll", keepTourViewport, { passive: true });
   window.addEventListener("wheel", preventTourScroll, { passive: false });
   window.addEventListener("touchmove", preventTourScroll, { passive: false });
@@ -125,7 +129,7 @@
     if (window.innerWidth <= 700) {
       const currentBounds = target.getBoundingClientRect();
       const mobileTop = 14;
-      const mobileGuideHeight = window.innerWidth <= 360 ? 168 : 188;
+      const mobileGuideHeight = getMobileGuideHeight();
       const mobileBottom = window.innerHeight - mobileGuideHeight - 20;
       const availableHeight = Math.max(120, mobileBottom - mobileTop);
       const targetTop = currentBounds.height <= availableHeight
@@ -141,7 +145,7 @@
       const padding = window.innerWidth <= 700 ? 6 : 9;
       const viewportTop = window.innerWidth <= 700 ? 6 : 8;
       const viewportBottom = window.innerWidth <= 700
-        ? window.innerHeight - (currentMessage === messages.length - 1 ? 12 : (window.innerWidth <= 360 ? 168 : 188) + 12)
+        ? window.innerHeight - (currentMessage === messages.length - 1 ? 12 : getMobileGuideHeight() + 12)
         : window.innerHeight - 8;
       const visibleTop = Math.max(viewportTop, bounds.top - padding);
       const visibleBottom = Math.min(viewportBottom, bounds.bottom + padding);
@@ -166,7 +170,7 @@
       });
 
       const guideWidth = Math.min(700, window.innerWidth - 28);
-      const mobileGuideHeight = window.innerWidth <= 360 ? 168 : 188;
+      const mobileGuideHeight = getMobileGuideHeight();
       const guideHeight = Math.min(window.innerWidth <= 700 ? mobileGuideHeight : 440, window.innerHeight - 28);
       guide.style.setProperty("--guide-width", guideWidth + "px");
       guide.style.height = guideHeight + "px";

@@ -3763,3 +3763,120 @@ html.mobile-execution-open .execution-chevron {
     aspect-ratio: 4 / 3;
   }
 }
+
+/* Los globos del tour comparten una altura con el cálculo de welcome.js. */
+@media (max-width: 700px) {
+  .jaguar-guide,
+  .jaguar-guide.guide-welcome {
+    width: calc(100% - 28px);
+    height: 232px;
+    max-width: none;
+    overflow: visible;
+  }
+
+  .jaguar-guide.is-positioned .jaguar-speech,
+  .jaguar-guide.guide-welcome .jaguar-speech,
+  .jaguar-speech {
+    top: 0;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: none;
+    max-height: none;
+    box-sizing: border-box;
+    padding: 12px 13px 10px;
+    overflow-wrap: anywhere;
+  }
+
+  .jaguar-speech h2 {
+    margin-bottom: 7px;
+    font-size: clamp(16px, 5vw, 21px);
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+
+  .jaguar-speech p {
+    font-size: clamp(11px, 3.2vw, 13px);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  .jaguar-speech-hint {
+    margin-top: 9px;
+    font-size: clamp(9px, 2.8vw, 11px);
+    line-height: 1.25;
+  }
+
+  .jaguar-speech-hint b {
+    margin-left: 4px;
+  }
+
+  .jaguar-speech-tail {
+    left: 30px;
+    right: auto;
+    bottom: -19px;
+    width: 25px;
+    height: 25px;
+    transform: skew(-25deg) rotate(-45deg);
+  }
+
+  .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-left .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-right .jaguar-guide-image {
+    left: 0;
+    right: auto;
+    bottom: 0;
+    width: min(135px, 35vw);
+    max-height: 135px;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+  .jaguar-guide.guide-welcome {
+    width: calc(100% - 28px);
+    height: min(520px, calc(100vh - 24px));
+  }
+
+  .jaguar-guide.guide-welcome .jaguar-guide-image {
+    width: min(330px, 43vw);
+    max-height: 520px;
+  }
+
+  .jaguar-guide.guide-welcome .jaguar-speech {
+    top: 16px;
+    left: min(330px, 43vw);
+    width: calc(100% - min(350px, 45vw));
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 360px) {
+  .jaguar-guide,
+  .jaguar-guide.guide-welcome {
+    height: 214px;
+  }
+
+  .jaguar-speech {
+    padding: 10px 10px 8px;
+  }
+
+  .jaguar-speech h2 {
+    font-size: clamp(15px, 5vw, 18px);
+  }
+
+  .jaguar-speech p {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .jaguar-speech-hint {
+    margin-top: 6px;
+    font-size: 10px;
+  }
+
+  .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-left .jaguar-guide-image,
+  .jaguar-guide.is-positioned.guide-side-right .jaguar-guide-image {
+    width: min(115px, 34vw);
+    max-height: 115px;
+  }
+}

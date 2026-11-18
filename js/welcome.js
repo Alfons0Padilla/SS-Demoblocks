@@ -31,10 +31,10 @@
       "Navega por la aventura": ".main-nav",
       "Comienza con una misión": ".home-hero .button-primary",
       "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".product-demo",
+      "Mira cómo funciona": ".demo-heading",
       "Elige tu camino": ".learning-modes",
       "Aprende el proceso": ".process-list",
-      "¿Listo para crear?": ".home-final-cta"
+      "¿Listo para crear?": ".final-actions"
     };
     const target = document.querySelector(targetSelectors[message.title]);
     if (!target) {
@@ -110,10 +110,10 @@
       "Navega por la aventura": ".main-nav",
       "Comienza con una misión": ".home-hero .button-primary",
       "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".product-demo",
+      "Mira cómo funciona": ".demo-heading",
       "Elige tu camino": ".learning-modes",
       "Aprende el proceso": ".process-list",
-      "¿Listo para crear?": ".home-final-cta"
+      "¿Listo para crear?": ".final-actions"
     };
     const target = document.querySelector(targetSelectors[message.title]);
     if (!target) {
@@ -162,10 +162,10 @@
       "Navega por la aventura": ".main-nav",
       "Comienza con una misión": ".home-hero .button-primary",
       "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".product-demo",
+      "Mira cómo funciona": ".demo-heading",
       "Elige tu camino": ".learning-modes",
       "Aprende el proceso": ".process-list",
-      "¿Listo para crear?": ".home-final-cta"
+      "¿Listo para crear?": ".final-actions"
     };
     const target = document.querySelector(targetSelectors[message.title]);
     if (!target) {
@@ -175,7 +175,8 @@
     }
 
     const before = target.getBoundingClientRect();
-    const targetDocumentTop = window.scrollY + before.top;
+    const appShellForPosition = document.querySelector(".app-shell");
+    const targetDocumentTop = (appShellForPosition ? appShellForPosition.scrollTop : window.scrollY) + before.top;
     const desiredTop = index === messages.length - 1 ? 260 : 70;
     setMobileTourScroll(targetDocumentTop - desiredTop);
     window.requestAnimationFrame(function () {
@@ -197,29 +198,11 @@
       const viewportBottom = cardRect
         ? (index === messages.length - 1 ? window.innerHeight - 12 : cardRect.top - 12)
         : window.innerHeight - 202;
-      const fallbackZones = {
-        "Mira cómo funciona": { top: 63, height: 300 },
-        "Elige tu camino": { top: 63, height: 489 },
-        "Aprende el proceso": { top: 63, height: 250 },
-        "¿Listo para crear?": { top: 260, height: 110 }
-      };
-      let visibleTop;
-      let visibleBottom;
-      let left;
-      let right;
-      if (bounds.bottom < 0 || bounds.top > window.innerHeight) {
-        const fallback = fallbackZones[message.title];
-        if (!fallback) return;
-        left = 12;
-        right = window.innerWidth - 12;
-        visibleTop = fallback.top;
-        visibleBottom = Math.min(viewportBottom, fallback.top + fallback.height);
-      } else {
-        visibleTop = Math.max(8, bounds.top - padding);
-        visibleBottom = Math.min(viewportBottom, bounds.bottom + padding);
-        left = Math.max(8, bounds.left - padding);
-        right = Math.min(window.innerWidth - 8, bounds.right + padding);
-      }
+      if (bounds.bottom < 0 || bounds.top > window.innerHeight) return;
+      const visibleTop = Math.max(8, bounds.top - padding);
+      const visibleBottom = Math.min(viewportBottom, bounds.bottom + padding);
+      const left = Math.max(8, bounds.left - padding);
+      const right = Math.min(window.innerWidth - 8, bounds.right + padding);
       if (visibleBottom <= visibleTop) return;
 
       spotlight.style.setProperty("display", "none", "important");
@@ -389,7 +372,8 @@
     if (window.innerWidth <= 700) {
       const currentBounds = target.getBoundingClientRect();
       const mobileGuideHeight = getMobileGuideHeight();
-      const targetDocumentTop = window.scrollY + currentBounds.top;
+      const appShellForPosition = document.querySelector(".app-shell");
+      const targetDocumentTop = (appShellForPosition ? appShellForPosition.scrollTop : window.scrollY) + currentBounds.top;
       const desiredViewportTop = currentBounds.height > window.innerHeight - mobileGuideHeight - 80
         ? 12
         : 70;

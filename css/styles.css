@@ -1123,7 +1123,7 @@ html.jaguar-tour-active body {
   .laboratory-lock-message .button,
   .laboratory-lock-card::before { animation: none; }
 }
-.jaguar-welcome-scrim { position: absolute; z-index: 20; inset: 0; background: transparent; animation: jaguar-scrim-in .45s ease both; }
+.jaguar-welcome-scrim { position: absolute; z-index: 20; inset: 0; background: rgba(17, 27, 52, .68); animation: jaguar-scrim-in .45s ease both; }
 .jaguar-overlay-panels { position: absolute; z-index: 21; inset: 0; pointer-events: none; }
 .jaguar-overlay-panel { position: fixed; display: block; background: rgba(17, 27, 52, .68); }
 .jaguar-guide { position: absolute; z-index: 23; left: 50%; bottom: 2vh; width: min(700px, 94vw); height: 440px; transform: translateX(-50%); animation: jaguar-arrive .9s cubic-bezier(.2,.8,.25,1) both; }
@@ -4154,9 +4154,13 @@ html.mobile-execution-open .execution-chevron {
 
 /* Tarjeta independiente del tour móvil de Inicio. Evita heredar las posiciones del tour antiguo. */
 @media (max-width: 700px) {
-  #jaguar-welcome .jaguar-welcome-scrim,
-  #jaguar-welcome .jaguar-overlay-panels {
+  #jaguar-welcome .jaguar-welcome-scrim {
+    z-index: 20 !important;
     background: rgba(17, 27, 52, .68) !important;
+  }
+
+  #jaguar-welcome .jaguar-overlay-panels {
+    display: none !important;
   }
 
   #jaguar-welcome .jaguar-guide {

@@ -4697,3 +4697,24 @@ html.mobile-execution-open .execution-chevron {
     transition: none;
   }
 }
+
+/* Presentación inicial: el personaje nunca excede el alto del navegador. */
+@media (min-width: 701px) {
+  #jaguar-welcome .jaguar-guide.guide-welcome {
+    left: 50% !important;
+    right: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    height: min(520px, calc(100dvh - 48px));
+    transform: translate(-50%, -50%) !important;
+  }
+
+  #jaguar-welcome .jaguar-guide.guide-welcome .jaguar-guide-image {
+    left: 0 !important;
+    right: auto !important;
+    bottom: 0 !important;
+    width: min(300px, 28vw);
+    height: min(400px, 52dvh);
+    max-height: min(400px, 52dvh);
+  }
+}

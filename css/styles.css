@@ -3964,6 +3964,129 @@ html.mobile-execution-open .execution-chevron {
   }
 }
 
+/* Tarjeta de puntuación al completar una misión. */
+.success-score-panel {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  width: min(410px, 92%);
+  margin-top: 10px;
+  padding: 10px 16px 12px;
+  border: 2px solid #f1c75b;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 10px 24px rgba(150, 112, 36, .16), inset 0 0 0 4px rgba(255, 226, 146, .28);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.success-score-panel .success-score {
+  margin: 0 !important;
+  line-height: 1;
+  letter-spacing: 2px;
+}
+
+.success-score-label {
+  margin-top: 7px;
+  color: #287c72;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.success-score-panel .success-score-details {
+  max-width: 340px;
+  margin-top: 7px;
+  color: #65766e;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .lesson-success.is-visible {
+    width: calc(100% - 24px);
+    min-height: 0;
+    max-height: calc(100vh - 24px);
+    height: auto;
+    padding: 24px 14px 18px;
+    overflow-y: auto;
+    border-width: 3px;
+    border-radius: 24px;
+  }
+
+  .lesson-success.is-visible .success-star {
+    font-size: 72px;
+  }
+
+  .lesson-success.is-visible > strong {
+    margin-top: 8px;
+    font-size: clamp(20px, 7vw, 28px);
+  }
+
+  .lesson-success.is-visible > strong + span {
+    font-size: 13px;
+  }
+
+  .success-score-panel {
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px 10px 9px;
+  }
+
+  .success-score-panel .success-score {
+    font-size: 24px !important;
+  }
+
+  .success-score-label {
+    font-size: 12px;
+  }
+
+  .success-score-panel .success-score-details {
+    max-width: 270px;
+    margin-top: 5px;
+    font-size: 10px;
+  }
+
+  .success-actions {
+    margin-top: 12px;
+  }
+
+  .success-actions .button {
+    min-height: 40px;
+    padding: 9px 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .lesson-success.is-visible {
+    width: calc(100% - 16px);
+    max-height: calc(100vh - 16px);
+    padding: 20px 10px 14px;
+  }
+
+  .lesson-success.is-visible .success-star {
+    font-size: 62px;
+  }
+
+  .lesson-success.is-visible > strong {
+    font-size: 20px;
+  }
+
+  .success-score-panel .success-score {
+    font-size: 21px !important;
+  }
+
+  .success-actions {
+    width: 100%;
+  }
+
+  .success-actions .button {
+    width: 100%;
+  }
+}
+
 /* Personaje del curso: tamaño contenido dentro del escenario móvil. */
 @media (max-width: 700px) {
   .site-redesign .lesson-stage #lesson-character,

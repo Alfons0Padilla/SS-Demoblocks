@@ -78,7 +78,13 @@
       : (index === 0 ? "jaguar-mobile-card is-intro" : "jaguar-mobile-card");
     card.style.display = "block";
     if (finalStep) {
-      card.setAttribute("style", "position: fixed !important; top: 14px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; transform: none !important;");
+      card.setAttribute("style", "position: fixed !important; top: 109px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; transform: none !important;");
+      window.requestAnimationFrame(function () {
+        card.setAttribute("style", "position: fixed !important; top: 109px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; max-height: 190px !important; transform: none !important;");
+      });
+      window.setTimeout(function () {
+        card.setAttribute("style", "position: fixed !important; top: 109px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; max-height: 190px !important; transform: none !important;");
+      }, 50);
     } else if (index === 0) {
       card.style.top = "50%";
       card.style.bottom = "auto";
@@ -196,11 +202,11 @@
       spotlight.style.setProperty("display", "none", "important");
       overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
       const halo = ensureMobileSpotlight();
-      halo.style.display = "block";
-      halo.style.left = left + "px";
-      halo.style.top = visibleTop + "px";
-      halo.style.width = Math.max(0, right - left) + "px";
-      halo.style.height = Math.max(0, visibleBottom - visibleTop) + "px";
+      halo.setAttribute("style",
+        "position:fixed!important;z-index:22!important;display:block!important;" +
+        "left:" + left + "px!important;top:" + visibleTop + "px!important;" +
+        "width:" + Math.max(0, right - left) + "px!important;" +
+        "height:" + Math.max(0, visibleBottom - visibleTop) + "px!important;");
     }
     paintSpotlight();
     [100, 300, 600].forEach(function (delay) {

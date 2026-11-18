@@ -265,7 +265,7 @@ h2 { margin: 6px 0 0; font-size: 27px; letter-spacing: -.8px; }
 @media (max-width: 700px) {
   .jaguar-mobile-card.is-final {
     position: fixed !important;
-    top: 14px !important;
+    top: 109px !important;
     right: 10px !important;
     bottom: auto !important;
     left: 10px !important;
@@ -526,7 +526,7 @@ body { background: #fffaf2; }
 .lesson-guide.message-refresh .lesson-guide-icon { animation: message-icon-bounce .55s cubic-bezier(.2,.9,.25,1.3) both; }
 .lesson-guide.message-refresh .lesson-guide-step { animation: message-step-glow .7s ease-out both; }
 .lesson-guide.message-refresh .lesson-guide-next { animation: message-button-arrive .5s .12s ease-out both; }
-.lesson-guide.message-refresh .lesson-guide-spotlight { animation: guide-pulse 1.2s ease-in-out infinite, spotlight-arrive .55s ease-out both; }
+.lesson-guide.message-refresh .lesson-guide-spotlight { animation: none; }
 @keyframes message-title-pop { from { opacity: 0; transform: translateY(10px) scale(.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes message-copy-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes message-icon-bounce { 0% { opacity: 0; transform: scale(.4) rotate(-18deg); } 70% { opacity: 1; transform: scale(1.18) rotate(8deg); } 100% { transform: scale(1) rotate(0); } }
@@ -542,7 +542,7 @@ body { background: #fffaf2; }
 .lesson-guide { position: fixed; z-index: 1000; inset: 0; display: none; }
 .lesson-guide.is-visible { display: block; }
 .lesson-guide-backdrop { position: absolute; z-index: 0; inset: 0; background: rgba(24, 35, 61, .42); pointer-events: auto; }
-.lesson-guide-spotlight { position: absolute; z-index: 1; border: 4px solid var(--yellow); border-radius: 17px; background: transparent; box-shadow: 0 0 0 7px rgba(255, 200, 87, .25), 0 5px 0 rgba(231, 169, 50, .18); pointer-events: none; animation: guide-pulse 1.2s ease-in-out infinite; }
+.lesson-guide-spotlight { position: absolute; z-index: 1; border: 4px solid var(--yellow); border-radius: 17px; background: transparent; box-shadow: 0 0 0 7px rgba(255, 200, 87, .25), 0 5px 0 rgba(231, 169, 50, .18); pointer-events: none; animation: none; transition: none; }
 .lesson-guide-card { position: absolute; z-index: 2; left: 50%; bottom: 18px; display: grid; justify-items: center; width: min(390px, calc(100% - 28px)); min-height: 212px; padding: 23px 24px 19px; overflow: visible; border: 4px solid #2f8d72; border-radius: 25px 25px 25px 7px; background: #fff; box-shadow: 0 18px 38px rgba(10, 20, 45, .28); text-align: center; transform: translateX(-50%); animation: mentor-card-in .38s ease-out both; }
 .lesson-guide-mentor { position: absolute; z-index: 3; left: -208px; bottom: -8px; width: 240px; height: 300px; object-fit: contain; object-position: bottom center; filter: drop-shadow(0 22px 18px rgba(0, 0, 0, .25)); animation: mentor-pop .65s cubic-bezier(.2, .9, .25, 1.2) both; }
 .lesson-guide-card::before { position: absolute; left: -33px; bottom: 34%; width: 40px; height: 40px; border-left: 4px solid #2f8d72; border-bottom: 4px solid #2f8d72; background: #fff; content: ""; transform: skew(-28deg) rotate(28deg); }
@@ -1149,7 +1149,7 @@ html.jaguar-tour-active body {
 .jaguar-guide-image-right { display: none; }
 .jaguar-guide.looks-right .jaguar-guide-image-left { display: none; }
 .jaguar-guide.looks-right .jaguar-guide-image-right { display: block; }
-.jaguar-spotlight { position: fixed; z-index: 22; border: 3px solid #ffd166; border-radius: 16px; box-shadow: 0 0 0 7px rgba(255, 209, 102, .38), 0 0 28px rgba(255, 209, 102, .8); pointer-events: none; transition: top .5s ease, left .5s ease, width .5s ease, height .5s ease; animation: jaguar-highlight-pulse 1.8s ease-in-out infinite; }
+.jaguar-spotlight { position: fixed; z-index: 22; border: 3px solid #ffd166; border-radius: 16px; box-shadow: 0 0 0 7px rgba(255, 209, 102, .38), 0 0 28px rgba(255, 209, 102, .8); pointer-events: none; transition: none; animation: none; }
 .jaguar-speech { position: absolute; z-index: 3; top: 8%; left: 330px; width: 350px; padding: 23px 24px 19px; border: 4px solid #2f8d72; border-radius: 25px 25px 25px 7px; color: #203752; background: #fff; box-shadow: 0 18px 38px rgba(10, 20, 45, .28); animation: jaguar-bubble-in .45s .55s ease both; }
 .jaguar-guide.guide-welcome .jaguar-speech,
 .jaguar-guide.is-positioned .jaguar-speech { animation: jaguar-bubble-in .45s ease both, jaguar-bubble-float 3.6s .55s ease-in-out infinite; }
@@ -1200,7 +1200,7 @@ html.jaguar-tour-active body {
     animation: jaguar-bubble-in .45s ease both, jaguar-bubble-float 3.6s .55s ease-in-out infinite !important;
   }
   .jaguar-speech-tail { animation: jaguar-tail-pulse 2.2s ease-in-out infinite !important; }
-  .jaguar-spotlight { animation: jaguar-highlight-pulse 1.8s ease-in-out infinite !important; }
+  .jaguar-spotlight { animation: none !important; transition: none !important; }
   .jaguar-welcome.is-dismissed { transition: none; }
 }
 
@@ -4194,8 +4194,11 @@ html.mobile-execution-open .execution-chevron {
   }
 
   .jaguar-mobile-card.is-final {
-    bottom: auto;
-    top: 14px;
+    bottom: auto !important;
+    top: 109px !important;
+    height: 190px !important;
+    max-height: 190px !important;
+    transform: none !important;
   }
 
   .jaguar-mobile-speech {
@@ -4489,6 +4492,15 @@ html.mobile-execution-open .execution-chevron {
   }
 }
 
+/* Las zonas resaltadas permanecen fijas: las tarjetas pueden animarse, no los halos. */
+.jaguar-spotlight,
+.jaguar-mobile-spotlight,
+.lesson-guide-spotlight {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
 /* Tarjeta independiente para las guías del Curso en móvil. */
 @media (max-width: 700px) {
   .lesson-guide-backdrop {
@@ -4581,5 +4593,7 @@ html.mobile-execution-open .execution-chevron {
     background: rgba(255, 255, 255, .08);
     box-shadow: 0 0 0 100vmax rgba(17, 27, 52, .68), 0 0 0 7px rgba(255, 209, 102, .38), 0 0 28px rgba(255, 209, 102, .8);
     pointer-events: none;
+    animation: none;
+    transition: none;
   }
 }

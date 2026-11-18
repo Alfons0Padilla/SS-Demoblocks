@@ -31,10 +31,10 @@
       "Navega por la aventura": ".main-nav",
       "Comienza con una misión": ".home-hero .button-primary",
       "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".demo-heading",
-      "Elige tu camino": ".home-paths .section-heading",
-      "Aprende el proceso": ".home-process .process-intro",
-      "¿Listo para crear?": ".home-final-cta .final-actions"
+      "Mira cómo funciona": ".product-demo",
+      "Elige tu camino": ".learning-modes",
+      "Aprende el proceso": ".process-list",
+      "¿Listo para crear?": ".home-final-cta"
     };
     const target = document.querySelector(targetSelectors[message.title]);
     if (!target) {
@@ -110,10 +110,10 @@
       "Navega por la aventura": ".main-nav",
       "Comienza con una misión": ".home-hero .button-primary",
       "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".demo-heading",
-      "Elige tu camino": ".home-paths .section-heading",
-      "Aprende el proceso": ".home-process .process-intro",
-      "¿Listo para crear?": ".home-final-cta .final-actions"
+      "Mira cómo funciona": ".product-demo",
+      "Elige tu camino": ".learning-modes",
+      "Aprende el proceso": ".process-list",
+      "¿Listo para crear?": ".home-final-cta"
     };
     const target = document.querySelector(targetSelectors[message.title]);
     if (!target) {
@@ -162,10 +162,10 @@
       "Navega por la aventura": ".main-nav",
       "Comienza con una misión": ".home-hero .button-primary",
       "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".demo-heading",
-      "Elige tu camino": ".home-paths .section-heading",
-      "Aprende el proceso": ".home-process .process-intro",
-      "¿Listo para crear?": ".home-final-cta .final-actions"
+      "Mira cómo funciona": ".product-demo",
+      "Elige tu camino": ".learning-modes",
+      "Aprende el proceso": ".process-list",
+      "¿Listo para crear?": ".home-final-cta"
     };
     const target = document.querySelector(targetSelectors[message.title]);
     if (!target) {
@@ -177,7 +177,12 @@
     const before = target.getBoundingClientRect();
     const targetDocumentTop = window.scrollY + before.top;
     const desiredTop = index === messages.length - 1 ? 260 : 70;
-    window.scrollTo({ top: Math.max(0, targetDocumentTop - desiredTop), left: 0, behavior: "auto" });
+    setMobileTourScroll(targetDocumentTop - desiredTop);
+    window.requestAnimationFrame(function () {
+      lockedScrollY = window.scrollY;
+      isProgrammaticScroll = false;
+      paintSpotlight();
+    });
 
     const run = ++mobileSpotlightRun;
     mobileSpotlightTimers.forEach(function (timer) { window.clearTimeout(timer); });
@@ -192,12 +197,30 @@
       const viewportBottom = cardRect
         ? (index === messages.length - 1 ? window.innerHeight - 12 : cardRect.top - 12)
         : window.innerHeight - 202;
-      if (bounds.bottom < 0 || bounds.top > window.innerHeight) return;
-      const visibleTop = Math.max(8, bounds.top - padding);
-      const visibleBottom = Math.min(viewportBottom, bounds.bottom + padding);
+      const fallbackZones = {
+        "Mira cómo funciona": { top: 63, height: 300 },
+        "Elige tu camino": { top: 63, height: 489 },
+        "Aprende el proceso": { top: 63, height: 250 },
+        "¿Listo para crear?": { top: 260, height: 110 }
+      };
+      let visibleTop;
+      let visibleBottom;
+      let left;
+      let right;
+      if (bounds.bottom < 0 || bounds.top > window.innerHeight) {
+        const fallback = fallbackZones[message.title];
+        if (!fallback) return;
+        left = 12;
+        right = window.innerWidth - 12;
+        visibleTop = fallback.top;
+        visibleBottom = Math.min(viewportBottom, fallback.top + fallback.height);
+      } else {
+        visibleTop = Math.max(8, bounds.top - padding);
+        visibleBottom = Math.min(viewportBottom, bounds.bottom + padding);
+        left = Math.max(8, bounds.left - padding);
+        right = Math.min(window.innerWidth - 8, bounds.right + padding);
+      }
       if (visibleBottom <= visibleTop) return;
-      const left = Math.max(8, bounds.left - padding);
-      const right = Math.min(window.innerWidth - 8, bounds.right + padding);
 
       spotlight.style.setProperty("display", "none", "important");
       overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
@@ -313,6 +336,7 @@
   }
 
   function keepTourViewport() {
+    if (window.innerWidth <= 700) return;
     if (!isProgrammaticScroll && window.scrollY !== lockedScrollY) {
       window.scrollTo(0, lockedScrollY);
     }
@@ -332,6 +356,28 @@
     return window.innerWidth <= 360 ? 190 : 220;
   }
 
+  function enableMobileTourScroll() {
+    if (window.innerWidth > 700) return;
+    document.documentElement.style.setProperty("overflow-y", "auto", "important");
+    document.documentElement.style.setProperty("height", "100dvh", "important");
+    document.body.style.setProperty("overflow-y", "auto", "important");
+    document.body.style.setProperty("height", "100dvh", "important");
+  }
+
+  function setMobileTourScroll(top) {
+    if (window.innerWidth > 700) return;
+    const appShell = document.querySelector(".app-shell");
+    const scrollContainer = appShell || document.documentElement;
+    const maxScroll = Math.max(0, scrollContainer.scrollHeight - window.innerHeight);
+    const nextScroll = Math.max(0, Math.min(maxScroll, top));
+    isProgrammaticScroll = true;
+    lockedScrollY = nextScroll;
+    scrollContainer.scrollTop = nextScroll;
+    document.documentElement.scrollTop = nextScroll;
+    document.body.scrollTop = nextScroll;
+    window.scrollTo({ top: nextScroll, left: 0, behavior: "auto" });
+  }
+
   window.addEventListener("scroll", keepTourViewport, { passive: true });
   window.addEventListener("wheel", preventTourScroll, { passive: false });
   window.addEventListener("touchmove", preventTourScroll, { passive: false });
@@ -347,11 +393,7 @@
       const desiredViewportTop = currentBounds.height > window.innerHeight - mobileGuideHeight - 80
         ? 12
         : 70;
-      window.scrollTo({
-        top: Math.max(0, targetDocumentTop - desiredViewportTop),
-        left: 0,
-        behavior: "auto"
-      });
+      setMobileTourScroll(targetDocumentTop - desiredViewportTop);
     } else {
       target.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
     }
@@ -474,6 +516,7 @@
   }
 
   function showMessage() {
+    enableMobileTourScroll();
     const message = messages[currentMessage];
     title.textContent = message.title;
     text.textContent = message.text;
@@ -522,6 +565,10 @@
     document.body.classList.add("jaguar-tour-finished");
     document.body.classList.remove("jaguar-tour-active");
     document.documentElement.classList.remove("jaguar-tour-active");
+    document.documentElement.style.removeProperty("overflow-y");
+    document.documentElement.style.removeProperty("height");
+    document.body.style.removeProperty("overflow-y");
+    document.body.style.removeProperty("height");
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     window.removeEventListener("scroll", keepTourViewport);
     window.removeEventListener("wheel", preventTourScroll);

@@ -4531,3 +4531,20 @@ html.mobile-execution-open .execution-chevron {
     min-height: 42px;
   }
 }
+
+@media (max-width: 700px) {
+  #jaguar-welcome .jaguar-spotlight {
+    display: none !important;
+  }
+
+  .jaguar-mobile-spotlight {
+    position: fixed;
+    z-index: 22;
+    display: none;
+    border: 4px solid #ffd166;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, .08);
+    box-shadow: 0 0 0 7px rgba(255, 209, 102, .38), 0 0 28px rgba(255, 209, 102, .8);
+    pointer-events: none;
+  }
+}

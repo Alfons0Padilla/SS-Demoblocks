@@ -4154,6 +4154,11 @@ html.mobile-execution-open .execution-chevron {
 
 /* Tarjeta independiente del tour móvil de Inicio. Evita heredar las posiciones del tour antiguo. */
 @media (max-width: 700px) {
+  #jaguar-welcome .jaguar-welcome-scrim,
+  #jaguar-welcome .jaguar-overlay-panels {
+    background: rgba(17, 27, 52, .68) !important;
+  }
+
   #jaguar-welcome .jaguar-guide {
     display: none !important;
   }
@@ -4473,6 +4478,23 @@ html.mobile-execution-open .execution-chevron {
 
 /* Tarjeta independiente para las guías del Curso en móvil. */
 @media (max-width: 700px) {
+  .lesson-guide-backdrop {
+    z-index: 0;
+    background: rgba(18, 24, 58, .68) !important;
+  }
+
+  .lesson-success-scrim,
+  .lesson-success-scrim.is-visible {
+    position: fixed !important;
+    z-index: 1090 !important;
+    inset: 0 !important;
+    background: rgba(18, 24, 58, .78) !important;
+  }
+
+  .lesson-success.is-visible {
+    z-index: 1100 !important;
+  }
+
   .lesson-guide-card,
   .lesson-guide-mentor {
     display: none !important;

@@ -1,0 +1,16 @@
+# Editor y sistema operativo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+
+# Archivos generados localmente
+node_modules/
+dist/
+build/
+coverage/

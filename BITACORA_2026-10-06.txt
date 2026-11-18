@@ -1,0 +1,124 @@
+BITÁCORA DE DESARROLLO - 6 DE OCTUBRE DE 2026
+Proyecto: RoboBloques
+
+RESUMEN DE LA SESIÓN
+=====================
+Hoy se refinó la experiencia del curso guiado, especialmente la presentación del reto, las pistas y la navegación entre misiones. También se activó temporalmente el acceso libre a todas las misiones para facilitar las pruebas durante el desarrollo.
+
+CAMBIOS REALIZADOS
+==================
+
+1. Simplificación del reto
+--------------------------------
+- La sección del reto dejó de mostrar secuencias de bloques, preguntas de reflexión y requisitos que podían revelar la solución.
+- Actualmente la tarjeta solo muestra:
+  - El icono del reto.
+  - El título "Tu reto".
+  - El objetivo claro de la misión.
+- El objetivo de las misiones normales utiliza instrucciones directas, por ejemplo:
+  - "Haz que Robotcito avance."
+  - "Lleva a Robotcito y tráelo de vuelta."
+  - "Crea tu propio recorrido."
+  - "Incluye una pausa en el recorrido."
+- Las preguntas se conservan únicamente en las misiones de corrección de errores, donde ayudan a detectar el problema sin entregar la solución.
+- El objetivo también se refleja en el escenario de la misión.
+
+2. Pistas progresivas
+----------------------
+- El botón de pista ya no muestra el texto "Necesito una pista".
+- Ahora solo aparece como una bombilla: 💡.
+- La bombilla se encuentra a la derecha del bloque del objetivo, fuera de la tarjeta.
+- La bombilla comienza desactivada y visualmente atenuada.
+- La pista se habilita cuando el sistema detecta que el usuario puede estar atascado:
+  - Aproximadamente 18 segundos de inactividad.
+  - Intentar ejecutar un programa vacío.
+  - Dos ejecuciones incorrectas.
+  - Eliminar todos los bloques del programa.
+- Habilitar la bombilla no muestra la pista automáticamente.
+- El usuario debe pulsar la bombilla para abrir la burbuja de pista.
+- La burbuja sigue siendo visual, accesible y contextual.
+- Al cambiar de misión, la bombilla vuelve a desactivarse.
+- Al completar una misión:
+  - Se cancela el temporizador de inactividad.
+  - La bombilla se desactiva.
+  - La burbuja se cierra.
+  - No vuelve a aparecer una pista para esa misión completada.
+
+3. Navegación entre misiones
+----------------------------
+- Se agregó una barra de navegación visible debajo de los controles de ejecución.
+- Incluye:
+  - "← Misión anterior".
+  - Indicador central, por ejemplo "Misión 2 de 5".
+  - "Siguiente misión →".
+- Los botones cambian de estado según la posición actual.
+- La navegación permite regresar y avanzar entre misiones disponibles.
+- También se mantiene la lista lateral de misiones.
+- La navegación es adaptable para pantallas pequeñas.
+
+4. Modo temporal de pruebas
+---------------------------
+- Se agregó en js/app.js la constante:
+
+  const COURSE_TEST_MODE = true;
+
+- Con este valor activo:
+  - Todos los módulos disponibles pueden abrirse.
+  - Todas las misiones aparecen disponibles.
+  - Se puede probar cualquier misión sin completar las anteriores.
+  - La navegación entre misiones no depende del progreso.
+- La lógica original de desbloqueo progresivo se conservó.
+- Cuando termine el desarrollo y comiencen las pruebas reales del flujo guiado, cambiar:
+
+  const COURSE_TEST_MODE = false;
+
+- Al cambiarlo a false se restaurará el bloqueo secuencial de módulos y misiones.
+
+ARCHIVOS MODIFICADOS HOY
+========================
+- curso.html
+  - Tarjeta simplificada del reto.
+  - Bombilla de pista fuera del bloque del objetivo.
+  - Navegación anterior/siguiente entre misiones.
+
+- js/app.js
+  - Objetivos claros para las misiones.
+  - Pistas progresivas y activación por bloqueo.
+  - Cierre de pistas al completar misiones.
+  - Navegación entre misiones.
+  - Modo temporal COURSE_TEST_MODE.
+
+- css/styles.css
+  - Diseño de la tarjeta simplificada.
+  - Posición y apariencia de la bombilla.
+  - Burbuja de pista asociada a la bombilla.
+  - Barra de navegación entre misiones.
+  - Ajustes responsive.
+
+VALIDACIONES REALIZADAS
+=======================
+- Se comprobó que los módulos 1 y 2 aparecen disponibles en modo de pruebas.
+- Se comprobó que las cinco misiones de cada módulo aparecen disponibles.
+- Se comprobó la navegación entre misiones.
+- Se comprobó que la bombilla empieza desactivada.
+- Se comprobó que completar una misión cierra y desactiva la pista.
+- Se comprobaron los archivos HTML, CSS y JavaScript sin errores.
+- git diff --check pasó correctamente.
+
+ESTADO ACTUAL
+=============
+- El curso tiene 10 misiones funcionales en los módulos 1 y 2.
+- Todos los módulos y misiones actuales están abiertos temporalmente para pruebas.
+- La tarjeta del reto ya no entrega la solución.
+- La ayuda se muestra solo cuando el sistema detecta bloqueo y después de que el usuario pulsa la bombilla.
+- El laboratorio sandbox conserva su funcionamiento independiente.
+
+SIGUIENTE PASO RECOMENDADO
+==========================
+- Continuar desarrollando y probando las misiones restantes del curso.
+- Mantener COURSE_TEST_MODE en true mientras se construye el contenido.
+- Al completar todos los módulos:
+  1. Cambiar COURSE_TEST_MODE a false.
+  2. Borrar o revisar el progreso guardado de localStorage.
+  3. Probar el flujo real de desbloqueo secuencial.
+  4. Revisar la dificultad y claridad de las pistas con usuarios reales.

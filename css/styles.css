@@ -263,15 +263,6 @@ h2 { margin: 6px 0 0; font-size: 27px; letter-spacing: -.8px; }
 .course-character-modal-card .button { width: 100%; }
 .course-character-modal-open { overflow: hidden; }
 @media (max-width: 700px) {
-  .jaguar-mobile-card.is-final {
-    position: fixed !important;
-    top: 109px !important;
-    right: 10px !important;
-    bottom: auto !important;
-    left: 10px !important;
-    transform: none !important;
-  }
-
   .jaguar-guide.is-positioned {
     left: 12px !important;
     right: 12px !important;
@@ -726,6 +717,93 @@ html.jaguar-tour-active body {
     height: auto;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+}
+
+/* Reglas finales móviles: una sola geometría para Inicio, Curso y Laboratorio. */
+@media (max-width: 700px) {
+  .jaguar-mobile-card,
+  .lesson-mobile-card {
+    position: fixed !important;
+    z-index: 1002 !important;
+    right: 10px !important;
+    bottom: 12px !important;
+    left: 10px !important;
+    width: auto !important;
+    min-height: 190px !important;
+    max-height: calc(100dvh - 24px) !important;
+    box-sizing: border-box !important;
+  }
+
+  .jaguar-mobile-card.is-intro,
+  .jaguar-mobile-card.is-final,
+  .lesson-mobile-card.is-welcome {
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .jaguar-mobile-card.is-final {
+    top: 12px !important;
+    transform: none !important;
+  }
+
+  .jaguar-mobile-speech,
+  .lesson-mobile-card {
+    overflow: visible;
+  }
+
+  .jaguar-mobile-speech p,
+  .lesson-mobile-card p {
+    max-height: min(96px, 25dvh);
+    overflow-y: auto;
+  }
+
+  .jaguar-mobile-character {
+    width: 96px !important;
+    height: 96px !important;
+  }
+
+  .laboratory-tour .jaguar-guide,
+  .laboratory-tour .jaguar-guide.is-positioned,
+  .laboratory-tour .jaguar-guide.guide-welcome {
+    position: fixed !important;
+    z-index: 1002 !important;
+    right: 10px !important;
+    left: 10px !important;
+    width: calc(100% - 20px) !important;
+    max-width: none !important;
+    height: min(220px, 30dvh) !important;
+    max-height: 220px !important;
+    transform: none !important;
+  }
+
+  .laboratory-tour .jaguar-guide {
+    top: auto !important;
+    bottom: 12px !important;
+  }
+
+  .laboratory-tour .jaguar-guide.guide-welcome {
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .laboratory-tour .jaguar-speech {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-height: none !important;
+    box-sizing: border-box;
+  }
+
+  .laboratory-tour .jaguar-guide-image {
+    right: 8px !important;
+    bottom: -1px !important;
+    width: 82px !important;
+    height: 82px !important;
   }
 }
 .laboratory-locked {
@@ -4193,20 +4271,6 @@ html.mobile-execution-open .execution-chevron {
     width: auto;
     height: 190px;
     pointer-events: none;
-  }
-
-  .jaguar-mobile-card.is-intro {
-    bottom: auto;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .jaguar-mobile-card.is-final {
-    bottom: auto !important;
-    top: 109px !important;
-    height: 190px !important;
-    max-height: 190px !important;
-    transform: none !important;
   }
 
   .jaguar-mobile-speech {

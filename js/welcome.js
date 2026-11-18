@@ -12,47 +12,12 @@
   let mobileSpotlight = null;
   let mobileSpotlightRun = 0;
   let mobileSpotlightTimers = [];
-  let mobileCardTimers = [];
-
   function ensureMobileSpotlight() {
     if (mobileSpotlight) return mobileSpotlight;
     mobileSpotlight = document.createElement("div");
     mobileSpotlight.className = "jaguar-mobile-spotlight";
     welcome.appendChild(mobileSpotlight);
     return mobileSpotlight;
-  }
-
-  function updateMobileSpotlight(message) {
-    if (window.innerWidth > 700) {
-      if (mobileSpotlight) mobileSpotlight.style.display = "none";
-      return;
-    }
-    const targetSelectors = {
-      "Navega por la aventura": ".main-nav",
-      "Comienza con una misión": ".home-hero .button-primary",
-      "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".demo-heading",
-      "Elige tu camino": ".learning-modes",
-      "Aprende el proceso": ".process-list",
-      "¿Listo para crear?": ".final-actions"
-    };
-    const target = document.querySelector(targetSelectors[message.title]);
-    if (!target) {
-      if (mobileSpotlight) mobileSpotlight.style.display = "none";
-      return;
-    }
-    const bounds = target.getBoundingClientRect();
-    const padding = 7;
-    const left = Math.max(8, bounds.left - padding);
-    const top = Math.max(8, bounds.top - padding);
-    const right = Math.min(window.innerWidth - 8, bounds.right + padding);
-    const bottom = Math.min(window.innerHeight - 8, bounds.bottom + padding);
-    const halo = ensureMobileSpotlight();
-    halo.style.display = "block";
-    halo.style.left = left + "px";
-    halo.style.top = top + "px";
-    halo.style.width = Math.max(0, right - left) + "px";
-    halo.style.height = Math.max(0, bottom - top) + "px";
   }
 
   function ensureMobileCard() {
@@ -77,21 +42,6 @@
       ? "jaguar-mobile-card is-final"
       : (index === 0 ? "jaguar-mobile-card is-intro" : "jaguar-mobile-card");
     card.style.display = "block";
-    if (finalStep) {
-      card.setAttribute("style", "position: fixed !important; top: 109px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; transform: none !important;");
-      window.requestAnimationFrame(function () {
-        card.setAttribute("style", "position: fixed !important; top: 109px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; max-height: 190px !important; transform: none !important;");
-      });
-      window.setTimeout(function () {
-        card.setAttribute("style", "position: fixed !important; top: 109px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; max-height: 190px !important; transform: none !important;");
-      }, 50);
-    } else if (index === 0) {
-      card.style.top = "50%";
-      card.style.bottom = "auto";
-    } else {
-      card.style.top = "auto";
-      card.style.bottom = "12px";
-    }
     card.innerHTML =
       '<div class="jaguar-mobile-speech">' +
         '<span class="jaguar-mobile-step">' + message.label + " · " + (index + 1) + " de " + messages.length + "</span>" +
@@ -102,58 +52,6 @@
       '<img class="jaguar-mobile-character" src="' + (message.look === "right" ? "Recursos/Jaguar Der.png" : "Recursos/Jaguar Izq.png") + '" alt="">';
     guide.style.setProperty("display", "none", "important");
     renderMobileSpotlight(message, index);
-  }
-
-  function forceMobileSpotlight(message, index) {
-    if (window.innerWidth > 700) return;
-    const targetSelectors = {
-      "Navega por la aventura": ".main-nav",
-      "Comienza con una misión": ".home-hero .button-primary",
-      "Prueba el laboratorio": ".home-hero .button-secondary",
-      "Mira cómo funciona": ".demo-heading",
-      "Elige tu camino": ".learning-modes",
-      "Aprende el proceso": ".process-list",
-      "¿Listo para crear?": ".final-actions"
-    };
-    const target = document.querySelector(targetSelectors[message.title]);
-    if (!target) {
-      spotlight.style.setProperty("display", "none", "important");
-      overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
-      if (mobileSpotlight) mobileSpotlight.style.display = "none";
-      return;
-    }
-
-    const known = {
-      "Navega por la aventura": { left: 18, top: 63, width: 309, height: 52 },
-      "Comienza con una misión": { left: 28, top: 63, width: 289, height: 61 },
-      "Prueba el laboratorio": { left: 28, top: 63, width: 289, height: 63 },
-      "Mira cómo funciona": { left: 5, top: 63, width: 350, height: 300 },
-      "Elige tu camino": { left: 5, top: 63, width: 350, height: 95 },
-      "Aprende el proceso": { left: 30, top: 63, width: 285, height: 250 },
-      "¿Listo para crear?": { left: 30, top: 260, width: 290, height: 110 }
-    };
-    const zone = known[message.title] || { left: 12, top: 64, width: window.innerWidth - 24, height: 55 };
-    const left = zone.left;
-    const visibleTop = zone.top;
-    const right = left + zone.width;
-    const visibleBottom = visibleTop + zone.height;
-    spotlight.style.setProperty("display", "block", "important");
-    spotlight.style.left = left + "px";
-    spotlight.style.top = visibleTop + "px";
-    spotlight.style.width = Math.max(0, right - left) + "px";
-    spotlight.style.height = Math.max(0, visibleBottom - visibleTop) + "px";
-
-    const hole = { left: left, top: visibleTop, right: right, bottom: visibleBottom };
-    const panelStyles = [
-      { left: 0, top: 0, width: "100%", height: hole.top + "px" },
-      { left: hole.right + "px", top: hole.top + "px", width: Math.max(0, window.innerWidth - hole.right) + "px", height: Math.max(0, hole.bottom - hole.top) + "px" },
-      { left: 0, top: hole.bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - hole.bottom) + "px" },
-      { left: 0, top: hole.top + "px", width: hole.left + "px", height: Math.max(0, hole.bottom - hole.top) + "px" }
-    ];
-    overlayPanels.forEach(function (panel, panelIndex) {
-      panel.style.display = "block";
-      Object.assign(panel.style, panelStyles[panelIndex]);
-    });
   }
 
   function renderMobileSpotlight(message, index) {
@@ -424,16 +322,8 @@
       guide.style.setProperty("--guide-width", guideWidth + "px");
       guide.style.height = guideHeight + "px";
       if (window.innerWidth <= 700) {
-        const edge = window.innerWidth <= 360 ? 10 : 12;
-        if (currentMessage === messages.length - 1) {
-          guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: 14px !important; bottom: auto !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + guideHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
-        } else {
-          guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: auto !important; bottom: 12px !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + guideHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
-        }
         window.requestAnimationFrame(function () {
-          const actual = guide.getBoundingClientRect();
-          const shift = edge - actual.left;
-          guide.style.setProperty("transform", "translateX(" + shift + "px)", "important");
+          guide.style.setProperty("display", "none", "important");
         });
         window.setTimeout(keepMobileGuideInside, 50);
         window.setTimeout(keepMobileGuideInside, 200);
@@ -514,13 +404,7 @@
     guide.classList.toggle("looks-right", message.look === "right");
     renderMobileCard(message, currentMessage);
     if (window.innerWidth <= 700) {
-      const edge = window.innerWidth <= 360 ? 10 : 12;
-      const fixedHeight = getMobileGuideHeight();
-      if (currentMessage === messages.length - 1) {
-        guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: 14px !important; bottom: auto !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + fixedHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
-      } else {
-        guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: auto !important; bottom: 12px !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + fixedHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
-      }
+      guide.style.setProperty("display", "none", "important");
       window.setTimeout(keepMobileGuideInside, 50);
       window.setTimeout(keepMobileGuideInside, 200);
       window.setTimeout(keepMobileGuideInside, 500);

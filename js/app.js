@@ -200,13 +200,22 @@
       saveProgress();
       renderCourseCharacter();
       closeCharacterModal();
+      let startsCourseWelcome = false;
       try {
         if (localStorage.getItem("robobloques-course-welcome-seen-v1") !== "true") {
           localStorage.setItem("robobloques-course-welcome-seen-v1", "true");
+          startsCourseWelcome = true;
           setTimeout(showWelcome, 80);
         }
       } catch (error) {
+        startsCourseWelcome = true;
         setTimeout(showWelcome, 80);
+      }
+      if (!startsCourseWelcome) {
+        setTimeout(function () {
+          if (moduleMissions(currentModule)[0] === mission()) showModuleWelcome(currentModule);
+          else showGuide();
+        }, 180);
       }
     });
     if (changeCharacterButton) changeCharacterButton.addEventListener("click", openCharacterModal);
@@ -281,27 +290,19 @@
       const first = moduleMissions(module).find(function (item) { return completed.indexOf(missions.indexOf(item)) < 0; }) || moduleMissions(module)[0];
       loadMission(missions.indexOf(first), true);
       if (!selectedCourseCharacter()) return;
-      const moduleWelcomeKey = "robobloques-course-module-welcome-" + module;
-      let shouldShowWelcome = true;
-      try { shouldShowWelcome = localStorage.getItem(moduleWelcomeKey) !== "true"; } catch (error) { shouldShowWelcome = true; }
-      if (shouldShowWelcome) {
-        try { localStorage.setItem(moduleWelcomeKey, "true"); } catch (error) {}
-        setTimeout(function () { showModuleWelcome(module); }, 120);
-      }
+      setTimeout(function () { showModuleWelcome(module); }, 120);
     }
     function renderProgram() { dropZone.innerHTML = ""; if (!actions.length) { selectedProgramIndex = null; dropZone.innerHTML = "<div class=\"empty-program\"><span class=\"plus-icon\">＋</span><p>Suelta aquí tu bloque<br><small>o tócalo para añadirlo</small></p></div>"; return; } if (selectedProgramIndex !== null && selectedProgramIndex >= actions.length) selectedProgramIndex = null; actions.forEach(function (entry, index) { const block = document.createElement("div"); block.className = "program-block block-" + (entry.type === "wait" ? "control" : "movement") + (selectedProgramIndex === index ? " is-selected" : ""); block.draggable = !running && window.innerWidth > 700; block.dataset.index = index; block.innerHTML = "<span>" + labels[entry.type][0] + "</span><strong>" + labels[entry.type][1] + "</strong>" + parameterMarkup(entry) + "<button type=\"button\" aria-label=\"Quitar bloque\">×</button>"; block.addEventListener("click", function (event) { if (running || window.innerWidth > 700 || event.target.closest("button, input")) return; if (selectedProgramIndex === null) { selectedProgramIndex = index; renderProgram(); return; } if (selectedProgramIndex === index) { selectedProgramIndex = null; renderProgram(); return; } const from = selectedProgramIndex; const targetRect = block.getBoundingClientRect(); let to = index + (event.clientY > targetRect.top + targetRect.height / 2 ? 1 : 0); const moved = actions.splice(from, 1)[0]; if (from < to) to--; actions.splice(Math.max(0, Math.min(actions.length, to)), 0, moved); selectedProgramIndex = null; renderProgram(); resetInactivity(); }); block.addEventListener("dragstart", function (event) { event.dataTransfer.setData("text/course-index", String(index)); block.classList.add("is-dragging"); }); block.addEventListener("dragend", function () { block.classList.remove("is-dragging"); }); const parameter = block.querySelector(".course-parameter"); if (parameter) parameter.addEventListener("change", function (event) { const input = event.target; const value = input.dataset.parameter === "degrees" ? Math.max(1, Math.min(360, Math.round(Number(input.value) || 45))) : Math.max(.1, Math.min(60, Number(input.value) || 1)); entry[input.dataset.parameter] = value; input.value = value; resetInactivity(); }); block.querySelector("button").addEventListener("click", function () { if (!running) { actions.splice(index, 1); selectedProgramIndex = null; renderProgram(); resetInactivity(); if (!actions.length) enableHint(); } }); dropZone.appendChild(block); }); }
     function clearMissionProgram() { actions = []; selectedProgramIndex = null; renderProgram(); }
     function addAction(type) { if (running || mission().blocks.indexOf(type) < 0) return; actions.push(createAction(type)); renderProgram(); resetInactivity(); }
     function renderPicker() { picker.innerHTML = ""; mission().blocks.forEach(function (type) { const button = document.createElement("button"); button.type = "button"; button.draggable = true; button.className = "visual-block block-" + (type === "wait" ? "control" : "movement"); button.innerHTML = "<span class=\"block-icon\">" + labels[type][0] + "</span><strong>" + labels[type][1] + "</strong>"; button.addEventListener("click", function () { addAction(type); }); button.addEventListener("dragstart", function (event) { event.dataTransfer.setData("text/course-action", type); }); picker.appendChild(button); }); }
     function loadMission(index, fromModule) { current = index; const item = mission(); currentModule = item.module; running = false; renderCourseCharacter(); if (frame) cancelAnimationFrame(frame); frame = null; positionX = 0; rotation = 0; character.style.transform = "translateX(0) rotate(0deg)"; clearMissionProgram(); if (item.initialSequence) { actions = item.initialSequence.map(function (type) { return createAction(type); }); renderProgram(); } canReset = false; invalidExecutions = 0; hintAvailable = false; hintButton.disabled = true; hideSuccess(); if (hintBubble) { hintBubble.classList.remove("is-visible"); hintBubble.setAttribute("aria-hidden", "true"); hintButton.setAttribute("aria-expanded", "false"); } renderPicker(); renderMissionList(); renderModules(); updateMissionNavigation(); const kindNames = { guided: "guiada", comprehension: "comprensión", error: "corrección de errores", creative: "creativa", open: "reto abierto" }; const info = moduleInfo[item.module]; document.querySelector("#mission-eyebrow").textContent = "Módulo " + item.module + " · Misión " + (moduleMissions(item.module).indexOf(item) + 1); document.querySelector("#curso-title").textContent = item.name; document.querySelector("#lesson-number").textContent = "0" + (moduleMissions(item.module).indexOf(item) + 1); document.querySelector("#module-kicker").textContent = info.level + " · " + info.name + " · " + kindNames[item.kind]; document.querySelector("#lesson-title").textContent = item.title;     document.querySelector("#lesson-objective").innerHTML = personalizeText(item.objective); document.querySelector("#lesson-target").textContent = personalizeText(item.target); document.querySelector("#lesson-challenge").textContent = personalizeText(item.target);     document.querySelector("#block-note").textContent = isLockedMission() ? "Valores fijados en esta primera misión del módulo" : "Arrastra para ordenar y modifica duración o grados cuando aparezcan"; document.querySelector("#mission-progress").textContent = "⭐ Módulo " + item.module + " · " + (moduleMissions(item.module).indexOf(item) + 1) + " de " + moduleMissions(item.module).length; document.querySelector("#course-percent").textContent = Math.round(completed.length * 100 / missions.length) + "%"; document.querySelector("#course-progress-bar").style.width = (completed.length * 100 / missions.length) + "%"; controls(); guideIndex = 0; closeGuide(); resetInactivity();
-      if (selectedCourseCharacter() && !fromModule && completed.indexOf(index) < 0) {
-        const missionGuideKey = "robobloques-course-mission-guide-" + index;
-        let shouldShowGuide = true;
-        try { shouldShowGuide = localStorage.getItem(missionGuideKey) !== "true"; } catch (error) { shouldShowGuide = true; }
-        if (shouldShowGuide) {
-          try { localStorage.setItem(missionGuideKey, "true"); } catch (error) {}
-          setTimeout(function () { showGuide(); }, 160);
-        }
+      if (selectedCourseCharacter() && !fromModule) {
+        const firstMissionOfModule = moduleMissions(currentModule)[0] === mission();
+        setTimeout(function () {
+          if (firstMissionOfModule) showModuleWelcome(currentModule);
+          else showGuide();
+        }, 160);
       }
     }
     function positionGuide() {
@@ -313,6 +314,7 @@
       if (!spot || !card) return;
       if (isWelcomeIntro) {
         spot.style.display = "none";
+        if (lessonMobileSpotlight) lessonMobileSpotlight.style.display = "none";
         card.style.left = "50%";
         card.style.top = "50%";
         card.style.right = "auto";
@@ -322,42 +324,54 @@
         return;
       }
       if (!target) return;
-      spot.style.display = "block";
       const mobile = window.innerWidth <= 700;
       const run = ++guidePositionRun;
       if (mobile) {
         spot.style.display = "none";
-      }
-      if (mobile) {
         const current = target.getBoundingClientRect();
-        const mobileCardRect = lessonMobileCard ? lessonMobileCard.getBoundingClientRect() : null;
-        const reserve = mobileCardRect && mobileCardRect.height ? mobileCardRect.height + 24 : 214;
-        const safeTop = 12;
-        const safeBottom = Math.max(safeTop + 120, window.innerHeight - reserve);
-        const available = safeBottom - safeTop;
-        const desired = current.height <= available ? safeTop + (available - current.height) / 2 : safeTop;
         guideScrollLock = true;
-        window.scrollTo(0, Math.max(0, window.scrollY + current.top - desired));
-      }
-      window.setTimeout(function () {
-        if (run !== guidePositionRun || !guide.classList.contains("is-visible")) return;
-        const b = target.getBoundingClientRect();
-        const p = guide.getBoundingClientRect();
-        const padding = mobile ? 6 : 8;
-        if (mobile) {
-          const halo = ensureLessonMobileSpotlight();
+        const targetDocumentTop = window.scrollY + current.top;
+        const desiredTop = current.height > window.innerHeight - 300 ? 12 : 70;
+        window.scrollTo({ top: Math.max(0, targetDocumentTop - desiredTop), left: 0, behavior: "auto" });
+        guideLockedScrollY = window.scrollY;
+
+        function paintMobileHalo() {
+          if (run !== guidePositionRun || !guide.classList.contains("is-visible")) return;
+          const b = target.getBoundingClientRect();
+          const padding = 8;
           const cardRect = lessonMobileCard ? lessonMobileCard.getBoundingClientRect() : null;
+          const bottomLimit = cardRect ? cardRect.top - 12 : window.innerHeight - 214;
+          if (b.bottom < 0 || b.top > window.innerHeight) return;
+          const top = Math.max(8, b.top - padding);
+          const bottom = Math.max(top + 8, Math.min(bottomLimit, b.bottom + padding));
           const left = Math.max(8, b.left - padding);
           const right = Math.min(window.innerWidth - 8, b.right + padding);
-          const top = Math.max(8, b.top - padding);
-          const bottomLimit = cardRect ? cardRect.top - 12 : window.innerHeight - 214;
-          const bottom = Math.max(top + 8, Math.min(bottomLimit, b.bottom + padding));
+          const halo = ensureLessonMobileSpotlight();
           halo.setAttribute("style",
             "position:fixed!important;z-index:1001!important;display:block!important;" +
             "left:" + left + "px!important;top:" + top + "px!important;" +
             "width:" + Math.max(8, right - left) + "px!important;" +
-            "height:" + Math.max(8, bottom - top) + "px!important;");
+            "height:" + Math.max(8, bottom - top) + "px!important;" +
+            "border:4px solid #ffd166!important;border-radius:17px!important;" +
+            "box-shadow:0 0 0 100vmax rgba(18,24,58,.68),0 0 0 7px rgba(255,200,87,.25)!important;");
+          guideLockedScrollY = window.scrollY;
         }
+
+        paintMobileHalo();
+        [100, 300, 600].forEach(function (delay) {
+          window.setTimeout(paintMobileHalo, delay);
+        });
+        window.setTimeout(function () { guideScrollLock = false; }, 700);
+        guide.dataset.placement = "mobile-bottom";
+        return;
+      }
+
+      spot.style.display = "block";
+      window.setTimeout(function () {
+        if (run !== guidePositionRun || !guide.classList.contains("is-visible")) return;
+        const b = target.getBoundingClientRect();
+        const p = guide.getBoundingClientRect();
+        const padding = 8;
         const mobileCardRect = lessonMobileCard ? lessonMobileCard.getBoundingClientRect() : null;
         const safeBottom = mobile
           ? (mobileCardRect && mobileCardRect.height ? mobileCardRect.top - 12 : window.innerHeight - 214)
@@ -409,9 +423,9 @@
     function showModuleWelcome(module) { if (!selectedCourseCharacter()) return; const info = moduleInfo[module]; guide.dataset.mode = "module-welcome"; guide.dataset.target = ""; guide.dataset.demo = ""; document.querySelector("#lesson-guide-step").textContent = "Módulo " + module + " · Bienvenida"; document.querySelector("#lesson-guide-icon").textContent = module === 1 ? "🧭" : "⏱️"; document.querySelector("#lesson-guide-title").textContent = "¡Comienza " + info.name + "!"; document.querySelector("#lesson-guide-text").textContent = personalizeText(info.welcome); document.querySelector("#lesson-guide-next").textContent = "Comenzar misión ➜"; guide.classList.add("is-visible", "is-welcome"); guide.setAttribute("aria-hidden", "false"); document.documentElement.classList.add("lesson-tour-active"); document.body.classList.add("lesson-tour-active"); renderLessonMobileCard("Módulo " + module + " · Bienvenida", "¡Comienza " + info.name + "!", personalizeText(info.welcome), "Comenzar misión ➜", true); replayGuideMessage(); setTimeout(positionGuide, 0); }
     function showWelcome() { guide.dataset.mode = "welcome"; guide.dataset.welcomeIndex = "0"; guide.dataset.target = ""; guide.dataset.demo = ""; document.querySelector("#lesson-guide-step").textContent = "Tu aventura comienza"; document.querySelector("#lesson-guide-icon").textContent = "🌿"; document.querySelector("#lesson-guide-title").textContent = "¡Hola, explorador!"; document.querySelector("#lesson-guide-text").textContent = "Soy Parachico y te acompañaré a aprender programación. En este curso conocerás las misiones, armarás programas con bloques y verás a tu personaje poner tus ideas en movimiento."; document.querySelector("#lesson-guide-next").textContent = "Conocer el curso ➜"; guide.classList.add("is-visible", "is-welcome"); guide.setAttribute("aria-hidden", "false"); document.documentElement.classList.add("lesson-tour-active"); document.body.classList.add("lesson-tour-active"); renderLessonMobileCard("Tu aventura comienza", "¡Hola, explorador!", "Soy Parachico y te acompañaré a aprender programación. En este curso conocerás las misiones, armarás programas con bloques y verás a tu personaje poner tus ideas en movimiento.", "Conocer el curso ➜", true); replayGuideMessage(); setTimeout(positionGuide, 0); }
     function guideSteps() { const steps = mission().guide ? mission().guide.slice() : []; if (!isLockedMission()) steps.push({ icon: "🛠️", title: "Busca las cinco estrellas", text: "Planifica antes de ejecutar, usa solo los bloques necesarios y evita intentos incorrectos. Así podrás conseguir hasta cinco estrellas." }); return steps; }
-    function showGuide() { if (!selectedCourseCharacter()) return; const steps = guideSteps(); if (!steps.length) return; const step = steps[guideIndex]; const guideCopy = (step.title + " " + step.text).toLowerCase(); const targetSelector = /bloques|elige|divid|programa|arma|repara|reordena|coloca/.test(guideCopy) ? "#lesson-blocks" : /ejecuta|cinco estrellas|revisa|comprueba|corrobora/.test(guideCopy) ? "#lesson-drop-zone" : ".lesson-stage"; guide.dataset.target = targetSelector; guide.dataset.demo = /arrastr|reordena|coloca/.test(guideCopy) ? "drag" : /ejecuta|cinco estrellas/.test(guideCopy) ? "execute" : ""; document.querySelector("#lesson-guide-step").textContent = guideIndex + 1 + " de " + steps.length; document.querySelector("#lesson-guide-icon").textContent = step.icon; document.querySelector("#lesson-guide-title").textContent = step.title; document.querySelector("#lesson-guide-text").textContent = personalizeText(step.text) + (!isLockedMission() && guideIndex < steps.length - 1 ? " También puedes editar los segundos o grados y arrastrar los bloques para cambiar su orden." : ""); document.querySelector("#lesson-guide-next").textContent = guideIndex === steps.length - 1 ? "¡Entendido! ✓" : "Siguiente ➜"; guide.classList.remove("is-welcome"); guide.classList.add("is-visible"); guide.setAttribute("aria-hidden", "false"); document.documentElement.classList.add("lesson-tour-active"); document.body.classList.add("lesson-tour-active"); document.querySelector("#lesson-guide-spotlight").style.display = "block"; renderLessonMobileCard((guideIndex + 1) + " de " + steps.length, step.title, personalizeText(step.text), document.querySelector("#lesson-guide-next").textContent, false); replayGuideMessage(); setTimeout(positionGuide, 0); }
+    function showGuide() { if (!selectedCourseCharacter()) return; const steps = guideSteps(); if (!steps.length) return; const step = steps[guideIndex]; const targetSelector = guideIndex === 0 ? ".lesson-stage" : guideIndex === 1 ? "#lesson-blocks" : "#lesson-drop-zone"; const guideCopy = (step.title + " " + step.text).toLowerCase(); guide.dataset.target = targetSelector; guide.dataset.demo = /arrastr|reordena|coloca/.test(guideCopy) ? "drag" : /ejecuta|cinco estrellas/.test(guideCopy) ? "execute" : ""; document.querySelector("#lesson-guide-step").textContent = guideIndex + 1 + " de " + steps.length; document.querySelector("#lesson-guide-icon").textContent = step.icon; document.querySelector("#lesson-guide-title").textContent = step.title; document.querySelector("#lesson-guide-text").textContent = personalizeText(step.text) + (!isLockedMission() && guideIndex < steps.length - 1 ? " También puedes editar los segundos o grados y arrastrar los bloques para cambiar su orden." : ""); document.querySelector("#lesson-guide-next").textContent = guideIndex === steps.length - 1 ? "¡Entendido! ✓" : "Siguiente ➜"; guide.classList.remove("is-welcome"); guide.classList.add("is-visible"); guide.setAttribute("aria-hidden", "false"); document.documentElement.classList.add("lesson-tour-active"); document.body.classList.add("lesson-tour-active"); document.querySelector("#lesson-guide-spotlight").style.display = "block"; renderLessonMobileCard((guideIndex + 1) + " de " + steps.length, step.title, personalizeText(step.text), document.querySelector("#lesson-guide-next").textContent, false); replayGuideMessage(); setTimeout(positionGuide, 0); }
     function closeGuide() { guide.classList.remove("is-visible", "is-welcome"); guide.setAttribute("aria-hidden", "true"); guide.dataset.demo = ""; guide.dataset.mode = ""; if (lessonMobileCard) lessonMobileCard.style.display = "none"; if (lessonMobileSpotlight) lessonMobileSpotlight.style.display = "none"; document.documentElement.classList.remove("lesson-tour-active"); document.body.classList.remove("lesson-tour-active"); guideScrollLock = false; guideLockedScrollY = window.scrollY; }
-    document.querySelector("#lesson-guide-next").addEventListener("click", function () { if (guide.dataset.mode === "module-welcome") { closeGuide(); showGuide(); return; } if (guide.dataset.mode === "welcome") { const welcomeSteps = [{ target: ".lesson-sidebar", icon: "🗺️", title: "Elige una misión", text: "En la columna izquierda podrás ver tu progreso, cambiar de módulo y escoger la misión que quieres practicar." }, { target: "#lesson-blocks", icon: "🧩", title: "Arma tu programa", text: "Aquí encontrarás los bloques disponibles. Tócalos para agregarlos y ordénalos en el espacio de trabajo." }, { target: ".lesson-stage", icon: "🤖", title: "Observa el resultado", text: "Robotcito ejecutará tus instrucciones en este escenario. Cuando estés listo, pulsa Ejecutar simulación." }]; const welcomeIndex = Number(guide.dataset.welcomeIndex || 0) + 1; if (welcomeIndex < welcomeSteps.length) { guide.dataset.welcomeIndex = String(welcomeIndex); const step = welcomeSteps[welcomeIndex]; guide.classList.remove("is-welcome"); guide.dataset.target = step.target; document.querySelector("#lesson-guide-spotlight").style.display = "block"; document.querySelector("#lesson-guide-step").textContent = (welcomeIndex + 1) + " de " + welcomeSteps.length; document.querySelector("#lesson-guide-icon").textContent = step.icon; document.querySelector("#lesson-guide-title").textContent = step.title; document.querySelector("#lesson-guide-text").textContent = step.text; document.querySelector("#lesson-guide-next").textContent = welcomeIndex === welcomeSteps.length - 1 ? "Comenzar misión 🚀" : "Siguiente ➜"; renderLessonMobileCard((welcomeIndex + 1) + " de " + welcomeSteps.length, step.title, step.text, document.querySelector("#lesson-guide-next").textContent, false); setTimeout(positionGuide, 0); } else closeGuide(); return; } if (guideIndex < guideSteps().length - 1) { guideIndex++; showGuide(); } else closeGuide(); });
+    document.querySelector("#lesson-guide-next").addEventListener("click", function () { if (guide.dataset.mode === "module-welcome") { closeGuide(); showGuide(); return; } if (guide.dataset.mode === "welcome") { const welcomeSteps = [{ target: ".lesson-sidebar", icon: "🗺️", title: "Elige una misión", text: "En la columna izquierda podrás ver tu progreso, cambiar de módulo y escoger la misión que quieres practicar." }, { target: "#lesson-blocks", icon: "🧩", title: "Arma tu programa", text: "Aquí encontrarás los bloques disponibles. Tócalos para agregarlos y ordénalos en el espacio de trabajo." }, { target: ".lesson-stage", icon: "🤖", title: "Observa el resultado", text: "Robotcito ejecutará tus instrucciones en este escenario. Cuando estés listo, pulsa Ejecutar simulación." }]; const welcomeIndex = Number(guide.dataset.welcomeIndex || 0) + 1; if (welcomeIndex < welcomeSteps.length) { guide.dataset.welcomeIndex = String(welcomeIndex); const step = welcomeSteps[welcomeIndex]; guide.classList.remove("is-welcome"); guide.dataset.target = step.target; document.querySelector("#lesson-guide-spotlight").style.display = "block"; document.querySelector("#lesson-guide-step").textContent = (welcomeIndex + 1) + " de " + welcomeSteps.length; document.querySelector("#lesson-guide-icon").textContent = step.icon; document.querySelector("#lesson-guide-title").textContent = step.title; document.querySelector("#lesson-guide-text").textContent = step.text; document.querySelector("#lesson-guide-next").textContent = welcomeIndex === welcomeSteps.length - 1 ? "Comenzar misión 🚀" : "Siguiente ➜"; renderLessonMobileCard((welcomeIndex + 1) + " de " + welcomeSteps.length, step.title, step.text, document.querySelector("#lesson-guide-next").textContent, false); setTimeout(positionGuide, 0); } else { closeGuide(); setTimeout(function () { if (moduleMissions(currentModule)[0] === mission()) showModuleWelcome(currentModule); else showGuide(); }, 180); } return; } if (guideIndex < guideSteps().length - 1) { guideIndex++; showGuide(); } else closeGuide(); });
     hintButton.addEventListener("click", function () { const isVisible = hintBubble.classList.toggle("is-visible"); hintBubble.setAttribute("aria-hidden", String(!isVisible)); hintButton.setAttribute("aria-expanded", String(isVisible)); if (isVisible) hintText.textContent = mission().hint; resetInactivity(); });
     window.addEventListener("resize", positionGuide);
     dropZone.addEventListener("dragover", function (event) { if (event.dataTransfer.types.indexOf("text/course-action") >= 0 || event.dataTransfer.types.indexOf("text/course-index") >= 0) { event.preventDefault(); dropZone.classList.add("is-over"); } });

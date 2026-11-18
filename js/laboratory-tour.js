@@ -49,60 +49,54 @@
   }
 
   function position(target) {
-    if (!target) {
+    const mobile = window.innerWidth <= 700;
+    const bounds = target ? target.getBoundingClientRect() : null;
+    const padding = 8;
+    const hole = bounds ? {
+      left: Math.max(8, bounds.left - padding),
+      top: Math.max(8, bounds.top - padding),
+      right: Math.min(window.innerWidth - 8, bounds.right + padding),
+      bottom: Math.min(window.innerHeight - 8, bounds.bottom + padding)
+    } : null;
+    if (!hole) {
       spotlight.style.display = "none";
       panels.forEach(function (panel) { panel.style.display = "none"; });
     } else {
       spotlight.style.display = "block";
       panels.forEach(function (panel) { panel.style.display = "block"; });
     }
-    const bounds = target ? target.getBoundingClientRect() : null;
-    const padding = 7;
-    const smallMobile = window.innerWidth <= 360;
-    const guideHeight = smallMobile ? 210 : 250;
-    const executionTarget = currentStepTarget === "#mobile-execution-toggle" ||
-      currentStepTarget === "#workspace-execution-menu";
-    const bottom = window.innerWidth <= 700
-      ? (executionTarget ? window.innerHeight - 8 : window.innerHeight - guideHeight - 10)
-      : window.innerHeight - 18;
-    const hole = bounds ? {
-      left: Math.max(8, bounds.left - padding),
-      top: Math.max(8, bounds.top - padding),
-      right: Math.min(window.innerWidth - 8, bounds.right + padding),
-      bottom: Math.min(bottom, bounds.bottom + padding)
-    } : { left: 8, top: 8, right: window.innerWidth - 8, bottom: Math.max(8, bottom) };
+    if (hole) {
     spotlight.style.left = hole.left + "px";
     spotlight.style.top = hole.top + "px";
     spotlight.style.width = Math.max(0, hole.right - hole.left) + "px";
     spotlight.style.height = Math.max(0, hole.bottom - hole.top) + "px";
-    const styles = [
-      { left: 0, top: 0, width: "100%", height: hole.top + "px" },
-      { left: hole.right + "px", top: hole.top + "px", width: Math.max(0, window.innerWidth - hole.right) + "px", height: Math.max(0, hole.bottom - hole.top) + "px" },
-      { left: 0, top: hole.bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - hole.bottom) + "px" },
-      { left: 0, top: hole.top + "px", width: hole.left + "px", height: Math.max(0, hole.bottom - hole.top) + "px" }
-    ];
-    panels.forEach(function (panel, panelIndex) { Object.assign(panel.style, styles[panelIndex]); });
-    const mobile = window.innerWidth <= 700 || (window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches);
-    const landscape = window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches;
-    const guideExecutionTarget = currentStepTarget === "#mobile-execution-toggle" ||
-      currentStepTarget === "#workspace-execution-menu";
-    guide.classList.toggle("tour-guide-top", landscape || guideExecutionTarget);
-    guide.classList.toggle("tour-guide-bottom", !landscape && !guideExecutionTarget);
-    const mobileEdge = window.innerWidth <= 360 ? 10 : 12;
-    guide.style.left = mobile ? (landscape ? "12px" : mobileEdge + "px") : "50%";
-    if (mobile) {
-      guide.style.setProperty("left", mobileEdge + "px", "important");
-      guide.style.setProperty("right", mobileEdge + "px", "important");
-      guide.style.setProperty("width", "calc(100% - " + (mobileEdge * 2) + "px)", "important");
+      const styles = [
+        { left: 0, top: 0, width: "100%", height: hole.top + "px" },
+        { left: hole.right + "px", top: hole.top + "px", width: Math.max(0, window.innerWidth - hole.right) + "px", height: Math.max(0, hole.bottom - hole.top) + "px" },
+        { left: 0, top: hole.bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - hole.bottom) + "px" },
+        { left: 0, top: hole.top + "px", width: hole.left + "px", height: Math.max(0, hole.bottom - hole.top) + "px" }
+      ];
+      panels.forEach(function (panel, panelIndex) { Object.assign(panel.style, styles[panelIndex]); });
     }
-    guide.style.setProperty("top", mobile ? (landscape || executionTarget ? "10px" : "auto") : "50%", "important");
-    guide.style.right = mobile ? (landscape ? "auto" : "14px") : "auto";
-    guide.style.setProperty("bottom", mobile ? (landscape || executionTarget ? "auto" : "10px") : "auto", "important");
-    guide.style.width = mobile ? (landscape ? "min(430px, 52vw)" : "calc(100% - 28px)") : "min(700px, calc(100% - 28px))";
-    guide.style.height = mobile
-      ? (window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches ? "188px" : (window.innerWidth <= 360 ? "210px" : "250px"))
-      : "min(440px, calc(100% - 28px))";
-    guide.style.transform = mobile ? "none" : "translate(-50%, -50%)";
+    const landscape = mobile && window.matchMedia("(orientation: landscape) and (max-height: 700px)").matches;
+    const edge = window.innerWidth <= 360 ? 10 : 12;
+    guide.style.left = mobile ? edge + "px" : "50%";
+    if (mobile) {
+      guide.style.setProperty("left", edge + "px", "important");
+      guide.style.setProperty("right", edge + "px", "important");
+      guide.style.setProperty("width", "calc(100% - " + (edge * 2) + "px)", "important");
+      guide.style.setProperty("top", index === 0 || landscape ? "12px" : "auto", "important");
+      guide.style.setProperty("bottom", index === 0 || landscape ? "auto" : "12px", "important");
+      guide.style.setProperty("height", "min(220px, 30dvh)", "important");
+      guide.style.setProperty("transform", "none", "important");
+    } else {
+      guide.style.setProperty("right", "auto", "important");
+      guide.style.setProperty("top", "50%", "important");
+      guide.style.setProperty("bottom", "auto", "important");
+      guide.style.width = "min(700px, calc(100% - 28px))";
+      guide.style.height = "min(440px, calc(100% - 28px))";
+      guide.style.transform = "translate(-50%, -50%)";
+    }
     guide.classList.add("is-positioned", mobile ? "guide-side-left" : "guide-side-right");
   }
 

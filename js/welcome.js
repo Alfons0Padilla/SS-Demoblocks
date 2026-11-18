@@ -33,12 +33,7 @@
       : (index === 0 ? "jaguar-mobile-card is-intro" : "jaguar-mobile-card");
     card.style.display = "block";
     if (finalStep) {
-      card.style.top = "14px";
-      card.style.bottom = "auto";
-      card.style.position = "fixed";
-      card.style.left = "10px";
-      card.style.right = "10px";
-      card.style.transform = "none";
+      card.setAttribute("style", "position: fixed !important; top: 14px !important; right: 10px !important; bottom: auto !important; left: 10px !important; width: auto !important; height: 190px !important; transform: none !important;");
     } else if (index === 0) {
       card.style.top = "50%";
       card.style.bottom = "auto";
@@ -56,6 +51,57 @@
       '<img class="jaguar-mobile-character" src="' + (message.look === "right" ? "Recursos/Jaguar Der.png" : "Recursos/Jaguar Izq.png") + '" alt="">';
     guide.style.setProperty("display", "none", "important");
     renderMobileSpotlight(message, index);
+  }
+
+  function forceMobileSpotlight(message, index) {
+    if (window.innerWidth > 700) return;
+    const targetSelectors = {
+      "Navega por la aventura": ".main-nav",
+      "Comienza con una misión": ".home-hero .button-primary",
+      "Prueba el laboratorio": ".home-hero .button-secondary",
+      "Mira cómo funciona": ".demo-heading",
+      "Elige tu camino": ".home-paths .section-heading",
+      "Aprende el proceso": ".home-process .process-intro",
+      "¿Listo para crear?": ".home-final-cta .final-actions"
+    };
+    const target = document.querySelector(targetSelectors[message.title]);
+    if (!target) {
+      spotlight.style.setProperty("display", "none", "important");
+      overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
+      return;
+    }
+
+    const known = {
+      "Navega por la aventura": { left: 18, top: 63, width: 309, height: 52 },
+      "Comienza con una misión": { left: 28, top: 63, width: 289, height: 61 },
+      "Prueba el laboratorio": { left: 28, top: 63, width: 289, height: 63 },
+      "Mira cómo funciona": { left: 5, top: 63, width: 350, height: 300 },
+      "Elige tu camino": { left: 5, top: 63, width: 350, height: 95 },
+      "Aprende el proceso": { left: 30, top: 63, width: 285, height: 250 },
+      "¿Listo para crear?": { left: 30, top: 260, width: 290, height: 110 }
+    };
+    const zone = known[message.title] || { left: 12, top: 64, width: window.innerWidth - 24, height: 55 };
+    const left = zone.left;
+    const visibleTop = zone.top;
+    const right = left + zone.width;
+    const visibleBottom = visibleTop + zone.height;
+    spotlight.style.setProperty("display", "block", "important");
+    spotlight.style.left = left + "px";
+    spotlight.style.top = visibleTop + "px";
+    spotlight.style.width = Math.max(0, right - left) + "px";
+    spotlight.style.height = Math.max(0, visibleBottom - visibleTop) + "px";
+
+    const hole = { left: left, top: visibleTop, right: right, bottom: visibleBottom };
+    const panelStyles = [
+      { left: 0, top: 0, width: "100%", height: hole.top + "px" },
+      { left: hole.right + "px", top: hole.top + "px", width: Math.max(0, window.innerWidth - hole.right) + "px", height: Math.max(0, hole.bottom - hole.top) + "px" },
+      { left: 0, top: hole.bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - hole.bottom) + "px" },
+      { left: 0, top: hole.top + "px", width: hole.left + "px", height: Math.max(0, hole.bottom - hole.top) + "px" }
+    ];
+    overlayPanels.forEach(function (panel, panelIndex) {
+      panel.style.display = "block";
+      Object.assign(panel.style, panelStyles[panelIndex]);
+    });
   }
 
   function renderMobileSpotlight(message, index) {
@@ -81,22 +127,19 @@
     const desiredTop = index === messages.length - 1 ? 260 : 70;
     window.scrollTo({ top: Math.max(0, targetDocumentTop - desiredTop), left: 0, behavior: "auto" });
 
-    const spotlightSizes = {
-      "Navega por la aventura": { top: 64, height: 50 },
-      "Comienza con una misión": { top: 64, height: 55 },
-      "Prueba el laboratorio": { top: 64, height: 55 },
-      "Mira cómo funciona": { top: 64, height: 300 },
-      "Elige tu camino": { top: 64, height: 95 },
-      "Aprende el proceso": { top: 64, height: 250 },
-      "¿Listo para crear?": { top: 260, height: 110 }
-    };
-    const size = spotlightSizes[message.title];
-    const left = 12;
-    const right = window.innerWidth - 12;
-    const visibleTop = size ? size.top : 64;
-    const visibleBottom = visibleTop + (size ? size.height : 55);
-
     function paintSpotlight() {
+      const bounds = target.getBoundingClientRect();
+      const padding = 7;
+      const card = document.querySelector(".jaguar-mobile-card");
+      const cardRect = card ? card.getBoundingClientRect() : null;
+      const viewportBottom = cardRect
+        ? (index === messages.length - 1 ? window.innerHeight - 12 : cardRect.top - 12)
+        : window.innerHeight - 202;
+      const visibleTop = Math.max(8, bounds.top - padding);
+      const visibleBottom = Math.min(viewportBottom, bounds.bottom + padding);
+      const left = Math.max(8, bounds.left - padding);
+      const right = Math.min(window.innerWidth - 8, bounds.right + padding);
+
       spotlight.style.setProperty("display", "block", "important");
       spotlight.style.left = left + "px";
       spotlight.style.top = visibleTop + "px";
@@ -262,8 +305,14 @@
     } else {
       target.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
     }
+    if (window.innerWidth <= 700) {
+      return;
+    }
     window.clearTimeout(positioningFrame);
     positioningFrame = window.setTimeout(function () {
+      if (window.innerWidth <= 700) {
+        return;
+      }
       const bounds = target.getBoundingClientRect();
       const padding = window.innerWidth <= 700 ? 6 : 9;
       const viewportTop = window.innerWidth <= 700 ? 6 : 8;
@@ -388,6 +437,45 @@
     guide.classList.toggle("looks-right", message.look === "right");
     renderMobileCard(message, currentMessage);
     if (window.innerWidth <= 700) {
+      const known = {
+        "Navega por la aventura": { left: 18, top: 63, width: 309, height: 52 },
+        "Comienza con una misión": { left: 28, top: 63, width: 289, height: 61 },
+        "Prueba el laboratorio": { left: 28, top: 63, width: 289, height: 63 },
+        "Mira cómo funciona": { left: 5, top: 63, width: 350, height: 300 },
+        "Elige tu camino": { left: 5, top: 63, width: 350, height: 95 },
+        "Aprende el proceso": { left: 30, top: 63, width: 285, height: 250 },
+        "¿Listo para crear?": { left: 30, top: 260, width: 290, height: 110 }
+      };
+      const zone = known[message.title];
+      if (zone) {
+        const paint = function () {
+          const right = zone.left + zone.width;
+            spotlight.setAttribute("style",
+              "display:block!important;position:fixed!important;" +
+              "left:" + zone.left + "px!important;" +
+              "top:" + zone.top + "px!important;" +
+              "width:" + zone.width + "px!important;" +
+              "height:" + zone.height + "px!important;");
+          const bottom = zone.top + zone.height;
+          const panelStyles = [
+            { left: 0, top: 0, width: "100%", height: zone.top + "px" },
+            { left: right + "px", top: zone.top + "px", width: Math.max(0, window.innerWidth - right) + "px", height: zone.height + "px" },
+            { left: 0, top: bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - bottom) + "px" },
+            { left: 0, top: zone.top + "px", width: zone.left + "px", height: zone.height + "px" }
+          ];
+          overlayPanels.forEach(function (panel, panelIndex) {
+            panel.style.display = "block";
+            Object.assign(panel.style, panelStyles[panelIndex]);
+          });
+        };
+        paint();
+        [100, 300, 600].forEach(function (delay) { window.setTimeout(paint, delay); });
+      } else {
+        spotlight.style.setProperty("display", "none", "important");
+        overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
+      }
+    }
+    if (window.innerWidth <= 700) {
       const edge = window.innerWidth <= 360 ? 10 : 12;
       const fixedHeight = getMobileGuideHeight();
       if (currentMessage === messages.length - 1) {
@@ -439,6 +527,42 @@
       currentMessage += 1;
       isProgrammaticScroll = true;
       window.scrollTo(0, 0);
+      window.setInterval(function () {
+        if (window.innerWidth > 700 || welcome.classList.contains("is-dismissed")) return;
+        const titleText = document.querySelector("#jaguar-guide-title")?.textContent || "";
+        const zones = {
+          "Navega por la aventura": { left: 18, top: 63, width: 309, height: 52 },
+          "Comienza con una misión": { left: 28, top: 63, width: 289, height: 61 },
+          "Prueba el laboratorio": { left: 28, top: 63, width: 289, height: 63 },
+          "Mira cómo funciona": { left: 5, top: 63, width: 350, height: 300 },
+          "Elige tu camino": { left: 5, top: 63, width: 350, height: 95 },
+          "Aprende el proceso": { left: 30, top: 63, width: 285, height: 250 },
+          "¿Listo para crear?": { left: 30, top: 260, width: 290, height: 110 }
+        };
+        const zone = zones[titleText];
+        if (!zone) {
+          spotlight.style.setProperty("display", "none", "important");
+          overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
+          return;
+        }
+        const right = zone.left + zone.width;
+        const bottom = zone.top + zone.height;
+        spotlight.style.setProperty("display", "block", "important");
+        spotlight.style.left = zone.left + "px";
+        spotlight.style.top = zone.top + "px";
+        spotlight.style.width = zone.width + "px";
+        spotlight.style.height = zone.height + "px";
+        const panelStyles = [
+          { left: 0, top: 0, width: "100%", height: zone.top + "px" },
+          { left: right + "px", top: zone.top + "px", width: Math.max(0, window.innerWidth - right) + "px", height: zone.height + "px" },
+          { left: 0, top: bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - bottom) + "px" },
+          { left: 0, top: zone.top + "px", width: zone.left + "px", height: zone.height + "px" }
+        ];
+        overlayPanels.forEach(function (panel, panelIndex) {
+          panel.style.display = "block";
+          Object.assign(panel.style, panelStyles[panelIndex]);
+        });
+      }, 100);
       showMessage();
       return;
     }

@@ -263,6 +263,30 @@ h2 { margin: 6px 0 0; font-size: 27px; letter-spacing: -.8px; }
 .course-character-modal-card .button { width: 100%; }
 .course-character-modal-open { overflow: hidden; }
 @media (max-width: 700px) {
+  .jaguar-mobile-card.is-final {
+    position: fixed !important;
+    top: 14px !important;
+    right: 10px !important;
+    bottom: auto !important;
+    left: 10px !important;
+    transform: none !important;
+  }
+
+  .jaguar-guide.is-positioned {
+    left: 12px !important;
+    right: 12px !important;
+    top: auto !important;
+    bottom: 12px !important;
+    width: calc(100% - 24px) !important;
+    max-width: 430px;
+    transform: none !important;
+  }
+
+  .jaguar-guide.guide-final {
+    top: 14px !important;
+    bottom: auto !important;
+  }
+
   html.course-character-modal-open,
   body.course-character-modal-open {
     height: 100%;
@@ -3964,6 +3988,47 @@ html.mobile-execution-open .execution-chevron {
   }
 }
 
+/* Reglas finales móviles para que ninguna versión anterior desplace el tour. */
+@media (max-width: 700px) {
+  .jaguar-guide.is-positioned {
+    left: 0 !important;
+    right: 0 !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    top: auto !important;
+    bottom: 12px !important;
+    width: calc(100% - 20px) !important;
+    max-width: 430px !important;
+    height: 190px !important;
+    transform: none !important;
+  }
+
+  .jaguar-guide.guide-final {
+    left: 10px !important;
+    right: 10px !important;
+    top: 14px !important;
+    bottom: auto !important;
+  }
+
+  .jaguar-guide.guide-welcome {
+    left: 50% !important;
+    right: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    width: calc(100% - 20px) !important;
+    height: 190px !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .jaguar-welcome:not(.is-intro) .jaguar-spotlight {
+    display: block !important;
+  }
+
+  .jaguar-welcome.is-intro .jaguar-spotlight {
+    display: none !important;
+  }
+}
+
 /* Tarjeta de puntuación al completar una misión. */
 .success-score-panel {
   position: relative;
@@ -4084,6 +4149,130 @@ html.mobile-execution-open .execution-chevron {
 
   .success-actions .button {
     width: 100%;
+  }
+}
+
+/* Tarjeta independiente del tour móvil de Inicio. Evita heredar las posiciones del tour antiguo. */
+@media (max-width: 700px) {
+  #jaguar-welcome .jaguar-guide {
+    display: none !important;
+  }
+
+  .jaguar-mobile-card {
+    position: fixed;
+    z-index: 25;
+    right: 10px;
+    bottom: 12px;
+    left: 10px;
+    width: auto;
+    height: 190px;
+    pointer-events: none;
+  }
+
+  .jaguar-mobile-card.is-intro {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .jaguar-mobile-card.is-final {
+    bottom: auto;
+    top: 14px;
+  }
+
+  .jaguar-mobile-speech {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    padding: 12px 14px 10px;
+    border: 4px solid #2f8d72;
+    border-radius: 25px 25px 25px 7px;
+    background: #fff;
+    box-shadow: 0 18px 38px rgba(10, 20, 45, .28);
+  }
+
+  .jaguar-mobile-card.is-final .jaguar-mobile-speech {
+    border-color: #e17c54;
+  }
+
+  .jaguar-mobile-step {
+    display: block;
+    margin-bottom: 5px;
+    color: #2f8d72;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+  }
+
+  .jaguar-mobile-speech h2 {
+    margin: 0 0 6px;
+    color: #203752;
+    font-size: clamp(17px, 5vw, 21px);
+    line-height: 1.08;
+  }
+
+  .jaguar-mobile-speech p {
+    margin: 0;
+    color: #63728a;
+    font-size: clamp(12px, 3.2vw, 13px);
+    line-height: 1.38;
+  }
+
+  .jaguar-mobile-hint {
+    display: block;
+    margin-top: 7px;
+    color: #e17c54;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .jaguar-mobile-character {
+    position: absolute;
+    z-index: 3;
+    right: 10px;
+    bottom: -1px;
+    width: 112px;
+    height: 112px;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 360px) {
+  .jaguar-mobile-card {
+    right: 10px;
+    bottom: 12px;
+    left: 10px;
+    height: 190px;
+  }
+
+  .jaguar-mobile-speech {
+    padding: 9px 10px 8px;
+  }
+
+  .jaguar-mobile-step {
+    display: none;
+  }
+
+  .jaguar-mobile-speech h2 {
+    font-size: 16px;
+  }
+
+  .jaguar-mobile-speech p {
+    font-size: 11px;
+  }
+
+  .jaguar-mobile-hint {
+    font-size: 9px;
+  }
+
+  .jaguar-mobile-character {
+    width: 94px;
+    height: 94px;
   }
 }
 
@@ -4279,5 +4468,66 @@ html.mobile-execution-open .execution-chevron {
   .laboratory-tour .jaguar-speech-step,
   .laboratory-tour .jaguar-speech-hint {
     display: none;
+  }
+}
+
+/* Tarjeta independiente para las guías del Curso en móvil. */
+@media (max-width: 700px) {
+  .lesson-guide-card,
+  .lesson-guide-mentor {
+    display: none !important;
+  }
+
+  .lesson-mobile-card {
+    position: fixed;
+    z-index: 1002;
+    right: 10px;
+    bottom: 12px;
+    left: 10px;
+    width: auto;
+    min-height: 190px;
+    box-sizing: border-box;
+    padding: 16px 14px 14px;
+    border: 4px solid #2f8d72;
+    border-radius: 24px 24px 24px 8px;
+    background: #fff;
+    box-shadow: 0 18px 38px rgba(10, 20, 45, .28);
+  }
+
+  .lesson-mobile-card.is-welcome {
+    top: 50%;
+    bottom: auto;
+    min-height: 240px;
+    transform: translateY(-50%);
+  }
+
+  .lesson-mobile-step {
+    display: block;
+    margin-bottom: 6px;
+    color: #287c72;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .lesson-mobile-card h2 {
+    margin: 0 0 7px;
+    color: var(--ink);
+    font-size: clamp(18px, 5vw, 22px);
+    line-height: 1.08;
+  }
+
+  .lesson-mobile-card p {
+    max-height: 92px;
+    margin: 0 0 10px;
+    overflow-y: auto;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.38;
+  }
+
+  .lesson-mobile-card .button {
+    width: 100%;
+    min-height: 42px;
   }
 }

@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  let lastWelcomeTitle = "";
+
   function fitTourGuides() {
     if (window.innerWidth > 700) return;
 
@@ -11,25 +13,7 @@
     const laboratoryGuide = document.querySelector("#laboratory-tour .jaguar-guide");
     const laboratoryImage = document.querySelector("#laboratory-tour .jaguar-guide-image");
 
-    if (welcomeGuide) {
-      const positioned = welcomeGuide.classList.contains("is-positioned");
-      const finalStep = welcomeGuide.classList.contains("guide-final");
-      welcomeGuide.style.setProperty("width", "calc(100% - " + (edge * 2) + "px)", "important");
-      welcomeGuide.style.setProperty("max-width", "430px", "important");
-      welcomeGuide.style.setProperty("height", small ? "190px" : "220px", "important");
-      welcomeGuide.style.setProperty("right", "auto", "important");
-      welcomeGuide.style.setProperty("transform", positioned ? "none" : "translate(-50%, -50%)", "important");
-
-      if (positioned) {
-        welcomeGuide.style.setProperty("left", edge + "px", "important");
-        welcomeGuide.style.setProperty("top", finalStep ? "14px" : "auto", "important");
-        welcomeGuide.style.setProperty("bottom", finalStep ? "auto" : "12px", "important");
-      } else {
-        welcomeGuide.style.setProperty("left", "50%", "important");
-        welcomeGuide.style.setProperty("top", "50%", "important");
-        welcomeGuide.style.setProperty("bottom", "auto", "important");
-      }
-    }
+    // El tour de Inicio lo controla exclusivamente welcome.js.
 
     if (welcomeImage) {
       welcomeImage.style.setProperty("left", "auto", "important");

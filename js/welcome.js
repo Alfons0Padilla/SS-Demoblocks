@@ -8,6 +8,118 @@
   const leftJaguar = document.querySelector(".jaguar-guide-image-left");
   const rightJaguar = document.querySelector(".jaguar-guide-image-right");
   if (!welcome || !spotlight || !guide) return;
+  let mobileCard = null;
+
+  function ensureMobileCard() {
+    if (mobileCard) return mobileCard;
+    mobileCard = document.createElement("div");
+    mobileCard.className = "jaguar-mobile-card";
+    mobileCard.setAttribute("aria-hidden", "true");
+    welcome.appendChild(mobileCard);
+    return mobileCard;
+  }
+
+  function renderMobileCard(message, index) {
+    if (window.innerWidth > 700) {
+      if (mobileCard) mobileCard.style.display = "none";
+      guide.style.removeProperty("display");
+      return;
+    }
+
+    const card = ensureMobileCard();
+    const finalStep = index === messages.length - 1;
+    card.className = finalStep
+      ? "jaguar-mobile-card is-final"
+      : (index === 0 ? "jaguar-mobile-card is-intro" : "jaguar-mobile-card");
+    card.style.display = "block";
+    if (finalStep) {
+      card.style.top = "14px";
+      card.style.bottom = "auto";
+      card.style.position = "fixed";
+      card.style.left = "10px";
+      card.style.right = "10px";
+      card.style.transform = "none";
+    } else if (index === 0) {
+      card.style.top = "50%";
+      card.style.bottom = "auto";
+    } else {
+      card.style.top = "auto";
+      card.style.bottom = "12px";
+    }
+    card.innerHTML =
+      '<div class="jaguar-mobile-speech">' +
+        '<span class="jaguar-mobile-step">' + message.label + " · " + (index + 1) + " de " + messages.length + "</span>" +
+        "<h2>" + message.title + "</h2>" +
+        "<p>" + message.text + "</p>" +
+        '<span class="jaguar-mobile-hint">Toca en cualquier parte para continuar <b aria-hidden="true">→</b></span>' +
+      "</div>" +
+      '<img class="jaguar-mobile-character" src="' + (message.look === "right" ? "Recursos/Jaguar Der.png" : "Recursos/Jaguar Izq.png") + '" alt="">';
+    guide.style.setProperty("display", "none", "important");
+    renderMobileSpotlight(message, index);
+  }
+
+  function renderMobileSpotlight(message, index) {
+    if (window.innerWidth > 700) return;
+    const targetSelectors = {
+      "Navega por la aventura": ".main-nav",
+      "Comienza con una misión": ".home-hero .button-primary",
+      "Prueba el laboratorio": ".home-hero .button-secondary",
+      "Mira cómo funciona": ".demo-heading",
+      "Elige tu camino": ".home-paths .section-heading",
+      "Aprende el proceso": ".home-process .process-intro",
+      "¿Listo para crear?": ".home-final-cta .final-actions"
+    };
+    const target = document.querySelector(targetSelectors[message.title]);
+    if (!target) {
+      spotlight.style.setProperty("display", "none", "important");
+      overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
+      return;
+    }
+
+    const before = target.getBoundingClientRect();
+    const targetDocumentTop = window.scrollY + before.top;
+    const desiredTop = index === messages.length - 1 ? 260 : 70;
+    window.scrollTo({ top: Math.max(0, targetDocumentTop - desiredTop), left: 0, behavior: "auto" });
+
+    const spotlightSizes = {
+      "Navega por la aventura": { top: 64, height: 50 },
+      "Comienza con una misión": { top: 64, height: 55 },
+      "Prueba el laboratorio": { top: 64, height: 55 },
+      "Mira cómo funciona": { top: 64, height: 300 },
+      "Elige tu camino": { top: 64, height: 95 },
+      "Aprende el proceso": { top: 64, height: 250 },
+      "¿Listo para crear?": { top: 260, height: 110 }
+    };
+    const size = spotlightSizes[message.title];
+    const left = 12;
+    const right = window.innerWidth - 12;
+    const visibleTop = size ? size.top : 64;
+    const visibleBottom = visibleTop + (size ? size.height : 55);
+
+    function paintSpotlight() {
+      spotlight.style.setProperty("display", "block", "important");
+      spotlight.style.left = left + "px";
+      spotlight.style.top = visibleTop + "px";
+      spotlight.style.width = Math.max(0, right - left) + "px";
+      spotlight.style.height = Math.max(0, visibleBottom - visibleTop) + "px";
+
+      const hole = { left: left, top: visibleTop, right: right, bottom: visibleBottom };
+      const panelStyles = [
+        { left: 0, top: 0, width: "100%", height: hole.top + "px" },
+        { left: hole.right + "px", top: hole.top + "px", width: Math.max(0, window.innerWidth - hole.right) + "px", height: Math.max(0, hole.bottom - hole.top) + "px" },
+        { left: 0, top: hole.bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - hole.bottom) + "px" },
+        { left: 0, top: hole.top + "px", width: hole.left + "px", height: Math.max(0, hole.bottom - hole.top) + "px" }
+      ];
+      overlayPanels.forEach(function (panel, panelIndex) {
+        panel.style.display = "block";
+        Object.assign(panel.style, panelStyles[panelIndex]);
+      });
+    }
+    paintSpotlight();
+    [100, 300, 600].forEach(function (delay) {
+      window.setTimeout(paintSpotlight, delay);
+    });
+  }
   const jaguarTourSeenKey = "robobloques-jaguar-tour-seen";
   let jaguarTourSeen = false;
   try {
@@ -97,6 +209,15 @@
   let positioningFrame = 0;
   let isProgrammaticScroll = false;
   let lockedScrollY = window.scrollY;
+  function keepMobileGuideInside() {
+    if (window.innerWidth > 700) return;
+    const edge = window.innerWidth <= 360 ? 10 : 12;
+    const actual = guide.getBoundingClientRect();
+    if (actual.width > 0) {
+      const shift = edge - actual.left;
+      guide.style.setProperty("transform", "translateX(" + shift + "px)", "important");
+    }
+  }
 
   function keepTourViewport() {
     if (!isProgrammaticScroll && window.scrollY !== lockedScrollY) {
@@ -128,14 +249,16 @@
     isProgrammaticScroll = true;
     if (window.innerWidth <= 700) {
       const currentBounds = target.getBoundingClientRect();
-      const mobileTop = 14;
       const mobileGuideHeight = getMobileGuideHeight();
-      const mobileBottom = window.innerHeight - mobileGuideHeight - 20;
-      const availableHeight = Math.max(120, mobileBottom - mobileTop);
-      const targetTop = currentBounds.height <= availableHeight
-        ? mobileTop + (availableHeight - currentBounds.height) / 2
-        : mobileTop;
-      window.scrollTo(0, Math.max(0, window.scrollY + currentBounds.top - targetTop));
+      const targetDocumentTop = window.scrollY + currentBounds.top;
+      const desiredViewportTop = currentBounds.height > window.innerHeight - mobileGuideHeight - 80
+        ? 12
+        : 70;
+      window.scrollTo({
+        top: Math.max(0, targetDocumentTop - desiredViewportTop),
+        left: 0,
+        behavior: "auto"
+      });
     } else {
       target.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
     }
@@ -149,9 +272,10 @@
         : window.innerHeight - 8;
       const visibleTop = Math.max(viewportTop, bounds.top - padding);
       const visibleBottom = Math.min(viewportBottom, bounds.bottom + padding);
+      spotlight.style.setProperty("display", "block", "important");
       spotlight.style.left = Math.max(8, bounds.left - padding) + "px";
       spotlight.style.top = visibleTop + "px";
-      spotlight.style.width = Math.min(window.innerWidth - 16, bounds.width + padding * 2) + "px";
+      spotlight.style.width = Math.max(0, Math.min(window.innerWidth - 16, bounds.width + padding * 2)) + "px";
       spotlight.style.height = Math.max(0, visibleBottom - visibleTop) + "px";
       const hole = {
         left: Math.max(8, bounds.left - padding),
@@ -174,6 +298,22 @@
       const guideHeight = Math.min(window.innerWidth <= 700 ? mobileGuideHeight : 440, window.innerHeight - 28);
       guide.style.setProperty("--guide-width", guideWidth + "px");
       guide.style.height = guideHeight + "px";
+      if (window.innerWidth <= 700) {
+        const edge = window.innerWidth <= 360 ? 10 : 12;
+        if (currentMessage === messages.length - 1) {
+          guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: 14px !important; bottom: auto !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + guideHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
+        } else {
+          guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: auto !important; bottom: 12px !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + guideHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
+        }
+        window.requestAnimationFrame(function () {
+          const actual = guide.getBoundingClientRect();
+          const shift = edge - actual.left;
+          guide.style.setProperty("transform", "translateX(" + shift + "px)", "important");
+        });
+        window.setTimeout(keepMobileGuideInside, 50);
+        window.setTimeout(keepMobileGuideInside, 200);
+        window.setTimeout(keepMobileGuideInside, 500);
+      }
       const gap = 24;
       const margin = 14;
       const candidates = [
@@ -246,10 +386,25 @@
       (currentMessage === messages.length - 1 ? " guide-final" : "");
     guide.classList.toggle("looks-left", message.look === "left");
     guide.classList.toggle("looks-right", message.look === "right");
+    renderMobileCard(message, currentMessage);
+    if (window.innerWidth <= 700) {
+      const edge = window.innerWidth <= 360 ? 10 : 12;
+      const fixedHeight = getMobileGuideHeight();
+      if (currentMessage === messages.length - 1) {
+        guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: 14px !important; bottom: auto !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + fixedHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
+      } else {
+        guide.setAttribute("style", "position: fixed !important; left: " + edge + "px !important; right: " + edge + "px !important; top: auto !important; bottom: 12px !important; width: calc(100% - " + (edge * 2) + "px) !important; max-width: 430px !important; height: " + fixedHeight + "px !important; transform: translateX(calc(" + edge + "px - 50vw)) !important;");
+      }
+      window.setTimeout(keepMobileGuideInside, 50);
+      window.setTimeout(keepMobileGuideInside, 200);
+      window.setTimeout(keepMobileGuideInside, 500);
+    }
     const target = document.querySelector(message.target);
     if (target) {
       positionGuide(target);
     } else {
+      spotlight.style.setProperty("display", "none", "important");
+      overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
       guide.style.removeProperty("left");
       guide.style.removeProperty("top");
       guide.style.removeProperty("height");

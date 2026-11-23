@@ -112,8 +112,14 @@
     step.textContent = "Laboratorio · " + (index + 1) + " de " + steps.length;
     currentStepTarget = current.target;
     const target = current.target ? document.querySelector(current.target) : null;
+    if (target) {
+      target.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+    }
     const finishRender = function () {
       if (currentRender !== renderId) return;
+      if (target) {
+        target.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+      }
       position(target);
       guide.classList.remove("message-refresh");
       void guide.offsetWidth;

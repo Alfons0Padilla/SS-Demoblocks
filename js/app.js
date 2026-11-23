@@ -369,6 +369,7 @@
         return;
       }
 
+      target.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
       spot.style.display = "block";
       window.setTimeout(function () {
         if (run !== guidePositionRun || !guide.classList.contains("is-visible")) return;

@@ -20,6 +20,38 @@
     return mobileSpotlight;
   }
 
+  function updateMobileSpotlight(message) {
+    if (window.innerWidth > 700) {
+      if (mobileSpotlight) mobileSpotlight.style.display = "none";
+      return;
+    }
+    const targetSelectors = {
+      "Navega por la aventura": ".main-nav",
+      "Comienza con una misión": ".home-hero .button-primary",
+      "Prueba el laboratorio": ".home-hero .button-secondary",
+      "Mira cómo funciona": ".demo-heading",
+      "Elige tu camino": ".home-paths .learning-modes",
+      "Aprende el proceso": ".home-process .process-intro",
+      "¿Listo para crear?": ".home-final-cta .final-actions"
+    };
+    const target = document.querySelector(targetSelectors[message.title]);
+    if (!target) {
+      if (mobileSpotlight) mobileSpotlight.style.display = "none";
+      return;
+    }
+    const bounds = target.getBoundingClientRect();
+    const padding = 7;
+    const left = Math.max(8, bounds.left - padding);
+    const top = Math.max(8, bounds.top - padding);
+    const right = Math.min(window.innerWidth - 8, bounds.right + padding);
+    const bottom = Math.min(window.innerHeight - 8, bounds.bottom + padding);
+    const halo = ensureMobileSpotlight();
+    halo.style.display = "block";
+    halo.style.left = left + "px";
+    halo.style.top = top + "px";
+    halo.style.width = Math.max(0, right - left) + "px";
+    halo.style.height = Math.max(0, bottom - top) + "px";
+  }
   function ensureMobileCard() {
     if (mobileCard) return mobileCard;
     mobileCard = document.createElement("div");
@@ -54,6 +86,57 @@
     renderMobileSpotlight(message, index);
   }
 
+  function forceMobileSpotlight(message, index) {
+    if (window.innerWidth > 700) return;
+    const targetSelectors = {
+      "Navega por la aventura": ".main-nav",
+      "Comienza con una misión": ".home-hero .button-primary",
+      "Prueba el laboratorio": ".home-hero .button-secondary",
+      "Mira cómo funciona": ".demo-heading",
+      "Elige tu camino": ".home-paths .learning-modes",
+      "Aprende el proceso": ".home-process .process-intro",
+      "¿Listo para crear?": ".home-final-cta .final-actions"
+    };
+    const target = document.querySelector(targetSelectors[message.title]);
+    if (!target) {
+      spotlight.style.setProperty("display", "none", "important");
+      overlayPanels.forEach(function (panel) { panel.style.display = "none"; });
+      if (mobileSpotlight) mobileSpotlight.style.display = "none";
+      return;
+    }
+
+    const known = {
+      "Navega por la aventura": { left: 18, top: 63, width: 309, height: 52 },
+      "Comienza con una misión": { left: 28, top: 63, width: 289, height: 61 },
+      "Prueba el laboratorio": { left: 28, top: 63, width: 289, height: 63 },
+      "Mira cómo funciona": { left: 5, top: 63, width: 350, height: 300 },
+      "Elige tu camino": { left: 5, top: 63, width: 350, height: 95 },
+      "Aprende el proceso": { left: 30, top: 63, width: 285, height: 250 },
+      "¿Listo para crear?": { left: 30, top: 260, width: 290, height: 110 }
+    };
+    const zone = known[message.title] || { left: 12, top: 64, width: window.innerWidth - 24, height: 55 };
+    const left = zone.left;
+    const visibleTop = zone.top;
+    const right = left + zone.width;
+    const visibleBottom = visibleTop + zone.height;
+    spotlight.style.setProperty("display", "block", "important");
+    spotlight.style.left = left + "px";
+    spotlight.style.top = visibleTop + "px";
+    spotlight.style.width = Math.max(0, right - left) + "px";
+    spotlight.style.height = Math.max(0, visibleBottom - visibleTop) + "px";
+
+    const hole = { left: left, top: visibleTop, right: right, bottom: visibleBottom };
+    const panelStyles = [
+      { left: 0, top: 0, width: "100%", height: hole.top + "px" },
+      { left: hole.right + "px", top: hole.top + "px", width: Math.max(0, window.innerWidth - hole.right) + "px", height: Math.max(0, hole.bottom - hole.top) + "px" },
+      { left: 0, top: hole.bottom + "px", width: "100%", height: Math.max(0, window.innerHeight - hole.bottom) + "px" },
+      { left: 0, top: hole.top + "px", width: hole.left + "px", height: Math.max(0, hole.bottom - hole.top) + "px" }
+    ];
+    overlayPanels.forEach(function (panel, panelIndex) {
+      panel.style.display = "block";
+      Object.assign(panel.style, panelStyles[panelIndex]);
+    });
+  }
   function renderMobileSpotlight(message, index) {
     if (window.innerWidth > 700) return;
     const targetSelectors = {
@@ -61,9 +144,9 @@
       "Comienza con una misión": ".home-hero .button-primary",
       "Prueba el laboratorio": ".home-hero .button-secondary",
       "Mira cómo funciona": ".demo-heading",
-      "Elige tu camino": ".learning-modes",
-      "Aprende el proceso": ".process-list",
-      "¿Listo para crear?": ".final-actions"
+      "Elige tu camino": ".home-paths .learning-modes",
+      "Aprende el proceso": ".home-process .process-intro",
+      "¿Listo para crear?": ".home-final-cta .final-actions"
     };
     const target = document.querySelector(targetSelectors[message.title]);
     if (!target) {
@@ -181,7 +264,7 @@
       title: "Elige tu camino",
       text: "En estas dos tarjetas puedes volver a elegir entre la ruta paso a paso y la experimentación libre.",
       label: "Caminos de aprendizaje",
-      target: ".home-paths .section-heading",
+      target: ".home-paths .learning-modes",
       place: "top-right",
       look: "left"
     },

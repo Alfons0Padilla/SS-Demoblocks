@@ -190,7 +190,7 @@ button { font: inherit; }
 .topbar { height: 76px; display: flex; align-items: center; gap: 36px; padding: 0 max(24px, calc((100% - 1180px) / 2)); background: var(--white); border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
 .brand-mark { display: grid; place-items: center; width: 48px; height: 48px; overflow: hidden; border-radius: 14px; background: var(--lavender); font-size: 25px; }
-.brand-mark img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.brand-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .brand strong, .brand small { display: block; }
 .brand strong { font-size: 18px; letter-spacing: -.4px; }
 .brand small { color: var(--muted); font-size: 11px; margin-top: 2px; }

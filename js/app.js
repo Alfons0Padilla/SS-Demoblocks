@@ -409,9 +409,26 @@
             { side: "bottom", left: targetLeft + (b.width - cardWidth) / 2, top: targetBottom + gap },
             { side: "top", left: targetLeft + (b.width - cardWidth) / 2, top: targetTop - cardHeight - gap }
           ];
-          const fits = function (candidate) { return candidate.left >= margin && candidate.top >= margin && candidate.left + cardWidth <= p.width - margin && candidate.top + cardHeight <= p.height - margin; };
+          const fits = function (candidate) {
+            const mentorClearance = candidate.side === "left" ? 208 : 0;
+            return candidate.left - mentorClearance >= margin &&
+              candidate.top >= margin &&
+              candidate.left + cardWidth <= p.width - margin &&
+              candidate.top + cardHeight <= p.height - margin;
+          };
           const overlaps = function (candidate) { return candidate.left < targetRight && candidate.left + cardWidth > targetLeft && candidate.top < targetBottom && candidate.top + cardHeight > targetTop; };
-          const placement = candidates.find(function (candidate) { return fits(candidate) && !overlaps(candidate); }) || candidates.find(fits) || candidates[2];
+          let placement;
+          if (guide.dataset.target === "#lesson-blocks") {
+            placement = {
+              side: "bottom",
+              left: targetLeft + (b.width - cardWidth) / 2,
+              top: targetBottom + gap
+            };
+            placement.left = Math.max(margin, Math.min(p.width - cardWidth - margin, placement.left));
+            placement.top = Math.max(margin, Math.min(p.height - cardHeight - margin, placement.top));
+          } else {
+            placement = candidates.find(function (candidate) { return fits(candidate) && !overlaps(candidate); }) || candidates.find(fits) || candidates[2];
+          }
           card.style.left = Math.max(margin, Math.min(p.width - cardWidth - margin, placement.left)) + "px";
           card.style.top = Math.max(margin, Math.min(p.height - cardHeight - margin, placement.top)) + "px";
           card.style.right = "auto";
